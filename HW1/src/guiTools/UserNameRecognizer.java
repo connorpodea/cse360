@@ -1,6 +1,5 @@
 package guiTools;
 
-
 public class UserNameRecognizer {
 	/**
 	 * <p> Title: FSM-translated UserNameRecognizer. </p>
@@ -105,15 +104,15 @@ public class UserNameRecognizer {
 			// next state
 			switch (state) {
 			case 0: 
+				// Start of validation user input.
 				// State 0 has 1 valid transition that is addressed by an if statement.
 				
 				// The current character is checked against A-Z, a-z. If any are matched
 				// the FSM goes to state 1
 				
-				// A-Z, a-z -> State 1
+				// A-Z, a-z, 0-9 -> State 1
 				if ((currentChar >= 'A' && currentChar <= 'Z' ) ||		// Check for A-Z
-						(currentChar >= 'a' && currentChar <= 'z' )) 	// Check for a-z
-						 {
+						(currentChar >= 'a' && currentChar <= 'z' )){	// Check for a-z
 					nextState = 1;
 					
 					// Count the character 
@@ -145,7 +144,7 @@ public class UserNameRecognizer {
 					userNameSize++;
 				}
 				// . -> State 2
-				else if (currentChar == '.') {							// Check for /
+				else if ((currentChar == '.') || (currentChar == '_') || (currentChar == '-')){							// Check for /
 					nextState = 2;
 					
 					// Count the .
@@ -215,12 +214,13 @@ public class UserNameRecognizer {
 		// makes it possible for this code to display a very specific error message to improve the
 		// user experience.
 		userNameRecognizerIndexofError = currentCharNdx;	// Set index of a possible error;
+		userNameRecognizerErrorMessage = "\n*** ERROR *** ";
 		
 		// The following code is a slight variation to support just console output.
 		switch (state) {
 		case 0:
 			// State 0 is not a final state, so we can return a very specific error message
-			userNameRecognizerErrorMessage += "A UserName must start with an alphabetic character. Please try again!\n";
+			userNameRecognizerErrorMessage += "A UserName must start with A-Z, a-z.\n";
 			return userNameRecognizerErrorMessage;
 
 		case 1:
@@ -229,7 +229,7 @@ public class UserNameRecognizer {
 
 			if (userNameSize < 4) {
 				// UserName is too small
-				userNameRecognizerErrorMessage += "A UserName must have at least 4 characters. Please try again!\n";
+				userNameRecognizerErrorMessage += "A UserName must have at least 4 characters.\n";
 				return userNameRecognizerErrorMessage;
 			}
 			else if (userNameSize > 16) {
@@ -241,7 +241,7 @@ public class UserNameRecognizer {
 			else if (currentCharNdx < input.length()) {
 				// There are characters remaining in the input, so the input is not valid
 				userNameRecognizerErrorMessage += 
-					"A UserName character may only contain alphanumeric characters. Please try again!\n";
+					"A UserName character may only contain the characters A-Z, a-z, 0-9.\n";
 				return userNameRecognizerErrorMessage;
 			}
 			else {
@@ -254,7 +254,7 @@ public class UserNameRecognizer {
 		case 2:
 			// State 2 is not a final state, so we can return a very specific error message
 			userNameRecognizerErrorMessage +=
-				"A UserName character after a period must be alphanumeric. Please try again!\n";
+				"A UserName character after a period, underscore, or dash must be followed by A-Z, a-z, 0-9.\n";
 			return userNameRecognizerErrorMessage;
 			
 		default:
