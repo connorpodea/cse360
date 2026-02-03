@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.lang.String"/>
-    <fullyQualifiedTypeName name="guiTools.UserNameRecognizer"/>
-    <fullyQualifiedTypeName name="java.text.Format"/>
-    <fullyQualifiedTypeName name="javafx.scene.paint.Color"/>
-    <fullyQualifiedTypeName name="passwordPopUpWindow.Model"/>
-</qualifiedTypeNameHistroy>
