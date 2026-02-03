@@ -60,6 +60,9 @@ public class ViewNewAccount {
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
+	
+	// This alert is used should the username enter not be valid. 
+	protected static Alert alertUsernameIsInvalid = new Alert(AlertType.INFORMATION);
 
     protected static Button button_Quit = new Button("Quit");
 
@@ -190,6 +193,10 @@ public class ViewNewAccount {
 		alertUsernamePasswordError.setTitle("Passwords Do Not Match");
 		alertUsernamePasswordError.setHeaderText("The two passwords must be identical.");
 		alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+		
+		alertUsernameIsInvalid.setTitle("UserName is Invalid");
+		alertUsernameIsInvalid.setHeaderText("Must be <= 4 or >= 16, first character must be A-Z, or a-z \n can be a special character only of _,-,. \n can have integer values");
+		alertUsernameIsInvalid.setContentText("Correct the username");
 
         // Set up the account creation and login
         setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);

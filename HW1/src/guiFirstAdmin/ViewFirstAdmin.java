@@ -1,6 +1,7 @@
 package guiFirstAdmin;
 
 import javafx.geometry.Pos;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -56,8 +57,8 @@ public class ViewFirstAdmin {
 			new Label("Enter the Admin's Username, the Password twice, and then click on " + 
 					"Setup Admin Account.");
 	
-	protected static Label label_InvalidUsername = new Label();
 	protected static Label label_PasswordsDoNotMatch = new Label();
+	protected static Label label_userNameIsInvalid = new Label();
 	protected static TextField text_AdminUsername = new TextField();
 	protected static PasswordField text_AdminPassword1 = new PasswordField();
 	protected static PasswordField text_AdminPassword2 = new PasswordField();
@@ -180,12 +181,12 @@ public class ViewFirstAdmin {
 		button_AdminSetup.setOnAction((_) -> {
 			ControllerFirstAdmin.doSetupAdmin(theStage,1); 
 			});
-		
-		// Label to display the username format is invalid
-		setupLabelUI(label_InvalidUsername, "Arial", 18, width, Pos.CENTER, 0, 330);
-		
+
 		// Label to display the Passwords do not match error message
 		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 18, width, Pos.CENTER, 0, 300);
+		
+		// label to display the Username to see if it is valid or invalid.
+		setupLabelUI(label_userNameIsInvalid, "Arial", 18, width, Pos.CENTER, 0, 300);
 
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
 		button_Quit.setOnAction((_) -> {ControllerFirstAdmin.performQuit(); });
@@ -193,8 +194,8 @@ public class ViewFirstAdmin {
 		// Place all of the just-initialized GUI elements into the pane
 		theRootPane.getChildren().addAll(label_ApplicationTitle, label_TitleLine1,
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
-				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch,
-				label_InvalidUsername, button_Quit);
+				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch, label_userNameIsInvalid,
+				button_Quit);
 	}
 	
 	

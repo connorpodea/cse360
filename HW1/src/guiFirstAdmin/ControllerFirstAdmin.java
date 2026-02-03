@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import database.Database;
 import entityClasses.User;
 import javafx.stage.Stage;
+import userNameRecognizerTestbed.UserNameRecognizer;
 
 /*******
  * <p> Title: ControllerFirstAdmin Class. </p>
@@ -43,6 +44,8 @@ public class ControllerFirstAdmin {
 	private static String adminUsername = "";
 	private static String adminPassword1 = "";
 	private static String adminPassword2 = "";		
+	//new 
+	private static String errMessage = "";
 	protected static Database theDatabase = applicationMain.FoundationsMain.database;		
 
 	/*-********************************************************************************************
@@ -66,6 +69,7 @@ public class ControllerFirstAdmin {
 	 */
 	protected static void setAdminUsername() {
 		adminUsername = ViewFirstAdmin.text_AdminUsername.getText();
+		errMessage = UserNameRecognizer.checkForValidUserName(adminUsername);	
 	}
 	
 	
@@ -78,7 +82,7 @@ public class ControllerFirstAdmin {
 	 */
 	protected static void setAdminPassword1() {
 		adminPassword1 = ViewFirstAdmin.text_AdminPassword1.getText();
-		ViewFirstAdmin.label_PasswordsDoNotMatch.setText("");
+		ViewFirstAdmin.label_userNameIsInvalid.setText(""); 
 	}
 	
 	
@@ -104,39 +108,49 @@ public class ControllerFirstAdmin {
 	 * 
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
-		
-		// Make sure the username is valid
-		String usernameError = guiTools.UserNameRecognizer.checkForValidUserName(adminUsername);
-		if (usernameError.length() > 0) {
-			// If the username is invalid, notify user of proper fix.
-			ViewFirstAdmin.label_InvalidUsername.setText(usernameError);
-		}
 		// Make sure the two passwords are the same
-		else if (adminPassword1.compareTo(adminPassword2) == 0) {
+		
+//		if(errMessage != "") {
+//			ViewFirstAdmin.text_AdminUsername.setText("");
+//			ViewFirstAdmin.label_PasswordsDoNotMatch.setText(
+//					"The two passwords must match. Please try again!");
+//			//ViewFirstAdmin.label_userNameIsInvalid.setText(errMessage); 
+//		}
+		
+		if(errMessage == "") {
+			if (adminPassword1.compareTo(adminPassword2) == 0) {
         	// Create the passwords and proceed to the user home page
-        	User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
-        			false);
-            try {
+        				User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
+        						false);
+            			try {
             	// Create a new User object with admin role and register in the database
-            	theDatabase.register(user);
-            	}
-            catch (SQLException e) {
-                System.err.println("*** ERROR *** Database error trying to register a user: " + 
+            			theDatabase.register(user);
+            		}
+            		catch (SQLException e) {
+                		System.err.println("*** ERROR *** Database error trying to register a user: " + 
                 		e.getMessage());
-                e.printStackTrace();
-                System.exit(0);
-            }
-            // User was established in the database, so navigate to the User Update Page
-        	guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewFirstAdmin.theStage, user);
+                		e.printStackTrace();
+                	System.exit(0);
+            	}
+            
+            	// User was established in the database, so navigate to the User Update Page
+        		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewFirstAdmin.theStage, user);
+			}
+				else {
+				// The two passwords are NOT the same, so clear the passwords, explain the passwords
+				// must be the same, and clear the message as soon as the first character is typed.
+				ViewFirstAdmin.text_AdminPassword1.setText("");
+				ViewFirstAdmin.text_AdminPassword2.setText("");
+				ViewFirstAdmin.label_PasswordsDoNotMatch.setText(
+						"The two passwords must match. Please try again!");
+			}
 		}
+		
 		else {
-			// The two passwords are NOT the same, so clear the passwords, explain the passwords
-			// must be the same, and clear the message as soon as the first character is typed.
-			ViewFirstAdmin.text_AdminPassword1.setText("");
-			ViewFirstAdmin.text_AdminPassword2.setText("");
-			ViewFirstAdmin.label_PasswordsDoNotMatch.setText(
-					"The two passwords must match. Please try again!");
+			//ViewFirstAdmin.text_AdminUsername.setText("");
+			ViewFirstAdmin.label_userNameIsInvalid.setText(errMessage);
 		}
+		
 	}
 	
 	
