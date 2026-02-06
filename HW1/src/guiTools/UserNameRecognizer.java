@@ -1,4 +1,4 @@
-package userNameRecognizerTestbed;
+package guiTools;
 
 
 public class UserNameRecognizer {

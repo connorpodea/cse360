@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import database.Database;
 import entityClasses.User;
+import guiTools.UserNameRecognizer;
 import javafx.stage.Stage;
-import userNameRecognizerTestbed.UserNameRecognizer;
 
 /*******
  * <p> Title: ControllerFirstAdmin Class. </p>
