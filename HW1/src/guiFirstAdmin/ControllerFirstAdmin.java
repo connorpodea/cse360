@@ -43,8 +43,12 @@ public class ControllerFirstAdmin {
 	
 	private static String adminUsername = "";
 	private static String adminPassword1 = "";
-	private static String adminPassword2 = "";		
-	//new 
+	private static String adminPassword2 = "";
+	private static String adminEmail = "";
+	private static String adminName = "";
+	private static String adminFirstName = "";
+	private static String adminMiddleName = "";
+	private static String adminLastName = "";
 	private static String errMessage = "";
 	protected static Database theDatabase = applicationMain.FoundationsMain.database;		
 
@@ -98,6 +102,13 @@ public class ControllerFirstAdmin {
 		ViewFirstAdmin.label_PasswordsDoNotMatch.setText("");
 	}
 	
+	protected static void setAdminEmail() {
+		adminEmail = ViewFirstAdmin.text_AdminEmail.getText();
+	}
+	
+	protected static void setAdminName() {
+		adminName = ViewFirstAdmin.text_AdminName.getText();
+	}
 	
 	/**********
 	 * <p> Method: doSetupAdmin() </p>
@@ -108,6 +119,7 @@ public class ControllerFirstAdmin {
 	 * 
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
+		
 		// Make sure the two passwords are the same
 		
 //		if(errMessage != "") {
@@ -117,11 +129,32 @@ public class ControllerFirstAdmin {
 //			//ViewFirstAdmin.label_userNameIsInvalid.setText(errMessage); 
 //		}
 		
+		if (adminName != "") {
+			String[] nameParts = adminName.split("\\s+");
+			
+			if (nameParts.length == 3) {
+				adminFirstName = nameParts[0];
+				adminMiddleName = nameParts[1];
+				adminLastName = nameParts[2];
+			}
+			else if (nameParts.length == 2) {
+				adminFirstName = nameParts[0];
+				adminMiddleName = "";
+				adminLastName = nameParts[1];
+			}
+			else {
+				adminFirstName = adminName;
+				adminMiddleName = "";
+				adminLastName = "";
+			}
+		}
+		
 		if(errMessage == "") {
 			if (adminPassword1.compareTo(adminPassword2) == 0) {
         	// Create the passwords and proceed to the user home page
-        				User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
-        						false);
+						User user = new User(adminUsername, adminPassword1, adminEmail, adminFirstName, adminMiddleName, adminLastName, "", true, false, false);
+        				// User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
+        				//		false);
             			try {
             	// Create a new User object with admin role and register in the database
             			theDatabase.register(user);

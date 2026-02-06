@@ -62,6 +62,8 @@ public class ViewFirstAdmin {
 	protected static TextField text_AdminUsername = new TextField();
 	protected static PasswordField text_AdminPassword1 = new PasswordField();
 	protected static PasswordField text_AdminPassword2 = new PasswordField();
+	protected static TextField text_AdminEmail = new TextField();
+	protected static TextField text_AdminName = new TextField();
 	private static Button button_AdminSetup = new Button("Setup Admin Account");
 
 	// This alert is used should the user enter two passwords that do not match
@@ -175,6 +177,18 @@ public class ViewFirstAdmin {
 		text_AdminPassword2.setPromptText("Enter Admin Password Again");
 		text_AdminPassword2.textProperty().addListener((_, _, _) 
 				-> {ControllerFirstAdmin.setAdminPassword2(); });
+		
+		// Establish the text input operand field for the Email
+		setupTextUI(text_AdminEmail, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 310, true);
+		text_AdminEmail.setPromptText("Enter Email Adress");
+		text_AdminEmail.textProperty().addListener((_, _, _) 
+				-> {ControllerFirstAdmin.setAdminEmail(); });
+		
+		// Establish the text input operand field for the name
+		setupTextUI(text_AdminName, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 360, true);
+		text_AdminName.setPromptText("Enter Full Name");
+		text_AdminName.textProperty().addListener((_, _, _) 
+				-> {ControllerFirstAdmin.setAdminName(); });
 
 		// Set up the Log In button
 		setupButtonUI(button_AdminSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
@@ -183,10 +197,10 @@ public class ViewFirstAdmin {
 			});
 
 		// Label to display the Passwords do not match error message
-		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 18, width, Pos.CENTER, 0, 300);
+		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 18, width, Pos.CENTER, 0, 410);
 		
 		// label to display the Username to see if it is valid or invalid.
-		setupLabelUI(label_userNameIsInvalid, "Arial", 18, width, Pos.CENTER, 0, 300);
+		setupLabelUI(label_userNameIsInvalid, "Arial", 18, width, Pos.CENTER, 0, 450);
 
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
 		button_Quit.setOnAction((_) -> {ControllerFirstAdmin.performQuit(); });
@@ -194,7 +208,7 @@ public class ViewFirstAdmin {
 		// Place all of the just-initialized GUI elements into the pane
 		theRootPane.getChildren().addAll(label_ApplicationTitle, label_TitleLine1,
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
-				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch, label_userNameIsInvalid,
+				text_AdminPassword2, text_AdminEmail, text_AdminName, button_AdminSetup, label_PasswordsDoNotMatch, label_userNameIsInvalid,
 				button_Quit);
 	}
 	

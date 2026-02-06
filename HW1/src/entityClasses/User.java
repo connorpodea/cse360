@@ -58,15 +58,14 @@ public class User {
      * 
      */
     // Constructor to initialize a new User object with userName, password, and role.
-    public User(String userName, String password, String fn, String mn, String ln, String pfn, 
-    		String ea, boolean r1, boolean r2, boolean r3) {
+    public User(String userName, String password, String email, String fn, String mn, String ln, String pfn, boolean r1, boolean r2, boolean r3) {
         this.userName = userName;
         this.password = password;
+        this.emailAddress = email;
         this.firstName = fn;
         this.middleName = mn;
         this.lastName = ln;
         this.preferredFirstName = pfn;
-        this.emailAddress = ea;
         this.adminRole = r1;
         this.role1 = r2;
         this.role2 = r3;

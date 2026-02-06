@@ -91,10 +91,9 @@ public class ControllerUserLogin {
 		// System.out.println("*** Password is valid for this user");
 		
 		// Establish this user's details
-    	User user = new User(username, password, theDatabase.getCurrentFirstName(), 
+    	User user = new User(username, password, theDatabase.getCurrentEmailAddress(), theDatabase.getCurrentFirstName(), 
     			theDatabase.getCurrentMiddleName(), theDatabase.getCurrentLastName(), 
-    			theDatabase.getCurrentPreferredFirstName(), theDatabase.getCurrentEmailAddress(), 
-    			theDatabase.getCurrentAdminRole(), 
+    			theDatabase.getCurrentPreferredFirstName(), theDatabase.getCurrentAdminRole(), 
     			theDatabase.getCurrentNewRole1(), theDatabase.getCurrentNewRole2());
     	
     	// See which home page dispatch to use
