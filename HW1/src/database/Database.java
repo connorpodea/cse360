@@ -37,7 +37,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase999912200001";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as991343200001";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -87,7 +87,7 @@ public class Database {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
-			//statement.execute("DROP ALL OBJECTS");
+			 statement.execute("DROP ALL OBJECTS");
 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
@@ -115,7 +115,8 @@ public class Database {
 				+ "emailAddress VARCHAR(255), "
 				+ "adminRole BOOL DEFAULT FALSE, "
 				+ "newRole1 BOOL DEFAULT FALSE, "
-				+ "newRole2 BOOL DEFAULT FALSE)";
+				+ "newRole2 BOOL DEFAULT FALSE, "
+				+ "isOTP BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
 		
 		// Create the invitation codes table
@@ -182,8 +183,8 @@ public class Database {
  */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
-				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2, isOTP) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
 			pstmt.setString(1, currentUsername);
@@ -838,6 +839,17 @@ public class Database {
 	    }
 	}
 	
+	public void resetUserPassword(String username, String tempPass) {
+		String query = "UPDATE userDB SET password = ?, isOTP = TRUE WHERE userName = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, tempPass);
+	        pstmt.setString(2, username);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	
 	/*******
 	 * <p> Method: boolean updateUserRole(String username, String role, String value) </p>
@@ -1038,6 +1050,37 @@ public class Database {
 		System.out.println();
 		}
 		resultSet.close();
+	}
+	
+	/*******
+	 * Check if the user is currently flagged for a one-time password reset.
+	 */
+	public boolean isPasswordTemporary(String username) {
+		String query = "SELECT isOTP FROM userDB WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getBoolean("isOTP");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/*******
+	 * Clears the OTP flag. Call this in your Update Controller after the 
+     * user successfully saves their new password.
+	 */
+	public void clearOTPFlag(String username) {
+		String query = "UPDATE userDB SET isOTP = FALSE WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 

@@ -50,11 +50,11 @@ public class ViewNewAccount {
     protected static Label label_NewUserCreation = new Label(" User Account Creation.");
     protected static Label label_NewUserLine = new Label("Please enter a username and a password.");
     protected static TextField text_Username = new TextField();
-    protected static PasswordField text_Password1 = new PasswordField();
-    protected static PasswordField text_Password2 = new PasswordField();
-    protected static Button button_UserSetup = new Button("User Setup");
-    protected static TextField text_Invitation = new TextField();
-
+	protected static PasswordField text_Password1 = new PasswordField();
+	protected static PasswordField text_Password2 = new PasswordField();
+	protected static TextField text_Email = new TextField();
+	protected static TextField text_Name = new TextField();
+    
 	// This alert is used should the invitation code be invalid
     protected static Alert alertInvitationCodeIsInvalid = new Alert(AlertType.INFORMATION);
 
@@ -65,6 +65,8 @@ public class ViewNewAccount {
 	protected static Alert alertUsernameIsInvalid = new Alert(AlertType.INFORMATION);
 
     protected static Button button_Quit = new Button("Quit");
+	protected static Button button_UserSetup = new Button("Create Account");
+
 
 	// These attributes are used to configure the page and populate it with this user's information
 	private static ViewNewAccount theView;		// Is instantiation of the class needed?
@@ -124,6 +126,8 @@ public class ViewNewAccount {
 		text_Username.setText("");	// Clear the input fields so previously entered values do not
 		text_Password1.setText("");	// appear for a new user
 		text_Password2.setText("");
+		text_Email.setText("");
+		text_Name.setText("");
 		
 		// Fetch the role for this user
 		theRole = theDatabase.getRoleGivenAnInvitationCode(theInvitationCode);
@@ -135,11 +139,12 @@ public class ViewNewAccount {
 		
 		// Get the email address associated with the invitation code
 		emailAddress = theDatabase.getEmailAddressUsingCode(theInvitationCode);
+		text_Email.setText(emailAddress);
 		
     	// Place all of the established GUI elements into the pane
     	theRootPane.getChildren().clear();
     	theRootPane.getChildren().addAll(label_NewUserCreation, label_NewUserLine, text_Username,
-    			text_Password1, text_Password2, button_UserSetup, button_Quit);    	
+    			text_Password1, text_Password2, text_Email, text_Name, button_UserSetup, button_Quit);    	
 
 		// Set the title for the window, display the page, and wait for the Admin to do something
 		theStage.setTitle("CSE 360 Foundation Code: New User Account Setup");	
@@ -184,6 +189,13 @@ public class ViewNewAccount {
 		setupTextUI(text_Password2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, true);
 		text_Password2.setPromptText("Enter the Password Again");
 		
+		setupTextUI(text_Email, "Arial", 16, 350, Pos.BASELINE_LEFT, 200, 310, true);
+		text_Email.setPromptText("Email Address");
+
+		setupTextUI(text_Name, "Arial", 16, 350, Pos.BASELINE_LEFT, 200, 360, true);
+		text_Name.setPromptText("Full Name (First Middle Last)");
+
+		
 		// If the invitation code is wrong, this alert dialog will tell the user
 		alertInvitationCodeIsInvalid.setTitle("Invalid Invitation Code");
 		alertInvitationCodeIsInvalid.setHeaderText("The invitation code is not valid.");
@@ -200,7 +212,14 @@ public class ViewNewAccount {
 
         // Set up the account creation and login
         setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
-        button_UserSetup.setOnAction((_) -> {ControllerNewAccount.doCreateUser(); });
+        button_UserSetup.setOnAction((_) -> {
+        	ControllerNewAccount.setUsername();
+        	ControllerNewAccount.setPassword1();
+			ControllerNewAccount.setPassword2();
+			ControllerNewAccount.setEmail();
+			ControllerNewAccount.setName();
+			ControllerNewAccount.doCreateUser();
+        });
 		
         // Enable the user to quit the application
         setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);

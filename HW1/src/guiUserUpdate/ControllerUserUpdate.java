@@ -1,6 +1,7 @@
 package guiUserUpdate;
 
 import entityClasses.User;
+import database.Database;
 import javafx.stage.Stage;
 
 public class ControllerUserUpdate {
@@ -17,6 +18,9 @@ public class ControllerUserUpdate {
 	 * class. In this case, there is just one method, no constructors, and no attributes.</p>
 	 *
 	 */
+	
+	// attributes
+	private static Database db = applicationMain.FoundationsMain.database;
 
 	/*-********************************************************************************************
 
@@ -37,7 +41,18 @@ public class ControllerUserUpdate {
 	 */
 	protected static void goToUserHomePage(Stage theStage, User theUser) {
 		
+		
+		if (db.isPasswordTemporary(theUser.getUserName())) {
+            // This is where you'd call your DB to save the NEW password and set isOTP to 0
+            // theDatabase.updatePasswordAndClearOTP(theUser.getUserName(), newPassword);
+            
+            // 2. Force them to Login page
+            guiUserLogin.ViewUserLogin.displayUserLogin(theStage);
+            return;
+        }
+		
 		// Get the roles the user selected during login
+		
 		int theRole = applicationMain.FoundationsMain.activeHomePage;
 
 		// Use that role to proceed to that role's home page

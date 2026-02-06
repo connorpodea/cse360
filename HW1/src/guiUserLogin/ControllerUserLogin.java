@@ -88,6 +88,25 @@ public class ControllerUserLogin {
     		ViewUserLogin.alertUsernamePasswordError.showAndWait();
     		return;
     	}
+    	
+    	// Check if this is a temporary password (isOTP == true)
+        if (theDatabase.isPasswordTemporary(username)) {
+            User user = new User(username, password, theDatabase.getCurrentEmailAddress(), 
+                                 theDatabase.getCurrentFirstName(), theDatabase.getCurrentMiddleName(), 
+                                 theDatabase.getCurrentLastName(), theDatabase.getCurrentPreferredFirstName(), 
+                                 theDatabase.getCurrentAdminRole(), theDatabase.getCurrentNewRole1(), 
+                                 theDatabase.getCurrentNewRole2());
+
+            // Inform the user
+            ViewUserLogin.alertUsernamePasswordError.setTitle("Password Reset Required");
+            ViewUserLogin.alertUsernamePasswordError.setHeaderText("Temporary Password Detected");
+            ViewUserLogin.alertUsernamePasswordError.setContentText("You must update your password before continuing.");
+            ViewUserLogin.alertUsernamePasswordError.showAndWait();
+
+            // Redirect to update page and STOP the login flow here
+            guiUserUpdate.ViewUserUpdate.displayUserUpdate(theStage, user);
+            return; 
+        }
 		// System.out.println("*** Password is valid for this user");
 		
 		// Establish this user's details
