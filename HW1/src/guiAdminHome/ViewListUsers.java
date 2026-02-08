@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 
 // Application Specific Imports
 import database.Database;
-import entityClasses.User;
 
 public class ViewListUsers {
 	

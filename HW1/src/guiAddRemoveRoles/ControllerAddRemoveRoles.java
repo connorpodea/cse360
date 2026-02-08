@@ -238,25 +238,52 @@ public class ControllerAddRemoveRoles {
 	protected static void performRemoveRole() {
 		
 		// Determine which item in the ComboBox list was selected
-		ViewAddRemoveRoles.theRemoveRole = (String) ViewAddRemoveRoles.
-				combobox_SelectRoleToRemove.getValue();
-		
-		// If the selection is the list header (e.g., "<Select a role>") don't do anything
-		if (ViewAddRemoveRoles.theRemoveRole.compareTo("<Select a role>") != 0) {
-			
-			// If an actual role was selected, update the database entry for that user for the role
-			if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, 
-					ViewAddRemoveRoles.theRemoveRole, "false") ) {
-				ViewAddRemoveRoles.combobox_SelectRoleToRemove = new ComboBox <String>();
-				ViewAddRemoveRoles.combobox_SelectRoleToRemove.setItems(FXCollections.
-					observableArrayList(ViewAddRemoveRoles.addList));
-				ViewAddRemoveRoles.combobox_SelectRoleToRemove.getSelectionModel().
-					clearAndSelect(0);		
-				setupSelectedUser();
-			}				
-		}
+	    ViewAddRemoveRoles.theRemoveRole = (String) ViewAddRemoveRoles.
+	            combobox_SelectRoleToRemove.getValue();
+
+	    // If the selection is the list header (e.g., "<Select a role>") don't do anything
+	    if (ViewAddRemoveRoles.theRemoveRole.compareTo("<Select a role>") != 0) {
+
+	        // UX-level safety: prevent an admin from removing Admin from their own account
+	        // (theDatabase should also enforce this server-side).
+	        String currentUser = theDatabase.getCurrentUsername();
+	        String targetUser = ViewAddRemoveRoles.theSelectedUser;
+	        if (ViewAddRemoveRoles.theRemoveRole.equalsIgnoreCase("Admin")
+	                && targetUser != null
+	                && targetUser.equals(currentUser)) {
+
+	            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+	                    javafx.scene.control.Alert.AlertType.ERROR);
+	            alert.setTitle("Action blocked");
+	            alert.setHeaderText("Cannot remove Admin role");
+	            alert.setContentText("You cannot remove the Admin role from your own account.");
+	            alert.showAndWait();
+	            return;
+	        }
+
+	        // If an actual role was selected, update the database entry for that user for the role
+	        if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser,
+	                ViewAddRemoveRoles.theRemoveRole, "false")) {
+
+	            ViewAddRemoveRoles.combobox_SelectRoleToRemove = new ComboBox<String>();
+	            ViewAddRemoveRoles.combobox_SelectRoleToRemove.setItems(FXCollections.
+	                    observableArrayList(ViewAddRemoveRoles.addList));
+	            ViewAddRemoveRoles.combobox_SelectRoleToRemove.getSelectionModel().
+	                    clearAndSelect(0);
+	            setupSelectedUser();
+
+	        } else {
+	            // updateUserRole returned false -> show helpful error message
+	            javafx.scene.control.Alert failure = new javafx.scene.control.Alert(
+	                    javafx.scene.control.Alert.AlertType.ERROR);
+	            failure.setTitle("Unable to remove role");
+	            failure.setHeaderText("Role removal blocked");
+	            failure.setContentText("The role removal failed. This may be because you attempted to remove the Admin role from your own account, or removing this role would leave the system with no admins. If you're sure this should be allowed, check server-side rules in Database.updateUserRole().");
+	            failure.showAndWait();
+	        }
+	    }
 	}
-	
+
 	
 	/**********
 	 * <p> Method: performReturn() </p>

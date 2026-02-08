@@ -65,106 +65,99 @@ public class ControllerUserLogin {
 	 * passing that information as parameters.
 	 * 
 	 */	
+	/**********
+	 * <p> Method: public doLogin() </p>
+	 * * <p> Description: This method is called when the user has clicked on the Login button. 
+	 * It verifies the credentials against the database and checks if a password reset 
+	 * is required.
+	 * */	
 	protected static void doLogin(Stage ts) {
 		theStage = ts;
-		String username = ViewUserLogin.text_Username.getText();
-		String password = ViewUserLogin.text_Password.getText();
-		String tempPassword = ViewOneTimePassword.TempText_Password1.getText();
-    	boolean loginResult = false;
-    	
-		// Fetch the user and verify the username
-     	if (theDatabase.getUserAccountDetails(username) == false) {
-     		// Don't provide too much information.  Don't say the username is invalid or the
-     		// password is invalid.  Just say the pair is invalid.
-    		ViewUserLogin.alertUsernamePasswordError.setContentText(
-    				"Incorrect username/password. Try again!");
-    		ViewUserLogin.alertUsernamePasswordError.showAndWait();
-    		return;
-    	}
-		// System.out.println("*** Username is valid");
 		
-		// Check to see that the login password matches the account password
-    	String actualPassword = theDatabase.getCurrentPassword();
-    	
-    	if (password.compareTo(actualPassword) != 0) {
-    		ViewUserLogin.alertUsernamePasswordError.setContentText(
-    				"Incorrect username/password. Try again!");
+		// 1. Fetch values from the View
+		String username = ViewUserLogin.text_Username.getText().trim();
+		String password = ViewUserLogin.text_Password.getText();
+    	boolean loginResult = false;
+
+    	// 2. Quick check for empty fields to prevent unnecessary database calls
+    	if (username.isEmpty() || password.isEmpty()) {
+    		ViewUserLogin.alertUsernamePasswordError.setHeaderText("Missing Information");
+    		ViewUserLogin.alertUsernamePasswordError.setContentText("Please enter both a username and a password.");
     		ViewUserLogin.alertUsernamePasswordError.showAndWait();
     		return;
     	}
     	
-    	// Check if this is a temporary password (isOTP == true)
+		// 3. Verify the username exists in the database
+     	if (theDatabase.getUserAccountDetails(username) == false) {
+     		// Use a generic message for security (don't reveal if the user exists)
+    		ViewUserLogin.alertUsernamePasswordError.setHeaderText("Login Failed");
+    		ViewUserLogin.alertUsernamePasswordError.setContentText("Incorrect username/password. Try again!");
+    		ViewUserLogin.alertUsernamePasswordError.showAndWait();
+    		return;
+    	}
+		
+		// 4. Verify the password matches
+    	String actualPassword = theDatabase.getCurrentPassword();
+    	if (password.equals(actualPassword) == false) {
+    		ViewUserLogin.alertUsernamePasswordError.setHeaderText("Login Failed");
+    		ViewUserLogin.alertUsernamePasswordError.setContentText("Incorrect username/password. Try again!");
+    		ViewUserLogin.alertUsernamePasswordError.showAndWait();
+    		return;
+    	}
+    	
+    	// 5. Check if this is a temporary password (isOTP)
         if (theDatabase.isPasswordTemporary(username)) {
+            // Reconstruct the user object from the database details
             User user = new User(username, password, theDatabase.getCurrentEmailAddress(), 
                                  theDatabase.getCurrentFirstName(), theDatabase.getCurrentMiddleName(), 
                                  theDatabase.getCurrentLastName(), theDatabase.getCurrentPreferredFirstName(), 
                                  theDatabase.getCurrentAdminRole(), theDatabase.getCurrentNewRole1(), 
                                  theDatabase.getCurrentNewRole2());
 
-            // Inform the user
-            ViewUserLogin.alertUsernamePasswordError.setTitle("Password Reset Required");
-            ViewUserLogin.alertUsernamePasswordError.setHeaderText("Temporary Password Detected");
-            ViewUserLogin.alertUsernamePasswordError.setContentText("You must update your password before continuing.");
+            // Inform the user they MUST reset
+            ViewUserLogin.alertUsernamePasswordError.setTitle("Action Required");
+            ViewUserLogin.alertUsernamePasswordError.setHeaderText("One-Time Password Detected");
+            ViewUserLogin.alertUsernamePasswordError.setContentText("You must update your password before you can access your home page.");
             ViewUserLogin.alertUsernamePasswordError.showAndWait();
 
-            // Redirect to update page and STOP the login flow here
+            // Redirect to the update page and exit the login flow
             guiUserUpdate.ViewUserUpdate.displayUserUpdate(theStage, user);
             return; 
         }
-		// System.out.println("*** Password is valid for this user");
 		
-		// Establish this user's details
-    	User user = new User(username, password, theDatabase.getCurrentEmailAddress(), theDatabase.getCurrentFirstName(), 
-    			theDatabase.getCurrentMiddleName(), theDatabase.getCurrentLastName(), 
-    			theDatabase.getCurrentPreferredFirstName(), theDatabase.getCurrentAdminRole(), 
-    			theDatabase.getCurrentNewRole1(), theDatabase.getCurrentNewRole2());
+		// 6. Finalize the User object for a successful login
+    	User user = new User(username, password, theDatabase.getCurrentEmailAddress(), 
+    			theDatabase.getCurrentFirstName(), theDatabase.getCurrentMiddleName(), 
+    			theDatabase.getCurrentLastName(), theDatabase.getCurrentPreferredFirstName(), 
+    			theDatabase.getCurrentAdminRole(), theDatabase.getCurrentNewRole1(), 
+    			theDatabase.getCurrentNewRole2());
     	
-    	// See which home page dispatch to use
+    	// 7. Determine Home Page Redirection
 		int numberOfRoles = theDatabase.getNumberOfRoles(user);		
-		// System.out.println("*** The number of roles: "+ numberOfRoles);
+
 		if (numberOfRoles == 1) {
-			// Single Account Home Page - The user has no choice here
-			
-			// Admin role
+			// Single Role Path
 			if (user.getAdminRole()) {
 				loginResult = theDatabase.loginAdmin(user);
-				if (loginResult) {
-					guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
-					if (user.getPassword().compareTo(tempPassword) == 0) {
-						theDatabase.updatePassword(username, "");
-							user.setPassword("");
-						}
-				}
-			} else if (user.getNewRole1()) {
+				if (loginResult) guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
+			} 
+			else if (user.getNewRole1()) {
 				loginResult = theDatabase.loginRole1(user);
-				if (loginResult) {
-					guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
-					if (user.getPassword().compareTo(tempPassword) == 0) {
-						theDatabase.updatePassword(username, "");
-							user.setPassword("");
-						}
-				}
-			} else if (user.getNewRole2()) {
+				if (loginResult) guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+			} 
+			else if (user.getNewRole2()) {
 				loginResult = theDatabase.loginRole2(user);
-				if (loginResult) {
-					guiRole2.ViewRole2Home.displayRole2Home(theStage, user);
-					if (user.getPassword().compareTo(tempPassword) == 0) {
-						theDatabase.updatePassword(username, "");
-							user.setPassword("");
-						}
-				}
-				// Other roles
-			} else {
-				System.out.println("***** UserLogin goToUserHome request has an invalid role");
+				if (loginResult) guiRole2.ViewRole2Home.displayRole2Home(theStage, user);
+			} 
+			else {
+				System.out.println("***** Error: Authenticated user has no valid roles.");
 			}
-		} else if (numberOfRoles > 1) {
-			// Multiple Account Home Page - The user chooses which role to play
-			// System.out.println("*** Going to displayMultipleRoleDispatch");
-			guiMultipleRoleDispatch.ViewMultipleRoleDispatch.
-				displayMultipleRoleDispatch(theStage, user);
+		} 
+		else if (numberOfRoles > 1) {
+			// Multiple Roles Path - Let user choose
+			guiMultipleRoleDispatch.ViewMultipleRoleDispatch.displayMultipleRoleDispatch(theStage, user);
 		}
-	}
-	
+	}	
 		
 	/**********
 	 * <p> Method: setup() </p>

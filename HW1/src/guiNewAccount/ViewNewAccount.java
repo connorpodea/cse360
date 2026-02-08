@@ -52,6 +52,8 @@ public class ViewNewAccount {
     protected static TextField text_Username = new TextField();
 	protected static PasswordField text_Password1 = new PasswordField();
 	protected static PasswordField text_Password2 = new PasswordField();
+	protected static Button button_UserSetup = new Button("Create Account");
+    protected static TextField text_Invitation = new TextField();
 	protected static TextField text_Email = new TextField();
 	protected static TextField text_Name = new TextField();
     
@@ -65,7 +67,6 @@ public class ViewNewAccount {
 	protected static Alert alertUsernameIsInvalid = new Alert(AlertType.INFORMATION);
 
     protected static Button button_Quit = new Button("Quit");
-	protected static Button button_UserSetup = new Button("Create Account");
 
 
 	// These attributes are used to configure the page and populate it with this user's information

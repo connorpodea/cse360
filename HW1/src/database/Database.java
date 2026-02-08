@@ -37,7 +37,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as991343200001";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as99134320012001";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -87,7 +87,7 @@ public class Database {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
-			 statement.execute("DROP ALL OBJECTS");
+			// statement.execute("DROP ALL OBJECTS");
 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
@@ -148,6 +148,21 @@ public class Database {
 	    }
 		return true;
 	}
+	
+	public int getNumberOfAdmins() {
+	    String query = "SELECT COUNT(*) AS count FROM userDB WHERE adminRole = TRUE";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt("count");
+	        }
+	    } catch (SQLException e) {
+	         
+	        return 0;
+	    }
+	    return 0;
+	}
+
 	
 	
 /*******
@@ -868,54 +883,122 @@ public class Database {
 	 */
 	// Update a users role
 	public boolean updateUserRole(String username, String role, String value) {
-		if (role.compareTo("Admin") == 0) {
-			String query = "UPDATE userDB SET adminRole = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentAdminRole = true;
-				else
-					currentAdminRole = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		if (role.compareTo("Staff") == 0) {
-			String query = "UPDATE userDB SET newRole1 = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentNewRole1 = true;
-				else
-					currentNewRole1 = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		if (role.compareTo("Student") == 0) {
-			String query = "UPDATE userDB SET newRole2 = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentNewRole2 = true;
-				else
-					currentNewRole2 = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		return false;
+		// SAFETY: if attempting to remove Admin role, check invariants first
+	    if (role.compareTo("Admin") == 0 && value.compareToIgnoreCase("false") == 0) {
+	        // Prevent admin from removing their own admin role
+	        if (username != null && username.equals(currentUsername)) {
+	            // Do not allow current logged-in admin to remove their own Admin role
+	            return false;
+	        }
+	        // Prevent removing last admin
+	        int adminCount = getNumberOfAdmins();
+	        if (adminCount <= 1) {
+	            // There's only one admin — do not allow removing the admin role
+	            return false;
+	        }
+	    }
+
+	    // Proceed with the existing implementation (update appropriate column and update
+	    // current* flags if the changed user is the currently logged-in user)
+	    if (role.compareTo("Admin") == 0) {
+	        String query = "UPDATE userDB SET adminRole = ? WHERE username = ?";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setString(1, value);
+	            pstmt.setString(2, username);
+	            pstmt.executeUpdate();
+	            // If we changed the current user's admin role, keep the in-memory flag correct
+	            if (username.equals(currentUsername)) {
+	                if (value.compareToIgnoreCase("true") == 0)
+	                    currentAdminRole = true;
+	                else
+	                    currentAdminRole = false;
+	            }
+	            return true;
+	        } catch (SQLException e) {
+	            return false;
+	        }
+	    }
+	    if (role.compareTo("Role1") == 0) {
+	        String query = "UPDATE userDB SET newRole1 = ? WHERE username = ?";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setString(1, value);
+	            pstmt.setString(2, username);
+	            pstmt.executeUpdate();
+	            if (username.equals(currentUsername)) {
+	                if (value.compareToIgnoreCase("true") == 0)
+	                    currentNewRole1 = true;
+	                else
+	                    currentNewRole1 = false;
+	            }
+	            return true;
+	        } catch (SQLException e) {
+	            return false;
+	        }
+	    }
+	    if (role.compareTo("Role2") == 0) {
+	        String query = "UPDATE userDB SET newRole2 = ? WHERE username = ?";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setString(1, value);
+	            pstmt.setString(2, username);
+	            pstmt.executeUpdate();
+	            if (username.equals(currentUsername)) {
+	                if (value.compareToIgnoreCase("true") == 0)
+	                    currentNewRole2 = true;
+	                else
+	                    currentNewRole2 = false;
+	            }
+	            return true;
+	        } catch (SQLException e) {
+	            return false;
+	        }
+	    }
+
+	    // Unknown role
+	    return false;
 	}
 	
+	// method to delete user
+	public boolean deleteUser(String username) {
+	    if (username == null) return false;
+
+	    // Prevent self-delete (current user can't delete their own account)
+	    if (username.equals(currentUsername)) {
+	        return false;
+	    }
+
+	    // If the user to be deleted is an admin, ensure there's at least one other admin
+	    String checkAdminQuery = "SELECT adminRole FROM userDB WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(checkAdminQuery)) {
+	        pstmt.setString(1, username);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            boolean isAdmin = rs.getBoolean("adminRole");
+	            if (isAdmin) {
+	                int adminCount = getNumberOfAdmins();
+	                if (adminCount <= 1) {
+	                    // Deleting this admin would leave zero admins — disallow
+	                    return false;
+	                }
+	            }
+	        } else {
+	            // User not found
+	            return false;
+	        }
+	    } catch (SQLException e) {
+	        return false;
+	    }
+
+	    // Perform the delete
+	    String deleteQuery = "DELETE FROM userDB WHERE username = ?";
+	    try (PreparedStatement pstmt2 = connection.prepareStatement(deleteQuery)) {
+	        pstmt2.setString(1, username);
+	        pstmt2.executeUpdate();
+	        return true;
+	    } catch (SQLException e) {
+	        return false;
+	    }
+	}
+
 	
 	// Attribute getters for the current user
 	/*******

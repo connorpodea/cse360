@@ -85,7 +85,7 @@ public class ViewAdminHome {
 	// inviting potential new users to establish an account and what role that user will have.
 	protected static Label label_Invitations = new Label("Send An Invitation");
 	protected static Label label_InvitationEmailAddress = new Label("Email Address");
-	protected static ComboBox<String> combobox_UserList = new ComboBox<>();
+	//protected static ComboBox<String> combobox_UserList = new ComboBox<>();
 	protected static TextField text_InvitationEmailAddress = new TextField();
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
 	protected static String [] roles = {"Admin", "Role1", "Role2"};
@@ -168,8 +168,6 @@ public class ViewAdminHome {
 		// If not yet established, populate the static aspects of the GUI
 		if (theView == null) theView = new ViewAdminHome();		// Instantiate singleton if needed
 		
-		combobox_UserList.setItems(FXCollections.observableArrayList(theDatabase.getUserList()));
-        combobox_UserList.getSelectionModel().select(0);
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
@@ -272,13 +270,6 @@ public class ViewAdminHome {
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.setOnAction((_) -> {ControllerAdminHome.performQuit(); });
 		
-		// GUI Area 6
-		setupComboBoxUI(combobox_UserList, "Dialog", 16, 250, 300, 320);
-		combobox_UserList.setItems(FXCollections.observableArrayList(theDatabase.getUserList()));
-		combobox_UserList.getSelectionModel().select(0);
-
-		// This is the end of the GUI initialization code
-		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
 			    label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
@@ -289,7 +280,6 @@ public class ViewAdminHome {
 			    combobox_SelectRole, button_SendInvitation, line_Separator3,
 			    button_ManageInvitations,
 			    button_SetOnetimePassword,
-			    combobox_UserList,   // <--- Make sure it is here ONCE
 			    button_DeleteUser,
 			    button_ListUsers,
 			    button_AddRemoveRoles,

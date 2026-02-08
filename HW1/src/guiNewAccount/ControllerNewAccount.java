@@ -2,12 +2,12 @@ package guiNewAccount;
 
 import java.sql.SQLException;
 import guiTools.UserNameRecognizer;
-import guiTools.PasswordRecognizer;
-import guiTools.EmailRecognizer;
 import database.Database;
-import guiFirstAdmin.ViewFirstAdmin;
-import entityClasses.User; // Added missing import
-import guiUserUpdate.ViewUserUpdate; // Added missing import
+import entityClasses.User;
+import guiUserUpdate.ViewUserUpdate;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 
 /*******
  * <p> Title: ControllerNewAccount Class. </p>
@@ -98,75 +98,85 @@ public class ControllerNewAccount {
 	 * passing that information as parameters.
 	 * */	
 	protected static void doCreateUser() {
-		
-		// Fetch the username and password. (We use the first of the two here, but we will validate
-		// that the two password fields are the same before we do anything with it.)
-		
-		int roleCode = 0;
-		User user = null;
-		
-		if (!name.isEmpty()) {
-			String[] nameParts = name.split("\\s+");
-			
-			if (nameParts.length == 3) {
-				firstName = nameParts[0];
-				middleName = nameParts[1];
-				lastName = nameParts[2];
-			}
-			else if (nameParts.length == 2) {
-				firstName = nameParts[0];
-				middleName = "";
-				lastName = nameParts[1];
-			}
-			else {
-				firstName = name;
-				middleName = "";
-				lastName = "";
-			}
-		}
-		
-		if (!errMessage.isEmpty()) { // Fixed logic: should proceed if errMessage is empty
-			ViewNewAccount.alertUsernameIsInvalid.showAndWait();
-			return;
-		}
-			
-		if (password1.compareTo(password2) == 0) {
-			if (ViewNewAccount.theRole.compareTo("Admin") == 0) {
-				roleCode = 1;
-				user = new User(username, password1, email, firstName, middleName, lastName, "", true, false, false);
-			}
-			else if (ViewNewAccount.theRole.compareTo("Role1") == 0) {
-				roleCode = 2;
-				user = new User(username, password1, email, firstName, middleName, lastName, "", false, true, false);
-			}
-			else if (ViewNewAccount.theRole.compareTo("Role2") == 0) {
-				roleCode = 3;
-				user = new User(username, password1, email, firstName, middleName, lastName, "", false, false, true);
-			} 
-				
-			applicationMain.FoundationsMain.activeHomePage = roleCode;
-			
-			try {
-				theDatabase.register(user);
-			}
-			catch (SQLException e){
-				e.printStackTrace();
-				System.exit(0);
-			}
-				
-			theDatabase.removeInvitationAfterUse(ViewNewAccount.theInvitationCode);
-				
-			theDatabase.getUserAccountDetails(username);
-				
-			ViewUserUpdate.displayUserUpdate(ViewNewAccount.theStage, user);
-		}
-		else {
-			ViewNewAccount.text_Password1.setText("");
-			ViewNewAccount.text_Password2.setText("");
-			ViewNewAccount.alertUsernamePasswordError.showAndWait();
-		}
-	}
+	    // 1. Fetch values from the static variables (populated by setUsername, setPassword, etc.)
+	    // These are already updated via your "set" methods in the Controller.
+	    
+	    // 2. USERNAME VALIDATION (The "Gatekeeper")
+	    // We check the syntax using the FSM recognizer
+	    String validationError = UserNameRecognizer.checkForValidUserName(username);
+	    if (validationError != null && !validationError.isEmpty()) {
+	        Alert alert = new Alert(AlertType.ERROR);
+	        alert.setTitle("Invalid Username");
+	        alert.setHeaderText("Username validation failed");
+	        alert.setContentText(validationError);
+	        // Try to center the alert on the current window
+	        if (ViewNewAccount.theStage != null) alert.initOwner(ViewNewAccount.theStage);
+	        alert.showAndWait();
+	        return; // STOP: Don't process anything else if the name is bad
+	    }
 
+	    // 3. PARSE THE FULL NAME
+	    // Handle First, Middle, and Last names based on whitespace
+	    if (name != null && !name.trim().isEmpty()) {
+	        String[] nameParts = name.trim().split("\\s+");
+	        if (nameParts.length >= 3) {
+	            firstName = nameParts[0];
+	            middleName = nameParts[1];
+	            lastName = nameParts[2];
+	        } else if (nameParts.length == 2) {
+	            firstName = nameParts[0];
+	            middleName = "";
+	            lastName = nameParts[1];
+	        } else {
+	            firstName = name;
+	            middleName = "";
+	            lastName = "";
+	        }
+	    }
+
+	    // 4. PASSWORD VALIDATION & DATABASE ENTRY
+	    if (password1.equals(password2) && !password1.isEmpty()) {
+	        int roleCode = 0;
+	        User user = null;
+
+	        // Determine Role based on the invitation details
+	        if (ViewNewAccount.theRole.equals("Admin")) {
+	            roleCode = 1;
+	            user = new User(username, password1, email, firstName, middleName, lastName, "", true, false, false);
+	        } else if (ViewNewAccount.theRole.equals("Role1")) {
+	            roleCode = 2;
+	            user = new User(username, password1, email, firstName, middleName, lastName, "", false, true, false);
+	        } else if (ViewNewAccount.theRole.equals("Role2")) {
+	            roleCode = 3;
+	            user = new User(username, password1, email, firstName, middleName, lastName, "", false, false, true);
+	        }
+
+	        applicationMain.FoundationsMain.activeHomePage = roleCode;
+
+	        try {
+	            // Register user in the database
+	            theDatabase.register(user);
+	            
+	            // Cleanup: remove the invitation code used so it can't be reused
+	            theDatabase.removeInvitationAfterUse(ViewNewAccount.theInvitationCode);
+	            
+	            // Sync database state and navigate to User Update page
+	            theDatabase.getUserAccountDetails(username);
+	            ViewUserUpdate.displayUserUpdate(ViewNewAccount.theStage, user);
+
+	        } catch (SQLException e) {
+	            Alert dbAlert = new Alert(AlertType.ERROR);
+	            dbAlert.setContentText("Database error: " + e.getMessage());
+	            dbAlert.showAndWait();
+	            e.printStackTrace();
+	        }
+	    } else {
+	        // Passwords don't match or were empty
+	        ViewNewAccount.text_Password1.setText("");
+	        ViewNewAccount.text_Password2.setText("");
+	        ViewNewAccount.alertUsernamePasswordError.showAndWait();
+	    }
+	}
 	/**********
 	 * <p> Method: public performQuit() </p>
 	 * * <p> Description: This method is called when the user has clicked on the Quit button.  Doing
@@ -178,94 +188,3 @@ public class ControllerNewAccount {
 		System.exit(0);
 	}	
 }
-
-		
-//		String username = ViewNewAccount.text_Username.getText();
-//		String password = ViewNewAccount.text_Password1.getText();
-//		
-//		// Display key information to the log
-//		System.out.println("** Account for Username: " + username + "; theInvitationCode: "+
-//				ViewNewAccount.theInvitationCode + "; email address: " + 
-//				ViewNewAccount.emailAddress + "; Role: " + ViewNewAccount.theRole);
-//		
-//		// Initialize local variables that will be created during this process
-//		int roleCode = 0;
-//		User user = null;
-//		username = UserNameRecognizer.checkForValidUserName(username);
-//
-//		// Make sure the two passwords are the same.	
-//		if(username == "") {
-//			if (ViewNewAccount.text_Password1.getText().
-//					compareTo(ViewNewAccount.text_Password2.getText()) == 0) {
-//			
-//				// The passwords match so we will set up the role and the User object base on the 
-//				// information provided in the invitation
-//				if (ViewNewAccount.theRole.compareTo("Admin") == 0) {
-//					roleCode = 1;
-//					user = new User(username, password, "", "", "", "", "", true, false, false);
-//				} else if (ViewNewAccount.theRole.compareTo("Role1") == 0) {
-//					roleCode = 2;
-//					user = new User(username, password, "", "", "", "", "", false, true, false);
-//				} else if (ViewNewAccount.theRole.compareTo("Role2") == 0) {
-//					roleCode = 3;
-//					user = new User(username, password, "", "", "", "", "", false, false, true);
-//				} else {
-//					System.out.println(
-//						"**** Trying to create a New Account for a role that does not exist!");
-//					System.exit(0);
-//				}
-//			
-//				// Unlike the FirstAdmin, we know the email address, so set that into the user as well.
-//				user.setEmailAddress(ViewNewAccount.emailAddress);
-//
-//				// Inform the system about which role will be played
-//				applicationMain.FoundationsMain.activeHomePage = roleCode;
-//			
-//				// Create the account based on user and proceed to the user account update page
-//				try {
-//					// Create a new User object with the pre-set role and register in the database
-//					theDatabase.register(user);
-//				} catch (SQLException e) {
-//					System.err.println("*** ERROR *** Database error: " + e.getMessage());
-//					e.printStackTrace();
-//					System.exit(0);
-//				}
-//            
-//				// The account has been set, so remove the invitation from the system
-//				theDatabase.removeInvitationAfterUse(
-//            		ViewNewAccount.text_Invitation.getText());
-//            
-//				// Set the database so it has this user and the current user
-//				theDatabase.getUserAccountDetails(username);
-//
-//				// Navigate to the Welcome Login Page
-//				guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewNewAccount.theStage, user);
-//			}
-//			else {
-//				// The two passwords are NOT the same, so clear the passwords, explain the passwords
-//				// must be the same, and clear the message as soon as the first character is typed.
-//				ViewNewAccount.text_Password1.setText("");
-//				ViewNewAccount.text_Password2.setText("");
-//				ViewNewAccount.alertUsernamePasswordError.showAndWait();
-//			}
-//		}
-//		else {
-//			ViewNewAccount.alertUsernameIsInvalid.showAndWait();
-//		}
-//	}
-//
-//	
-//	/**********
-//	 * <p> Method: public performQuit() </p>
-//	 * 
-//	 * <p> Description: This method is called when the user has clicked on the Quit button.  Doing
-//	 * this terminates the execution of the application.  All important data must be stored in the
-//	 * database, so there is no cleanup required.  (This is important so we can minimize the impact
-//	 * of crashed.)
-//	 * 
-//	 */	
-//	protected static void performQuit() {
-//		System.out.println("Perform Quit");
-//		System.exit(0);
-//	}	
-//}

@@ -13,13 +13,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import database.Database;
 import entityClasses.User;
-import guiAddRemoveRoles.ControllerAddRemoveRoles;
-import guiFirstAdmin.ControllerFirstAdmin;
 import javafx.scene.control.Alert;
 
 public class ViewOneTimePassword{
@@ -139,7 +136,7 @@ public class ViewOneTimePassword{
 		button_Quit.setOnAction((_) -> {ControllerOneTimePassword.performQuit(); });
 		
 		// button to confirm password change.
-		setupButtonUI(button_confirmPassword, "Dialog", 18, 210, Pos.CENTER, 300, 300);
+		setupButtonUI(button_confirmPassword, "Dialog", 18, 210, Pos.CENTER, 50, 310);
 		button_confirmPassword.setOnAction((_) -> {ControllerOneTimePassword.doOneTimePassword();});
 		
 		// setting up pop up alert confirming the password.

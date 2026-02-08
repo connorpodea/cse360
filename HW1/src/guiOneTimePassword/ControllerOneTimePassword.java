@@ -1,14 +1,6 @@
 package guiOneTimePassword;
 
 import database.Database;
-import entityClasses.User;
-import guiAddRemoveRoles.ViewAddRemoveRoles;
-import guiFirstAdmin.ViewFirstAdmin;
-import guiNewAccount.ViewNewAccount;
-import javafx.collections.FXCollections;
-import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-
 public class ControllerOneTimePassword {
 	
 	// having access to the data base so we can see the users.

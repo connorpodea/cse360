@@ -1,6 +1,11 @@
 package guiUserUpdate;
 
 import entityClasses.User;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+// Import the FSM validator (adjust package if you put the class elsewhere)
+import guiTools.UserNameRecognizer;
 import database.Database;
 import javafx.stage.Stage;
 
@@ -72,4 +77,37 @@ public class ControllerUserUpdate {
 			System.exit(0);
 		}
  	}
+	
+	/**
+	 * Helper: validateUsername
+	 * 
+	 * A reusable helper method that controllers can call when the user attempts to change
+	 * their username on the User Update page (or any other page).  It uses the shared
+	 * UserNameRecognizer FSM to validate the username syntax and displays an Alert with
+	 * the helpful message returned by the recognizer when invalid.
+	 * 
+	 * @param newUserName the candidate username to validate
+	 * @param ownerStage  the JavaFX Stage to attach the modal Alert to (may be null)
+	 * @return true if the username is syntactically valid, false otherwise (and an Alert is shown)
+	 */
+	protected static boolean validateUsername(String newUserName, Stage ownerStage) {
+		if (newUserName == null) newUserName = "";
+		String validationError = UserNameRecognizer.checkForValidUserName(newUserName);
+		if (validationError != null && !validationError.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Invalid Username");
+			alert.setHeaderText("Username validation failed");
+			alert.setContentText(validationError);
+			try {
+				if (ownerStage != null) alert.initOwner(ownerStage);
+			} catch (Exception ex) {
+				// ignore if unable to set owner
+			}
+			alert.showAndWait();
+			return false;
+		}
+		return true;
+	}
 }
+	
+	

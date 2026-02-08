@@ -2,6 +2,14 @@ package guiAdminHome;
 
 import database.Database;
 
+//JavaFX Alert import for validator helper
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+
+//Import the FSM validator
+import guiTools.UserNameRecognizer;
+
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
  * 
@@ -123,11 +131,64 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void deleteUser() {
-		System.out.println("\n*** WARNING ***: Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("Delete User Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+		// Get the list of users
+	    java.util.List<String> users = theDatabase.getUserList();
+	    if (users == null || users.size() <= 1) { // only <Select a User> or empty
+	        ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
+	        ViewAdminHome.alertNotImplemented.setHeaderText("Delete User");
+	        ViewAdminHome.alertNotImplemented.setContentText("No users available to delete.");
+	        ViewAdminHome.alertNotImplemented.showAndWait();
+	        return;
+	    }
+
+	    // Present a ChoiceDialog to pick which user to delete
+	    javafx.scene.control.ChoiceDialog<String> dialog =
+	            new javafx.scene.control.ChoiceDialog<>(users.get(0), users);
+	    dialog.setTitle("Delete a User");
+	    dialog.setHeaderText("Select a user to delete");
+	    dialog.setContentText("User:");
+
+	    java.util.Optional<String> result = dialog.showAndWait();
+	    if (!result.isPresent()) return;
+	    String selectedUser = result.get();
+
+	    if (selectedUser == null || selectedUser.compareTo("<Select a User>") == 0) {
+	        // invalid selection
+	        javafx.scene.control.Alert a = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+	        a.setTitle("Delete User");
+	        a.setHeaderText("No user selected");
+	        a.setContentText("Please select a valid user.");
+	        a.showAndWait();
+	        return;
+	    }
+
+	    // Confirm deletion with a Yes/No
+	    javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+	    confirm.setTitle("Confirm Delete");
+	    confirm.setHeaderText("Are you sure?");
+	    confirm.setContentText("Are you sure you want to permanently delete user '" + selectedUser + "'?");
+	    java.util.Optional<javafx.scene.control.ButtonType> confirmResult = confirm.showAndWait();
+	    if (!confirmResult.isPresent() || confirmResult.get() != javafx.scene.control.ButtonType.OK) {
+	        return; // user cancelled
+	    }
+
+	    // Attempt the delete via the database (server-side safety checks are in Database.deleteUser)
+	    boolean ok = theDatabase.deleteUser(selectedUser);
+	    if (ok) {
+	        javafx.scene.control.Alert success = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+	        success.setTitle("Delete User");
+	        success.setHeaderText("User Deleted");
+	        success.setContentText("User '" + selectedUser + "' was deleted.");
+	        success.showAndWait();
+	    } else {
+	        // Provide helpful reason where possible (since deleteUser returns only boolean, give generic message)
+	        // If you prefer, enhance deleteUser to return error codes/messages for more specific UI text.
+	        javafx.scene.control.Alert failure = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+	        failure.setTitle("Delete User");
+	        failure.setHeaderText("Unable to delete user");
+	        failure.setContentText("The deletion was blocked. Make sure you are not deleting your own account and at least one admin will remain.");
+	        failure.showAndWait();
+	    }
 	}
 	
 	/**********
@@ -207,4 +268,36 @@ public class ControllerAdminHome {
 	protected static void performQuit() {
 		System.exit(0);
 	}
+	
+	/*********************************************************************************
+	 * Helper: validateUsername
+	 *
+	 * A reusable helper method that controllers can call when an admin action requires
+	 * validating a username (e.g., before deleting or modifying a user). It uses the shared
+	 * UserNameRecognizer FSM to validate the username syntax and displays an Alert with
+	 * the helpful message returned by the recognizer when invalid.
+	 *
+	 * @param candidate the candidate username to validate
+	 * @param ownerStage the JavaFX Stage to attach the modal Alert to (may be null)
+	 * @return true if valid, false if invalid (and an Alert is shown)
+	 *********************************************************************************/
+	protected static boolean validateUsername(String candidate, Stage ownerStage) {
+		if (candidate == null) candidate = "";
+		String validationError = UserNameRecognizer.checkForValidUserName(candidate);
+		if (validationError != null && !validationError.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Invalid Username");
+			alert.setHeaderText("Username validation failed");
+			alert.setContentText(validationError);
+			try {
+				if (ownerStage != null) alert.initOwner(ownerStage);
+			} catch (Exception ex) {
+				// ignore if unable to set owner
+			}
+			alert.showAndWait();
+			return false;
+		}
+		return true;
+	}
 }
+
