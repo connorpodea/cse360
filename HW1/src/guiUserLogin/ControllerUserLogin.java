@@ -1,6 +1,7 @@
 package guiUserLogin;
 
 import database.Database;
+import guiOneTimePassword.ViewOneTimePassword;
 import entityClasses.User;
 import javafx.stage.Stage;
 
@@ -51,6 +52,8 @@ public class ControllerUserLogin {
 
 	private static Stage theStage;	
 	
+	private static String username = ViewUserLogin.text_Username.getText();
+	
 	/**********
 	 * <p> Method: public doLogin() </p>
 	 * 
@@ -66,6 +69,7 @@ public class ControllerUserLogin {
 		theStage = ts;
 		String username = ViewUserLogin.text_Username.getText();
 		String password = ViewUserLogin.text_Password.getText();
+		String tempPassword = ViewOneTimePassword.TempText_Password1.getText();
     	boolean loginResult = false;
     	
 		// Fetch the user and verify the username
@@ -126,16 +130,28 @@ public class ControllerUserLogin {
 				loginResult = theDatabase.loginAdmin(user);
 				if (loginResult) {
 					guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
+					if (user.getPassword().compareTo(tempPassword) == 0) {
+						theDatabase.updatePassword(username, "");
+							user.setPassword("");
+						}
 				}
 			} else if (user.getNewRole1()) {
 				loginResult = theDatabase.loginRole1(user);
 				if (loginResult) {
 					guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+					if (user.getPassword().compareTo(tempPassword) == 0) {
+						theDatabase.updatePassword(username, "");
+							user.setPassword("");
+						}
 				}
 			} else if (user.getNewRole2()) {
 				loginResult = theDatabase.loginRole2(user);
 				if (loginResult) {
 					guiRole2.ViewRole2Home.displayRole2Home(theStage, user);
+					if (user.getPassword().compareTo(tempPassword) == 0) {
+						theDatabase.updatePassword(username, "");
+							user.setPassword("");
+						}
 				}
 				// Other roles
 			} else {

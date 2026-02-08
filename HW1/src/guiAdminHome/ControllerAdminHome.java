@@ -111,29 +111,7 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void setOnetimePassword () {
-		String targetUser = (String) ViewAdminHome.combobox_UserList.getValue();
-		
-		if (targetUser == null || targetUser.equals("<Select a User>")) {
-			ViewAdminHome.alertNotImplemented.setHeaderText("Selection Error");
-			ViewAdminHome.alertNotImplemented.setContentText("Please select a user first.");
-			ViewAdminHome.alertNotImplemented.showAndWait();
-			return;
-		}
-		
-		// 2. Generate a random 6-character code (Reuse your invitation logic)
-		String otp = java.util.UUID.randomUUID().toString().substring(0, 6);
-				
-		// 3. Update the database
-		// You will need to add a method like resetUserPassword(username, newPass) to your Database class
-		theDatabase.resetUserPassword(targetUser, otp);
-				
-		// 4. Show the Admin the code to give to the user
-		String msg = "One-Time Password for " + targetUser + " is: " + otp + 
-						"\nGive this code to the user. It will expire upon first use.";
-				
-		ViewAdminHome.alertEmailSent.setTitle("OTP Generated");
-		ViewAdminHome.alertEmailSent.setContentText(msg);
-		ViewAdminHome.alertEmailSent.showAndWait();
+		guiOneTimePassword.ViewOneTimePassword.displayOneTimePassword(ViewAdminHome.theStage, ViewAdminHome.theUser);
 	}
 	
 	/**********

@@ -929,6 +929,24 @@ public class Database {
 	public String getCurrentUsername() { return currentUsername;};
 
 	
+	// go into the database and change the current users password to temp password.
+	public boolean updatePassword(String username, String newPassword) {
+		// the query to change password.
+		String query = "UPDATE userDB SET password = ? WHERE userName = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	    	pstmt.setString(1, newPassword);
+		    pstmt.setString(2, username);
+		    pstmt.executeUpdate();
+
+		    // check to ensure that the username that we want to change the password for is correct.
+		    if (username.equals(currentUsername)) currentPassword = newPassword;
+		    	return true;
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
+	
 	/*******
 	 * <p> Method: String getCurrentPassword() </p>
 	 * 
