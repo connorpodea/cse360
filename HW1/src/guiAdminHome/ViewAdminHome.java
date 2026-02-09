@@ -3,6 +3,7 @@ package guiAdminHome;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,12 @@ import javafx.stage.Stage;
 import database.Database;
 import entityClasses.User;
 import guiUserUpdate.ViewUserUpdate;
+
+
+import javafx.scene.control.TableColumn;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.TableView;
+
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -55,6 +62,14 @@ public class ViewAdminHome {
 	*/
 	
 	// These are the application values required by the user interface
+	
+	protected static TableView<User> table_Users;
+	protected static TableColumn<User, String> col_UserName;
+	protected static TableColumn<User, String> col_Name;
+	protected static TableColumn<User, String> col_Email;
+	protected static TableColumn<User, String> col_Roles;
+	
+
 	
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
@@ -183,6 +198,59 @@ public class ViewAdminHome {
 		theStage.show();											// Display it to the user
 	}
 	
+	protected static void displayUserList(List<User> users) {
+		table_Users.getItems().setAll(users);
+	}
+	
+	private void setupUsersTable() {
+	    table_Users = new TableView<>();
+	    table_Users.setPrefWidth(320);
+	    table_Users.setPrefHeight(240);
+	    table_Users.setLayoutX(300);
+	    table_Users.setLayoutY(270);
+	    col_UserName = new TableColumn<>("Username");
+	    col_Name     = new TableColumn<>("Name");
+	    col_Email    = new TableColumn<>("Email");
+	    col_Roles    = new TableColumn<>("Roles");
+	    col_UserName.setCellValueFactory(cell ->
+	        new SimpleStringProperty(cell.getValue().getUserName())
+	    );
+	    col_Email.setCellValueFactory(cell ->
+	        new SimpleStringProperty(cell.getValue().getEmailAddress())
+	    );
+	    col_Name.setCellValueFactory(cell -> {
+	        User u = cell.getValue();
+	        String preferred = u.getPreferredFirstName();
+	        String first = u.getFirstName();
+	        String middle = u.getMiddleName();
+	        String last = u.getLastName();
+	        String displayFirst = (preferred != null && !preferred.trim().isEmpty())
+	                ? preferred.trim()
+	                : (first == null ? "" : first.trim());
+	        String displayMiddle = (middle == null) ? "" : middle.trim();
+	        String displayLast = (last == null) ? "" : last.trim();
+	        String fullName = displayFirst
+	                + (!displayMiddle.isEmpty() ? " " + displayMiddle : "")
+	                + (!displayLast.isEmpty() ? " " + displayLast : "");
+	        return new SimpleStringProperty(fullName.trim());
+	    });
+	    col_Roles.setCellValueFactory(cell -> {
+	        User u = cell.getValue();
+	        List<String> parts = new ArrayList<>();
+	        if (u.getAdminRole()) parts.add("Admin");
+	        if (u.getNewRole1()) parts.add("Role1");
+	        if (u.getNewRole2()) parts.add("Role2");
+	        return new SimpleStringProperty(String.join(", ", parts));
+	       
+	    });
+	   
+	    table_Users.getColumns().setAll(col_UserName, col_Name, col_Email, col_Roles);
+	    // table_Users.getColumns().setAll(col_UserName, col_Name, col_Email, col_Roles);
+	    theRootPane.getChildren().add(table_Users);
+	}
+
+
+	
 	/**********
 	 * <p> Method: GUIAdminHomePage() </p>
 	 * 
@@ -199,6 +267,10 @@ public class ViewAdminHome {
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
 		theAdminHomeScene = new Scene(theRootPane, width, height);
+		
+		setupUsersTable(); 
+
+
 	
 		// Populate the window with the title and other common widgets and set their static state
 		

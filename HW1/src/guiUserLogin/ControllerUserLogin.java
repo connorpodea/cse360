@@ -1,10 +1,10 @@
 package guiUserLogin;
 
 import database.Database;
-import guiOneTimePassword.ViewOneTimePassword;
 import entityClasses.User;
 import javafx.stage.Stage;
 import guiOneTimePassword.ControllerOneTimePassword;
+import guiOneTimePassword.ViewOneTimePassword;
 
 /*******
  * <p> Title: ControllerUserLogin Class. </p>

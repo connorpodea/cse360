@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+/guiAdminHome/
+/database/
+/guiUserLogin/
+=======
 /module-info.class
 /guiOneTimePassword/
 /guiUserLogin/
@@ -5,3 +10,4 @@
 /guiTools/
 /guiUserUpdate/
 /guiFirstAdmin/
+>>>>>>> 70fb5adc759ff09716e51965c1fff8744178033f
