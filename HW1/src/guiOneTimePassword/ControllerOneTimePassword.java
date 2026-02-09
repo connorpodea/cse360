@@ -7,7 +7,7 @@ public class ControllerOneTimePassword {
 	private static Database theDatabase = applicationMain.FoundationsMain.database; 
 	protected static String password1 = "";
 	protected static String password2 = "";
-	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password2.getText();;
+	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password1.getText();;
 
 	
 	protected static void doSelectUser() {
@@ -128,10 +128,6 @@ public class ControllerOneTimePassword {
 		else if(ViewOneTimePassword.TempText_Password1.getText().compareTo(ViewOneTimePassword.TempText_Password2.getText()) == 0 ) {
 			theDatabase.updatePassword(ViewOneTimePassword.theSelectedUser, ViewOneTimePassword.TempText_Password1.getText());
 			performConfirmation();
-			/*
-			 * ViewOneTimePassword.TempText_Password1.setText("");
-			 * ViewOneTimePassword.TempText_Password2.setText("");
-			 */
 			 
 			
 		}

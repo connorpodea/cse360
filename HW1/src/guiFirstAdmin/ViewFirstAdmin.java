@@ -64,6 +64,7 @@ public class ViewFirstAdmin {
 	protected static PasswordField text_AdminPassword2 = new PasswordField();
 	protected static TextField text_AdminEmail = new TextField();
 	protected static TextField text_AdminName = new TextField();
+	protected static Label label_PasswordInvalid = new Label();
 	private static Button button_AdminSetup = new Button("Setup Admin Account");
 
 	// This alert is used should the user enter two passwords that do not match
@@ -199,6 +200,9 @@ public class ViewFirstAdmin {
 		// Label to display the Passwords do not match error message
 		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 18, width, Pos.CENTER, 0, 410);
 		
+		// label to display the missing requirements for a valid password
+		setupLabelUI(label_PasswordInvalid, "Arial", 18, width, Pos.CENTER, 0, 430);
+		
 		// label to display the Username to see if it is valid or invalid.
 		setupLabelUI(label_userNameIsInvalid, "Arial", 18, width, Pos.CENTER, 0, 450);
 
@@ -209,7 +213,7 @@ public class ViewFirstAdmin {
 		theRootPane.getChildren().addAll(label_ApplicationTitle, label_TitleLine1,
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
 				text_AdminPassword2, text_AdminEmail, text_AdminName, button_AdminSetup, label_PasswordsDoNotMatch, label_userNameIsInvalid,
-				button_Quit);
+				button_Quit, label_PasswordInvalid);
 	}
 	
 	

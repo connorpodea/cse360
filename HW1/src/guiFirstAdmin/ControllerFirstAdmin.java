@@ -8,7 +8,7 @@ import guiUserLogin.ViewUserLogin;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+import guiTools.PasswordRecognizer;
 /*******
  * <p> Title: ControllerFirstAdmin Class. </p>
  * 
@@ -52,6 +52,7 @@ public class ControllerFirstAdmin {
 	private static String adminMiddleName = "";
 	private static String adminLastName = "";
 	private static String errMessage = "";
+	private static String checkPassword = "";
 	protected static Database theDatabase = applicationMain.FoundationsMain.database;		
 
 	/*-********************************************************************************************
@@ -162,7 +163,9 @@ public class ControllerFirstAdmin {
 
 	    // 3. VALIDATE PASSWORDS AND REGISTER
 	    if (adminPassword1.equals(adminPassword2) && !adminPassword1.isEmpty()) {
-	        try {
+	        checkPassword = PasswordRecognizer.evaluatePassword(adminPassword1);
+	        if(checkPassword == "") {
+	    	try {
 	            User user = new User(adminUsername, adminPassword1, adminEmail, 
 	                                 adminFirstName, adminMiddleName, adminLastName, 
 	                                 "", true, false, false);
@@ -177,6 +180,9 @@ public class ControllerFirstAdmin {
 	            dbAlert.setContentText("Could not register admin: " + e.getMessage());
 	            dbAlert.showAndWait();
 	        }
+	        } else {
+		        ViewFirstAdmin.label_PasswordInvalid.setText(checkPassword);
+	        }
 	    } else {
 	        // Passwords don't match or are empty
 	        ViewFirstAdmin.text_AdminPassword1.setText("");
@@ -184,6 +190,7 @@ public class ControllerFirstAdmin {
 	        ViewFirstAdmin.label_PasswordsDoNotMatch.setText(
 	                "The passwords must match and cannot be empty!");
 	    }
+	    
 	}
 	
 	
