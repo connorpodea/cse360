@@ -1,4 +1,7 @@
 package guiAdminHome;
+import database.Database;
+import java.util.List;
+import entityClasses.User;
 
 /*******
  * <p> Title: ModelAdminHome Class. </p>
@@ -16,5 +19,8 @@ package guiAdminHome;
  */
 
 public class ModelAdminHome {
-
+	protected static List<User> getAllUsers(Database db) {
+		   return db.getAllUsersForDisplay();
+	}
 }
+

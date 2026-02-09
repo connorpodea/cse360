@@ -34,10 +34,11 @@ import entityClasses.User;
  * codes, and numerous other database related functions.
  */
 public class Database {
+	
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as99134320012001";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as991343120012001";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -259,6 +260,43 @@ public class Database {
 //		System.out.println(userList);
 		return userList;
 	}
+	
+	public List<User> getAllUsersForDisplay() {
+		List<User> users = new ArrayList<>();
+		
+		String query = """
+			    SELECT userName, preferredFirstName, firstName, middleName, lastName,
+			           emailAddress, adminRole, newRole1, newRole2
+			    FROM userDB
+			    ORDER BY userName
+			""";
+		
+		try (PreparedStatement pstmt = connection.prepareStatement(query);
+		         ResultSet rs = pstmt.executeQuery()) {
+		        while (rs.next()) {
+		            User u = new User();
+		            // Username (DO NOT overwrite later)
+		            u.setUserName(rs.getString("userName"));
+		            // Name parts (used by View, not stored as one field)
+		            u.setPreferredFirstName(rs.getString("preferredFirstName"));
+		            u.setFirstName(rs.getString("firstName"));
+		            u.setMiddleName(rs.getString("middleName"));
+		            u.setLastName(rs.getString("lastName"));
+		            // Email
+		            u.setEmailAddress(rs.getString("emailAddress"));
+		            // Roles (booleans — View derives display text)
+		            u.setAdminRole(rs.getBoolean("adminRole"));
+		            u.setRole1User(rs.getBoolean("newRole1"));
+		            u.setRole2User(rs.getBoolean("newRole2"));
+		            users.add(u);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    return users;
+		}
+
+
 
 /*******
  * <p> Method: boolean loginAdmin(User user) </p>

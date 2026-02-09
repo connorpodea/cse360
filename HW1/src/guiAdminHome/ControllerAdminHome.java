@@ -1,5 +1,7 @@
 package guiAdminHome;
 
+import java.util.List;
+
 import database.Database;
 
 //JavaFX Alert import for validator helper
@@ -9,6 +11,8 @@ import javafx.stage.Stage;
 
 //Import the FSM validator
 import guiTools.UserNameRecognizer;
+
+import entityClasses.User;
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -200,13 +204,14 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void listUsers() {
-		// System.out.println("\n*** WARNING ***: List Users Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		// ViewAdminHome.alertNotImplemented.setHeaderText("List User Issue");
-		// ViewAdminHome.alertNotImplemented.setContentText("List Users Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.showAndWait();
-		guiAdminHome.ViewListUsers.displayListUsers(ViewAdminHome.theStage);
+	    List<User> users = theDatabase.getAllUsersForDisplay();
+	    System.out.println("Users loaded = " + users.size());
+	    ViewAdminHome.displayUserList(users);
 	}
+
+
+
+
 	
 	/**********
 	 * <p> 

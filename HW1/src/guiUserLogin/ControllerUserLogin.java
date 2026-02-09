@@ -1,7 +1,6 @@
 package guiUserLogin;
 
 import database.Database;
-import guiOneTimePassword.ViewOneTimePassword;
 import entityClasses.User;
 import javafx.stage.Stage;
 
