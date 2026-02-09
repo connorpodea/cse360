@@ -12,6 +12,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import entityClasses.User;
+import guiTools.PasswordRecognizer;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /*******
  * <p> Title: ViewUserUpdate Class. </p>
@@ -101,6 +104,10 @@ public class ViewUserUpdate {
 	private static TextInputDialog dialogUpdateLastName;
 	private static TextInputDialog dialogUpdatePreferredFirstName;
 	private static TextInputDialog dialogUpdateEmailAddresss;
+	
+	private static Alert alertInvalidPassword = new Alert(AlertType.INFORMATION);
+	
+	private static String checkPassword = "";
 	
 	// dialog box for password.
 	private static TextInputDialog dialogUpdatePassword;
@@ -263,12 +270,25 @@ public class ViewUserUpdate {
         setupLabelUI(label_CurrentPassword, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 150);
         setupButtonUI(button_UpdatePassword, "Dialog", 18, 275, Pos.CENTER, 500, 143);
         button_UpdatePassword.setOnAction((_) -> {result = dialogUpdatePassword.showAndWait();
-    	result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
-    	theDatabase.getUserAccountDetails(theUser.getUserName());
-    	String newPassword = theDatabase.getCurrentPassword();
-    	theUser.setPassword(newPassword);
-    	if (newPassword == null || newPassword.length() < 1)label_CurrentFirstName.setText("<none>");
-    	else label_CurrentPassword.setText(newPassword); theDatabase.updatePassword(theUser.getUserName(), newPassword);
+        String newPassword = result.get();
+    	checkPassword = PasswordRecognizer.evaluatePassword(newPassword);
+        if(checkPassword == "") {
+        	result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
+        	theDatabase.getUserAccountDetails(theUser.getUserName());
+    	}
+    	if (checkPassword == "") {
+    	    if (newPassword == null || newPassword.length() < 1) {
+    	        label_CurrentPassword.setText("<none>");
+    	    } else {
+    	        label_CurrentPassword.setText(newPassword);
+    	        theDatabase.updatePassword(theUser.getUserName(), newPassword);
+    	    }
+
+    	} else {
+    		alertInvalidPassword.setTitle("Error!");
+    	    alertInvalidPassword.setHeaderText(checkPassword);
+    	    alertInvalidPassword.showAndWait();
+    	}
     		
     }); 
         

@@ -3,6 +3,8 @@ package guiUserLogin;
 import database.Database;
 import entityClasses.User;
 import javafx.stage.Stage;
+import guiOneTimePassword.ControllerOneTimePassword;
+import guiOneTimePassword.ViewOneTimePassword;
 
 /*******
  * <p> Title: ControllerUserLogin Class. </p>
@@ -138,15 +140,33 @@ public class ControllerUserLogin {
 			// Single Role Path
 			if (user.getAdminRole()) {
 				loginResult = theDatabase.loginAdmin(user);
-				if (loginResult) guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
+				if (loginResult) {
+					guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
+				}
+				if(actualPassword.compareTo(ViewOneTimePassword.TempText_Password1.getText()) == 0) {
+					theDatabase.updatePassword(username, "");
+					user.setPassword("");
+				}
 			} 
 			else if (user.getNewRole1()) {
 				loginResult = theDatabase.loginRole1(user);
-				if (loginResult) guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+				if (loginResult) { 
+					guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+				}
+				if(actualPassword.compareTo(ViewOneTimePassword.TempText_Password1.getText()) == 0) {
+					theDatabase.updatePassword(username, ""); 
+					user.setPassword("");
+				}
 			} 
 			else if (user.getNewRole2()) {
 				loginResult = theDatabase.loginRole2(user);
-				if (loginResult) guiRole2.ViewRole2Home.displayRole2Home(theStage, user);
+				if (loginResult) {
+					guiRole2.ViewRole2Home.displayRole2Home(theStage, user);
+				}
+				if(actualPassword.compareTo(ViewOneTimePassword.TempText_Password1.getText()) == 0) {
+					theDatabase.updatePassword(username, "");
+					user.setPassword("");
+				}
 			} 
 			else {
 				System.out.println("***** Error: Authenticated user has no valid roles.");

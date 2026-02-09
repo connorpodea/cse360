@@ -38,7 +38,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as991343120012001";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase9as991343200120010000000000000000000000000";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -956,7 +956,7 @@ public class Database {
 	            return false;
 	        }
 	    }
-	    if (role.compareTo("Role1") == 0) {
+	    if (role.compareTo("Staff") == 0) {
 	        String query = "UPDATE userDB SET newRole1 = ? WHERE username = ?";
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	            pstmt.setString(1, value);
@@ -973,7 +973,7 @@ public class Database {
 	            return false;
 	        }
 	    }
-	    if (role.compareTo("Role2") == 0) {
+	    if (role.compareTo("Student") == 0) {
 	        String query = "UPDATE userDB SET newRole2 = ? WHERE username = ?";
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	            pstmt.setString(1, value);
