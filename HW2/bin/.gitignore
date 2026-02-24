@@ -1,0 +1,17 @@
+/applicationMain/
+/database/
+/entityClasses/
+/guiAddRemoveRoles/
+/guiAdminHome/
+/guiFirstAdmin/
+/guiMultipleRoleDispatch/
+/guiNewAccount/
+/guiOneTimePassword/
+/guiPostManagement/
+/guiReplyManagement/
+/guiRole1/
+/guiRole2/
+/guiTools/
+/guiUserLogin/
+/guiUserUpdate/
+/module-info.class
