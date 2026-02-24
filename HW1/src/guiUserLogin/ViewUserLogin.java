@@ -12,45 +12,42 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-
-/*******
- * <p> Title: GUIStartupPage Class. </p>
- * 
- * <p> Description: The Java/FX-based System Startup Page.</p>
- * 
+/**
+ * <p> Title: ViewUserLogin Class. </p>
+ *
+ * <p> Description: This class provides the JavaFX-based user interface for the 
+ * system login page, allowing existing users to sign in or new users to 
+ * initiate account setup via an invitation code. </p>
+ *
  * <p> Copyright: Lynn Robert Carter © 2025 </p>
- * 
+ *
  * @author Lynn Robert Carter
- * 
- * @version 1.00		2025-04-20 Initial version
- *  
+ * @version 1.00 2025-04-20 Initial version
  */
-
 public class ViewUserLogin {
 
 	/*-********************************************************************************************
-
 	Attributes
-
 	 *********************************************************************************************/
-
-	// These are the application values required by the user interface
 
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	private static Label label_ApplicationTitle = new Label("Foundation Application Startup Page");
 
-	// This set is for all subsequent starts of the system
 	private static Label label_OperationalStartTitle = new Label("Log In or Invited User Account Setup ");
 	private static Label label_LogInInsrtuctions = new Label("Enter your user name and password and "+	
 			"then click on the LogIn button");
+	
+	/** Alert displayed when an invalid username or password combination is entered. */
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
 
-
-	//	private User user;
+	/** TextField for the user to enter their username. */
 	protected static TextField text_Username = new TextField();
+	
+	/** PasswordField for the user to enter their password. */
 	protected static PasswordField text_Password = new PasswordField();
+	
 	private static Button button_Login = new Button("Log In");	
 
 	private static Label label_AccountSetupInsrtuctions = new Label("No account? "+	
@@ -62,18 +59,22 @@ public class ViewUserLogin {
 
 	private static Stage theStage;	
 	private static Pane theRootPane;
+	
+	/** The primary Scene for the User Login interface. */
 	public static Scene theUserLoginScene = null;	
 
-
-	private static ViewUserLogin theView = null;	//	private static guiUserLogin.ControllerUserLogin theController;
-
+	private static ViewUserLogin theView = null;
 
 	/*-********************************************************************************************
-
-	Constructor
-
+	Constructor and Display Methods
 	 *********************************************************************************************/
 
+	/**
+	 * <p> Method: displayUserLogin </p>
+	 * * <p> Description: Static entry point to display the login page. Initializes 
+	 * the view if necessary and resets all input fields. </p>
+	 * @param ps The JavaFX Stage onto which the login scene will be set.
+	 */
 	public static void displayUserLogin(Stage ps) {
 		
 		// Establish the references to the GUI. There is no current user yet.
@@ -94,27 +95,9 @@ public class ViewUserLogin {
 		theStage.show();
 	}
 
-	/**********
-	 * <p> Method: ViewUserLoginPage() </p>
-	 * 
-	 * <p> Description: This method is called when the application first starts. It must handle
-	 * two cases: 1) when no has been established and 2) when one or more users have been 
-	 * established.
-	 * 
-	 * If there are no users in the database, this means that the person starting the system jmust
-	 * be an administrator, so a special GUI is provided to allow this Admin to set a username and
-	 * password.
-	 * 
-	 * If there is at least one user, then a different display is shown for existing users to login
-	 * and for potential new users to provide an invitation code and if it is valid, they are taken
-	 * to a page where they can specify a username and password.</p>
-	 * 
-	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
-	 * 
-	 * @param theRoot specifies the JavaFX Pane to be used for this GUI and it's methods
-	 * 
-	 * @param db specifies the Database to be used by this GUI and it's methods
-	 * 
+	/**
+	 * Private constructor to initialize the GUI layout, labels, and widgets.
+	 * This handles both the existing user login and the invitation-based setup.
 	 */
 	private ViewUserLogin() {
 
@@ -124,50 +107,37 @@ public class ViewUserLogin {
 		
 		// Populate the window with the title and other common widgets and set their static state
 		setupLabelUI(label_ApplicationTitle, "Arial", 32, width, Pos.CENTER, 0, 10);
-
 		setupLabelUI(label_OperationalStartTitle, "Arial", 24, width, Pos.CENTER, 0, 60);
 
-
 		// Existing user log in portion of the page
-
 		setupLabelUI(label_LogInInsrtuctions, "Arial", 18, width, Pos.BASELINE_LEFT, 20, 120);
 
-		// Establish the text input operand field for the username
 		setupTextUI(text_Username, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 160, true);
 		text_Username.setPromptText("Enter Username");
 
-		// Establish the text input operand field for the password
 		setupTextUI(text_Password, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
 		text_Password.setPromptText("Enter Password");
 
-		// Set up the Log In button
 		setupButtonUI(button_Login, "Dialog", 18, 200, Pos.CENTER, 475, 180);
 		button_Login.setOnAction((_) -> {ControllerUserLogin.doLogin(theStage); });
 
 		alertUsernamePasswordError.setTitle("Invalid username/password!");
 		alertUsernamePasswordError.setHeaderText(null);
 
-
 		// The invitation to setup an account portion of the page
-
 		setupLabelUI(label_AccountSetupInsrtuctions, "Arial", 18, width, Pos.BASELINE_LEFT, 20, 300);
 
-		// Establish the text input operand field for the password
 		setupTextUI(text_Invitation, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 340, true);
 		text_Invitation.setPromptText("Enter Invitation Code");
 
-		// Set up the setup button
 		setupButtonUI(button_SetupAccount, "Dialog", 18, 200, Pos.CENTER, 475, 340);
 		button_SetupAccount.setOnAction((_) -> {
 			System.out.println("**** Calling doSetupAccount");
 			ControllerUserLogin.doSetupAccount(theStage, text_Invitation.getText());
 		});
 
-		// Set up the Quit button  
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
 		button_Quit.setOnAction((_) -> {ControllerUserLogin.performQuit(); });
-
-		//		theRootPane.getChildren().clear();
 
 		theRootPane.getChildren().addAll(
 				label_ApplicationTitle, 
@@ -179,15 +149,19 @@ public class ViewUserLogin {
 
 
 	/*-********************************************************************************************
-
-	Helper methods to reduce code length
-
+	Helper methods
 	 *********************************************************************************************/
 
-	/**********
-	 * Private local method to initialize the standard fields for a label
+	/**
+	 * Initializes standard fields for a label.
+	 * @param l The Label object
+	 * @param ff Font family
+	 * @param f Font size
+	 * @param w Width
+	 * @param p Alignment position
+	 * @param x X location
+	 * @param y Y location
 	 */
-
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
@@ -196,17 +170,15 @@ public class ViewUserLogin {
 		l.setLayoutY(y);		
 	}
 
-
-	/**********
-	 * Private local method to initialize the standard fields for a button
-	 * 
-	 * @param b		The Button object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
+	/**
+	 * Initializes standard fields for a button.
+	 * @param b The Button object
+	 * @param ff Font family
+	 * @param f Font size
+	 * @param w Width
+	 * @param p Alignment position
+	 * @param x X location
+	 * @param y Y location
 	 */
 	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
 		b.setFont(Font.font(ff, f));
@@ -216,8 +188,16 @@ public class ViewUserLogin {
 		b.setLayoutY(y);		
 	}
 
-	/**********
-	 * Private local method to initialize the standard fields for a text field
+	/**
+	 * Initializes standard fields for a text field.
+	 * @param t The TextField object
+	 * @param ff Font family
+	 * @param f Font size
+	 * @param w Width
+	 * @param p Alignment position
+	 * @param x X location
+	 * @param y Y location
+	 * @param e Editable flag
 	 */
 	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e){
 		t.setFont(Font.font(ff, f));

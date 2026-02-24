@@ -20,6 +20,11 @@ import javafx.stage.Stage;
 // Application Specific Imports
 import database.Database;
 
+/**
+ * <p> Title: ViewListUsers Class </p>
+ * <p> Description: This class provides a graphical interface to display a paginated 
+ * list of all registered users in the database. </p>
+ */
 public class ViewListUsers {
 	
 	/*-*******************************************************************************************
@@ -28,30 +33,25 @@ public class ViewListUsers {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
-	// GUI Area 1: Title
+	/** Label for the page title. */
 	protected static Label label_PageTitle = new Label("All Registered Users");
 	
-	// GUI Area 2: List Headers
+	/** Label for the list column headers. */
 	protected static Label label_Headers = new Label();
 	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
-	// GUI Area 3: Scrollable List (we'll just use VBox for pages)
 	private static VBox vbox_UserContainer = new VBox();
-
-	// GUI Area 4: Page Navigation
 	private static Button button_PagePrev = new Button("<");
 	private static Button button_PageNext = new Button(">");
 	private static Label label_PageInfo = new Label();
 
-	// GUI Area 5: Back to Admin Home
+	/** Button to navigate back to the Admin Home page. */
 	protected static Button button_Back = new Button("Back to Admin Home");
 
-	// Pagination attributes
 	private static int currentPage = 1;
 	private static int usersPerPage = 10;
 	private static int totalPages = 1;
 
-	// Singleton and Database References
 	private static ViewListUsers theView;
 	private static Pane theRootPane;
 	private static Scene theScene;
@@ -61,6 +61,12 @@ public class ViewListUsers {
 	Methods
 	*/
 
+	/**
+	 * <p> Method: displayListUsers </p>
+	 * <p> Description: Entry point to display the user list view. Initializes the view if 
+	 * it hasn't been created and refreshes the user data. </p>
+	 * @param ps The JavaFX Stage onto which the scene is set.
+	 */
 	public static void displayListUsers(Stage ps) {
 		if (theView == null) theView = new ViewListUsers();
 		
@@ -72,6 +78,9 @@ public class ViewListUsers {
 		ps.show();
 	}
 
+	/**
+	 * Private constructor to initialize the GUI components for the user list.
+	 */
 	private ViewListUsers() {
 		theRootPane = new Pane();
 		theScene = new Scene(theRootPane, width, height);
@@ -123,6 +132,9 @@ public class ViewListUsers {
 			vbox_UserContainer, button_PagePrev, button_PageNext, label_PageInfo, button_Back);
 	}
 
+	/**
+	 * Populates the VBox container with user data based on the current page index.
+	 */
 	private static void populateUserList() {
 	    vbox_UserContainer.getChildren().clear();
 	    List<String> usernames = theDatabase.getUserList();
@@ -154,7 +166,9 @@ public class ViewListUsers {
 	    label_PageInfo.setText(currentPage + " of " + totalPages);
 	}
 
-	// The Helper methods provided in your foundation code
+	/**
+	 * Helper method to setup Label UI properties.
+	 */
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
@@ -163,6 +177,9 @@ public class ViewListUsers {
 		l.setLayoutY(y);		
 	}
 
+	/**
+	 * Helper method to setup Button UI properties.
+	 */
 	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);

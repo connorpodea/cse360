@@ -1,42 +1,37 @@
 package guiTools;
 
-
+/**
+ * <p> Title: EmailRecognizer Class. </p>
+ * * <p> Description: A Finite State Machine implementation for recognizing valid email/user patterns. 
+ * This class demonstrates mechanical translation of FSM diagrams into executable Java. </p>
+ * * <p> Copyright: Lynn Robert Carter © 2024 </p>
+ * * @author Lynn Robert Carter
+ * @version 1.01 2024-09-17
+ */
 public class EmailRecognizer {
+	
 	/**
-	 * <p> Title: FSM-translated UserNameRecognizer. </p>
-	 * 
-	 * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
-	 * diagram into an executable Java program using the UserName Recognizer. The code 
-	 * detailed design is based on a while loop with a select list</p>
-	 * 
-	 * <p> Copyright: Lynn Robert Carter © 2024 </p>
-	 * 
-	 * @author Lynn Robert Carter
-	 * 
-	 * @version 1.00		2024-09-13	Initial baseline derived from the Even Recognizer
-	 * @version 1.01		2024-09-17	Correction to address UNChar coding error, improper error
-	 * 									message, and improve internal documentation
-	 * 
+	 * Default constructor for EmailRecognizer.
 	 */
+	public EmailRecognizer() {
+	}
 
-	/**********************************************************************************************
-	 * 
-	 * Result attributes to be used for GUI applications where a detailed error message and a 
-	 * pointer to the character of the error will enhance the user experience.
-	 * 
-	 */
-
-	public static String userNameRecognizerErrorMessage = "";	// The error message text
-	public static String userNameRecognizerInput = "";			// The input being processed
-	public static int userNameRecognizerIndexofError = -1;		// The index of error location
+	/** The error message text associated with the recognition process. */
+	public static String userNameRecognizerErrorMessage = "";	
+	
+	/** The input string being processed by the recognizer. */
+	public static String userNameRecognizerInput = "";			
+	
+	/** The index location where a recognition error was detected. */
+	public static int userNameRecognizerIndexofError = -1;		
+	
 	private static int state = 0;						// The current state value
 	private static int nextState = 0;					// The next state value
 	private static boolean finalState = false;			// Is this state a final state?
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line
 	private static int currentCharNdx;					// The index of the current character
-	private static boolean running;						// The flag that specifies if the FSM is 
-														// running
+	private static boolean running;						// The flag that specifies if the FSM is running
 	private static int userNameSize = 0;			// A numeric value may not exceed 16 characters
 
 	// Private method to display debugging data
@@ -64,13 +59,11 @@ public class EmailRecognizer {
 		}
 	}
 
-	/**********
+	/**
 	 * This method is a mechanical transformation of a Finite State Machine diagram into a Java
 	 * method.
-	 * 
-	 * @param input		The input string for the Finite State Machine
-	 * @return			An output string that is empty if every things is okay or it is a String
-	 * 						with a helpful description of the error
+	 * @param input The input string for the Finite State Machine to validate.
+	 * @return An output string that is empty if the input is valid, otherwise an error message.
 	 */
 	public static String checkForValidUserName(String input) {
 		// Check to ensure that there is input to process
@@ -231,7 +224,7 @@ public class EmailRecognizer {
 			if (userNameSize < 4) {
 				// UserName is too small
 				userNameRecognizerErrorMessage += "A UserName must have at least 4 characters.\n";
-				return userNameRecognizerErrorMessage;
+				return userNameErrorMessage;
 			}
 			else if (userNameSize > 16) {
 				// UserName is too long

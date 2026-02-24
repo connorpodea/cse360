@@ -123,7 +123,7 @@ public class ControllerFirstAdmin {
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
 	    
-	    // 1. VALIDATE USERNAME FIRST (Fail-Fast)
+	    // 1. VALIDATE USERNAME FIRST
 	    String validationError = UserNameRecognizer.checkForValidUserName(adminUsername);
 	    if (validationError != null && !validationError.isEmpty()) {
 	        Alert alert = new Alert(AlertType.ERROR);
@@ -171,6 +171,7 @@ public class ControllerFirstAdmin {
 	                                 "", true, false, false);
 	            
 	            theDatabase.register(user);
+	            // ENFORCE LOG IN AFTER ACCOUNT CREATION
 	            ViewUserLogin.displayUserLogin(ps);
 	            
 	        } catch (SQLException e) {

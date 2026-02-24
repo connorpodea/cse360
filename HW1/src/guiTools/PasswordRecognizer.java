@@ -1,53 +1,60 @@
 package guiTools;
 
-/*******
- * <p> Title: Model Class - establishes the required GUI data and the computations.
- * </p>
+/**
+ * <p> Title: Model Class - establishes the required GUI data and the computations. </p>
  *
  * <p> Description: This Model class is a major component of a Model View Controller (MVC)
  * application design that provides the user with a Graphical User Interface using JavaFX
- * widgets as opposed to a command line interface.
- * 
- * In this case the Model deals with an input from the user and checks to see if it conforms to
- * the requirements specified by a graphical representation of a finite state machine.
- * 
- * This is a purely static component of the MVC implementation.  There is no need to instantiate
- * the class.
- *
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * widgets as opposed to a command line interface. </p>
+ * * <p> Copyright: Lynn Robert Carter © 2025 </p>
  *
  * @author Lynn Robert Carter
- *
- * @version 2.00	2025-07-30 Rewrite of this application for the Fall 2025 offering of CSE 360
- * and other ASU courses.
+ * @version 2.00	2025-07-30
  */
-
 public class PasswordRecognizer {
+	
+	/**
+	 * Default constructor for PasswordRecognizer.
+	 */
+	public PasswordRecognizer() {
+		// Explicit constructor to satisfy Javadoc warnings
+	}
 
-	public static String passwordErrorMessage = "";		// The error message text
-	public static String passwordInput = "";			// The input being processed
-	public static int passwordIndexofError = -1;		// The index where the error was located
+	/** The error message text for password validation. */
+	public static String passwordErrorMessage = "";	
+	
+	/** The input string currently being processed. */
+	public static String passwordInput = "";			
+	
+	/** The index where a character error was located. */
+	public static int passwordIndexofError = -1;		
+	
+	/** Flag indicating if an upper case character was found. */
 	public static boolean foundUpperCase = false;
+	
+	/** Flag indicating if a lower case character was found. */
 	public static boolean foundLowerCase = false;
+	
+	/** Flag indicating if a numeric digit was found. */
 	public static boolean foundNumericDigit = false;
+	
+	/** Flag indicating if a special character was found. */
 	public static boolean foundSpecialChar = false;
+	
+	/** Flag indicating if the password meets the minimum length requirement. */
 	public static boolean foundLongEnough = false;
+	
+	/** Flag indicating if the password meets the maximum length requirement. */
 	public static boolean foundTooLong = false;
+	
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line
 	private static int currentCharNdx;					// The index of the current character
-	private static boolean running;						// The flag that specifies if the FSM is 
-														// running
+	private static boolean running;						// The flag that specifies if the FSM is running
 
-	/*
-	 * This private method displays the input line and then on a line under it displays the input
-	 * up to the point of the error.  At that point, a question mark is place and the rest of the 
-	 * input is ignored. This method is designed to be used to display information to make it clear
-	 * to the user where the error in the input can be found, and show that on the console 
-	 * terminal.
-	 * 
+	/**
+	 * Displays the input line and the point of error for console debugging.
 	 */
-
 	private static void displayInputState() {
 		// Display the entire input line
 		System.out.println(inputLine);
@@ -57,20 +64,13 @@ public class PasswordRecognizer {
 	}
 	
 
-	/**********
+	/**
 	 * <p> Title: evaluatePassword - Public Method </p>
-	 * 
-	 * <p> Description: This method is a mechanical transformation of a Directed Graph diagram 
-	 * into a Java method. This method is used by both the GUI version of the application as well
-	 * as the testing automation version.
-	 * 
+	 * * <p> Description: This method is a mechanical transformation of a Directed Graph diagram 
+	 * into a Java method. </p>
 	 * @param input		The input string evaluated by the directed graph processing
-	 * @return			An output string that is empty if every things is okay or it will be
-	 * 						a string with a helpful description of the error follow by two lines
-	 * 						that shows the input line follow by a line with an up arrow at the
-	 *						point where the error was found.
+	 * @return			An output string that is empty if everything is okay or a descriptive error message
 	 */
-	
 	public static String evaluatePassword(String input) {
 		// The following are the local variable used to perform the Directed Graph simulation
 		passwordErrorMessage = "";
@@ -93,9 +93,7 @@ public class PasswordRecognizer {
 		// The input is not empty, so we can access the first character
 		currentChar = input.charAt(0);		// The current character from the above indexed position
 
-		// The Directed Graph simulation continues until the end of the input is reached or at some 
-		// state the current character does not match any valid transition to a next state.  This
-		// local variable is a working copy of the input.
+		// The Directed Graph simulation continues until the end of the input is reached
 		passwordInput = input;				// Save a copy of the input
 		
 		// The following are the attributes associated with each of the requirements
@@ -110,12 +108,9 @@ public class PasswordRecognizer {
 		// This flag determines whether the directed graph (FSM) loop is operating or not
 		running = true;						// Start the loop
 
-		// The Directed Graph simulation continues until the end of the input is reached or at some
-		// state the current character does not match any valid transition
 		while (running) {
 			displayInputState();
-			// The cascading if statement sequentially tries the current character against all of
-			// the valid transitions, each associated with one of the requirements
+			// The cascading if statement sequentially tries the current character against all transitions
 			if (currentChar >= 'A' && currentChar <= 'Z') {
 				System.out.println("Upper case letter found");
 				foundUpperCase = true;
@@ -171,7 +166,7 @@ public class PasswordRecognizer {
 		if(!foundTooLong)
 			errMessage += "Must be at Most 24 characters; ";
 		
-		if (errMessage == "")
+		if (errMessage.equals(""))
 			return "";
 		
 		// If it gets here, there something was not found, so return an appropriate message

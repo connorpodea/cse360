@@ -1,15 +1,34 @@
 package guiOneTimePassword;
 
 import database.Database;
+
+/**
+ * Controller class for the One Time Password functionality.
+ */
 public class ControllerOneTimePassword {
+	
+	/**
+	 * Default constructor for ControllerOneTimePassword.
+	 */
+	public ControllerOneTimePassword() {
+		// Default constructor
+	}
 	
 	// having access to the data base so we can see the users.
 	private static Database theDatabase = applicationMain.FoundationsMain.database; 
+	
+	/** The first password entered by the user. */
 	protected static String password1 = "";
+	
+	/** The second password entered by the user for confirmation. */
 	protected static String password2 = "";
+	
+	/** The current password of the user being modified. */
 	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password1.getText();;
 
-	
+	/**
+	 * Selects a user and retrieves their account details from the database.
+	 */
 	protected static void doSelectUser() {
 		ViewOneTimePassword.theSelectedUser = 
 				(String) ViewOneTimePassword.combobox_SelectUser.getValue();
@@ -21,6 +40,9 @@ public class ControllerOneTimePassword {
 		
 	}
 	
+	/**
+	 * Updates the visibility of UI elements in the root pane.
+	 */
 	protected static void repaintWindow() {
 		ViewOneTimePassword.theRootPane.getChildren().clear();
 		
@@ -49,6 +71,9 @@ public class ControllerOneTimePassword {
 		
 	}
 	
+	/**
+	 * Sets up the roles and permissions view for the selected user.
+	 */
 	private static void setupSelectedUser() {
 		System.out.println("*** Entering setupSelectedUser");
 		
@@ -108,16 +133,23 @@ public class ControllerOneTimePassword {
 		repaintWindow();
 	}
 	
-	// display password1 textfield.
+	/**
+	 * Updates the first password variable from the UI.
+	 */
 	protected static void setAdminPassword1() {
 		password1 = ViewOneTimePassword.TempText_Password1.getText();
 	}
 	
+	/**
+	 * Updates the second password variable from the UI.
+	 */
 	protected static void setAdminPassword2() {
 		password2 = ViewOneTimePassword.TempText_Password2.getText();		
 	}
 	
-	
+	/**
+	 * Validates input and updates the password in the database.
+	 */
 	protected static void doOneTimePassword() {
 		if(ViewOneTimePassword.TempText_Password1.getText() == "") {
 			ViewOneTimePassword.TempText_Password1.setText("");
@@ -139,26 +171,34 @@ public class ControllerOneTimePassword {
 	  
 	}
 	 
-	
-	
-	// displays home page when user clickes return page button. 
+	/**
+	 * Returns the user to the Admin Home screen.
+	 */
 	protected static void performReturn() {
 		guiAdminHome.ViewAdminHome.displayAdminHome(ViewOneTimePassword.theStage,
 				ViewOneTimePassword.theUser);
 	}
 	
+	/**
+	 * Logs out the user and returns to the login screen.
+	 */
 	protected static void performLogout() {
 		guiUserLogin.ViewUserLogin.displayUserLogin(ViewOneTimePassword.theStage);
 	}
 	
+	/**
+	 * Closes the application.
+	 */
 	protected static void performQuit() {
 		System.exit(0);
 	}
 	
+	/**
+	 * Shows a confirmation dialog for successful password updates.
+	 */
 	protected static void performConfirmation() {
 		ViewOneTimePassword.displayConfirmation.showAndWait();
 		
 	}
 	
-	
-	}
+}

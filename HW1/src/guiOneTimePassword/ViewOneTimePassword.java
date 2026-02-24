@@ -19,56 +19,79 @@ import database.Database;
 import entityClasses.User;
 import javafx.scene.control.Alert;
 
-public class ViewOneTimePassword{
+/**
+ * <p> Title: ViewOneTimePassword Class. </p>
+ * <p> Description: This class provides the user interface for an administrator 
+ * to generate and assign a temporary (one-time) password to a selected user. </p>
+ */
+public class ViewOneTimePassword {
 	
-	// creating a new page, when the user clicks button it takes them to the page where they
-	// can set up a one time password. 
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 	
+	/** Label for the page title. */
 	protected static Label label_PageTitle = new Label();
+	/** Label for user details display. */
 	protected static Label label_UserDetails = new Label();
+	/** Label prompting the admin to select a user from the list. */
 	protected static Label label_SelectUser = new Label("Select a user to be updated:");
+	/** Button to navigate to the account update page. */
 	protected static Button button_UpdateThisUser = new Button("Account Update");
+	/** Button to confirm and save the temporary password change. */
 	protected static Button button_confirmPassword = new Button("Confirm Password Change");
 	
-	
-	// text fields, where the user will be prompted to enter a new one time password.
+	/** PasswordField for entering the new temporary password. */
 	public static PasswordField TempText_Password1 = new PasswordField();
+	/** PasswordField for confirming the new temporary password. */
 	protected static PasswordField TempText_Password2 = new PasswordField();
 	private static String TempPassword = TempText_Password1.getText();
 	
-	
+	/** The primary Stage used to display this view. */
 	protected static Stage theStage;
+	/** The current User interacting with the system. */
 	protected static User theUser;
+	/** The username of the user currently selected in the ComboBox. */
 	protected static String theSelectedUser = "<Select a User>";
 	
 	private static ViewOneTimePassword theView;
+	/** ComboBox used to select a user from the database. */
 	protected static ComboBox <String> combobox_SelectUser = new ComboBox <String>();
 	
-	
-	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
+	/** The Pane that holds all the GUI widgets for this view. */
+	protected static Pane theRootPane;
+	/** The Scene representing the one-time password page. */
 	public static Scene oneTimePasswordScene = null; 
+	/** Label representing the visual title on the page. */
 	protected static Label labelPageTitle = new Label();
 	
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
-	
-	// lists
+	/** List of roles or attributes to be added. */
 	protected static List<String> addList = new ArrayList<String>();
+	/** List of roles or attributes to be removed. */
 	protected static List<String> removeList = new ArrayList<String>();
 	
-	// buttons to return to main admin page, quit program, or logout:
+	/** Button to return to the previous admin home page. */
 	protected static Button button_Return = new Button("Return");
+	/** Button to log out of the current session. */
 	protected static Button button_Logout = new Button("Logout");
+	/** Button to exit the application. */
 	protected static Button button_Quit = new Button("Quit");
 	
-	// pop up alerts
+	/** Information alert confirming a successful password change. */
 	protected static Alert displayConfirmation = new Alert(AlertType.INFORMATION);
+	/** Error alert shown when passwords do not match. */
 	protected static Alert displayError = new Alert(AlertType.INFORMATION);
+	/** Error alert shown when password fields are empty. */
 	protected static Alert displayError2 = new Alert(AlertType.INFORMATION);
 	
-	
+	/**
+	 * <p> Method: displayOneTimePassword </p>
+	 * <p> Description: Main entry point for displaying this view. Initializes the view if 
+	 * it doesn't exist and sets the scene on the stage. </p>
+	 * @param ps The JavaFX Stage to be used.
+	 * @param user The current User object.
+	 */
 	public static void displayOneTimePassword(Stage ps, User user) {
 		theStage = ps;
 		theUser = user;
@@ -87,6 +110,11 @@ public class ViewOneTimePassword{
 		ControllerOneTimePassword.doSelectUser();
 	}
 	
+	/**
+	 * <p> Constructor: ViewOneTimePassword </p>
+	 * <p> Description: Initializes the GUI components, layout, and event handlers 
+	 * for the One-Time Password view. </p>
+	 */
 	public ViewOneTimePassword() {
 		theRootPane = new Pane();
 		
@@ -96,10 +124,8 @@ public class ViewOneTimePassword{
 		
 		setupLabelUI(label_SelectUser, "Arial", 20, 300, Pos.BASELINE_LEFT, 20, 130);
 		
-		//drop down box, will display a list of users currently in the database.
 		setupComboBoxUI(combobox_SelectUser, "Dialog", 16, 250, 280, 125);
 		List<String> userList = theDatabase.getUserList();
-
 
 		userList.removeIf(u -> u == null || u.trim().isEmpty());
 
@@ -110,22 +136,16 @@ public class ViewOneTimePassword{
     		@SuppressWarnings("unused") String oldvalue, 
     		@SuppressWarnings("unused") String newValue) -> {ControllerOneTimePassword.doSelectUser();});
 		
-		// will display the password fields so the user can enter text.
-				setupTextUI(TempText_Password1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, 
-						true);
-				TempText_Password1.setPromptText("Enter Temp Password");
-				TempText_Password1.textProperty().addListener((_, _, _)
-						-> {ControllerOneTimePassword.setAdminPassword1(); });
+		setupTextUI(TempText_Password1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
+		TempText_Password1.setPromptText("Enter Temp Password");
+		TempText_Password1.textProperty().addListener((_, _, _)
+				-> {ControllerOneTimePassword.setAdminPassword1(); });
 
-				// Establish the text input operand field for the password
-				setupTextUI(TempText_Password2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, 
-						true);
-				TempText_Password2.setPromptText("Enter Temp Password Again");
-				TempText_Password2.textProperty().addListener((_, _, _) 
-						-> {ControllerOneTimePassword.setAdminPassword2(); });
+		setupTextUI(TempText_Password2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, true);
+		TempText_Password2.setPromptText("Enter Temp Password Again");
+		TempText_Password2.textProperty().addListener((_, _, _) 
+				-> {ControllerOneTimePassword.setAdminPassword2(); });
 		
-		
-		// will be able to return back to the main page.
 		setupButtonUI(button_Return, "Dialog", 18, 210, Pos.CENTER, 20, 540);
 		button_Return.setOnAction((_) -> {ControllerOneTimePassword.performReturn(); });
 		
@@ -135,24 +155,19 @@ public class ViewOneTimePassword{
 		setupButtonUI(button_Quit, "Dialog", 18, 210, Pos.CENTER, 570, 540);
 		button_Quit.setOnAction((_) -> {ControllerOneTimePassword.performQuit(); });
 		
-		// button to confirm password change.
 		setupButtonUI(button_confirmPassword, "Dialog", 18, 210, Pos.CENTER, 50, 310);
 		button_confirmPassword.setOnAction((_) -> {ControllerOneTimePassword.doOneTimePassword();});
 		
-		// setting up pop up alert confirming the password.
 		displayConfirmation.setTitle("Congrats");
 		displayConfirmation.setHeaderText("You have succesfully created a tempoaray password, please log out");
 		displayConfirmation.setContentText("One you enter you're new password it will be erased and you will have to create a permentant password");
 		
-		// Display Error message if passwords are not the same.
 		displayError.setTitle("Error!!");
 		displayError.setHeaderText("Passwords do Not Match, Please Confirm They are the Same");
 		
-		// display error if empty
 		displayError2.setTitle("Error!!");
 		displayError2.setHeaderText("Passwords are empty, please enter a valid password");
 		
-		// making it so that it actually displays the buttons, text, and drop down features.
 		theRootPane.getChildren().addAll(labelPageTitle, label_SelectUser, combobox_SelectUser, button_Return, button_Logout, button_Quit,
 										 TempText_Password1, TempText_Password2, button_confirmPassword);	
 		
@@ -193,5 +208,4 @@ public class ViewOneTimePassword{
 			t.setLayoutY(y);		
 			t.setEditable(e);
 		}
-	 
-	}
+}
