@@ -1,30 +1,46 @@
 package entityClasses;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Represents a discussion post in the system.
- * Handles basic data and validation for posts.
+ * Represents a discussion post.
+ * Stores basic post data like title, body, author, and time created.
  */
 public class Post {
 
+    /** Unique id for the post */
     private int id;
+
+    /** Post title */
     private String title;
+
+    /** Main content of the post */
     private String body;
+
+    /** Author of the post */
     private String author;
+
+    /** Time the post was created */
     private LocalDateTime timestamp;
+
+    /** Category the post belongs to */
     private String category;
 
+    /** Max allowed length for post titles */
     public static final int MAX_TITLE_LENGTH = 200;
+
+    /** Max allowed length for post bodies */
     public static final int MAX_BODY_LENGTH = 5000;
 
     /**
-     * Creates a new Post.
+     * Creates a new Post with the current timestamp.
      *
-     * @param id     the id of the post
-     * @param title  title of the post
-     * @param body   main content
-     * @param author user who made the post
+     * @param id       the id of the post
+     * @param title    the post title
+     * @param body     the post content
+     * @param author   the user who created the post
+     * @param category the category of the post
      */
     public Post(int id, String title, String body, String author, String category) {
         validateCreate(title, body, author);
@@ -37,7 +53,12 @@ public class Post {
     }
 
     /**
-     * Makes sure post data is valid before creating it.
+     * Validates values when creating a post.
+     *
+     * @param title  post title
+     * @param body   post body
+     * @param author post author
+     * @throws IllegalArgumentException if any value is invalid
      */
     private void validateCreate(String title, String body, String author) {
         if (title == null || title.trim().isEmpty()) {
@@ -53,12 +74,15 @@ public class Post {
             throw new IllegalArgumentException("Post title exceeds 200 characters.");
         }
         if (body.length() > MAX_BODY_LENGTH) {
-        	throw new IllegalArgumentException("Post body exceeds 5000 characters.");
+            throw new IllegalArgumentException("Post body exceeds 5000 characters.");
         }
     }
 
     /**
-     * Updates title and body of the post.
+     * Updates the title and body of the post.
+     *
+     * @param newTitle updated title
+     * @param newBody  updated body
      */
     public void update(String newTitle, String newBody) {
         validateUpdate(newTitle, newBody);
@@ -67,7 +91,11 @@ public class Post {
     }
 
     /**
-     * Checks updated values.
+     * Validates values when updating a post.
+     *
+     * @param newTitle updated title
+     * @param newBody  updated body
+     * @throws IllegalArgumentException if values are invalid
      */
     private void validateUpdate(String newTitle, String newBody) {
         if (newTitle == null || newTitle.trim().isEmpty()) {
@@ -80,44 +108,43 @@ public class Post {
             throw new IllegalArgumentException("Updated post title exceeds 200 characters.");
         }
         if (newBody.length() > MAX_BODY_LENGTH) {
-        	throw new IllegalArgumentException("Updated post body exceeds 5000 characters.");
+            throw new IllegalArgumentException("Updated post body exceeds 5000 characters.");
         }
     }
-    
+
     /**
-     * Formats the time stamp into something readable.
-     * 
-     * @return formatted timestamp
+     * Returns the timestamp in a readable format.
+     *
+     * @return formatted timestamp string
      */
     public String getFormattedTimestamp() {
-        // This turns the weird default time format into something nicer
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, hh:mm a");
         return this.timestamp.format(formatter);
     }
 
     /**
-     * @return post id
+     * @return the post id
      */
     public int getId() {
         return id;
     }
 
     /**
-     * @return post title
+     * @return the post title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @return post body
+     * @return the post body
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * @return post author
+     * @return the post author
      */
     public String getAuthor() {
         return author;
@@ -129,21 +156,35 @@ public class Post {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
-    
+
     /**
-     * @return category of the post
+     * @return the post category
      */
     public String getCategory() {
         return category;
     }
-    
-    // Used when loading from the database
+
+    /**
+     * Sets the body of the post.
+     * Used when loading data from the database.
+     *
+     * @param body post body
+     */
     public void setBody(String body) {
         this.body = body;
     }
 
-    // Constructor used for database loading
-    public Post(int id, String title, String body, String author, String category, java.time.LocalDateTime timestamp) {
+    /**
+     * Constructor used when loading a post from the database.
+     *
+     * @param id        post id
+     * @param title     post title
+     * @param body      post body
+     * @param author    post author
+     * @param category  post category
+     * @param timestamp time the post was created
+     */
+    public Post(int id, String title, String body, String author, String category, LocalDateTime timestamp) {
         this.id = id;
         this.title = title;
         this.body = body;
