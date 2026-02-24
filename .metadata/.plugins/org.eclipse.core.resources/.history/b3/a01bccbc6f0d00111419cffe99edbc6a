@@ -1,0 +1,119 @@
+package guiPostManagement;
+
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import entityClasses.User;
+
+public class ViewPostManagement {
+	// Screen Dimensions
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+
+	// GUI Widgets
+	protected static Label label_PageTitle = new Label("Create New Post");
+	protected static TextField text_Title = new TextField();
+	protected static TextArea text_Body = new TextArea();
+	protected static Button button_Submit = new Button("Submit Post");
+	protected static Button button_Back = new Button("Back");
+	
+    protected static ListView<String> list_Posts = new ListView<>();
+    protected static Label label_PostList = new Label("Current Posts:");
+    protected static ComboBox<String> combo_Category = new ComboBox<>(); // Only one declaration!
+    
+    // Right side "Full View" Widgets
+    protected static Label label_FullTitle = new Label("Select a post to read...");
+    protected static Label label_FullAuthor = new Label();
+    protected static Label label_FullTimestamp = new Label();
+    protected static TextArea area_FullBody = new TextArea();
+    protected static Button button_ReplyToThis = new Button("Reply to this Post");
+    
+    protected static int currentPostId = -1;
+
+	protected static Stage theStage;
+	protected static User theUser;
+	private static Pane theRootPane;
+	private static Scene theScene;
+	private static ViewPostManagement theView;
+
+	public static void displayPostManagement(Stage ps, User user) {
+	    theStage = ps;
+	    theUser = user;
+	    if (theView == null) theView = new ViewPostManagement();
+	    
+	    // Refresh the list every time the page loads
+	    refreshPostList(); 
+	    
+	    theStage.setTitle("Post Management");
+	    theStage.setScene(theScene);
+	    theStage.show();
+	}
+
+	private ViewPostManagement() {
+        theRootPane = new Pane();
+        theScene = new Scene(theRootPane, width, height);
+
+        // --- TOP AREA: Create Post with Category ---
+        setupLabelUI(label_PageTitle, "Arial", 24, width, Pos.CENTER, 0, 10);
+        
+        combo_Category.getItems().addAll("Homework", "General Question", "Lab", "Project");
+        combo_Category.setLayoutX(50); combo_Category.setLayoutY(50);
+        combo_Category.setPromptText("Select Category");
+
+        text_Title.setPromptText("Title");
+        text_Title.setLayoutX(200); text_Title.setLayoutY(50);
+        text_Title.setPrefWidth(width - 450);
+
+        setupButtonUI(button_Submit, "Arial", 14, 100, Pos.CENTER, width - 200, 50);
+        button_Submit.setOnAction((_) -> { ControllerPostManagement.performCreatePost(); });
+
+        // --- LEFT SIDE: Sidebar (1/3 of screen) ---
+        list_Posts.setLayoutX(20); list_Posts.setLayoutY(100);
+        list_Posts.setPrefSize(250, height - 200);
+        // LISTENER: Calls the controller when a post is clicked
+        list_Posts.getSelectionModel().selectedItemProperty().addListener((_) -> {
+            ControllerPostManagement.displaySelectedPost();
+        });
+
+        // --- RIGHT SIDE: Main Reading Area (2/3 of screen) ---
+        setupLabelUI(label_FullTitle, "Arial", 20, 400, Pos.BASELINE_LEFT, 300, 110);
+        setupLabelUI(label_FullAuthor, "Arial", 14, 400, Pos.BASELINE_LEFT, 300, 140);
+        setupLabelUI(label_FullTimestamp, "Arial", 12, 400, Pos.BASELINE_LEFT, 300, 160);
+        
+        area_FullBody.setLayoutX(300); area_FullBody.setLayoutY(190);
+        area_FullBody.setPrefSize(width - 350, height - 400);
+        area_FullBody.setEditable(false); // Can't edit others' posts
+
+        setupButtonUI(button_ReplyToThis, "Arial", 16, 200, Pos.CENTER, 300, height - 150);
+        button_ReplyToThis.setOnAction((_) -> { ControllerPostManagement.performReply(); });
+
+        theRootPane.getChildren().addAll(label_PageTitle, combo_Category, text_Title, button_Submit, 
+            list_Posts, label_FullTitle, label_FullAuthor, label_FullTimestamp, area_FullBody, button_ReplyToThis);
+    }	
+	/**********
+	 * <p> Method: refreshPostList() </p>
+	 * * <p> Description: This method retrieves all posts from the PostStorage and
+	 * populates the ListView. This provides the 'Read' functionality of CRUD. </p>
+	 */
+	public static void refreshPostList() {
+        list_Posts.getItems().clear();
+        // Use the full package name for the Post type here
+        for (entityClasses.Post p : ModelPostManagement.getPostStorage().getAllPosts()) {
+            String displayString = String.format("%s\nBy: %s | %s", 
+                                   p.getTitle(), p.getAuthor(), p.getTimestamp());
+            list_Posts.getItems().add(displayString);
+        }
+    }
+	
+
+	// Helper methods copied from baseline to maintain consistency
+	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+		l.setFont(Font.font(ff, f)); l.setMinWidth(w); l.setAlignment(p); l.setLayoutX(x); l.setLayoutY(y);		
+	}
+	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+		b.setFont(Font.font(ff, f)); b.setMinWidth(w); b.setAlignment(p); b.setLayoutX(x); b.setLayoutY(y);		
+	}
+}

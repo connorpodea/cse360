@@ -1,0 +1,113 @@
+package guiPostManagement;
+
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import entityClasses.User;
+
+public class ViewPostManagement {
+	// Screen Dimensions
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+
+	// GUI Widgets
+	protected static Label label_PageTitle = new Label("Create New Post");
+	protected static TextField text_Title = new TextField();
+	protected static TextArea text_Body = new TextArea();
+	protected static Button button_Submit = new Button("Submit Post");
+	protected static Button button_Back = new Button("Back");
+	
+	// New attributes
+    protected static ListView<String> list_Posts = new ListView<>();
+    protected static Button button_ReplyToSelected = new Button("Reply to Selected");
+    protected static Label label_PostList = new Label("Current Posts:");
+
+	protected static Stage theStage;
+	protected static User theUser;
+	private static Pane theRootPane;
+	private static Scene theScene;
+	private static ViewPostManagement theView;
+
+	public static void displayPostManagement(Stage ps, User user) {
+		theStage = ps;
+		theUser = user;
+		if (theView == null) theView = new ViewPostManagement();
+		
+		theStage.setTitle("Post Management");
+		theStage.setScene(theScene);
+		theStage.show();
+	}
+
+	private ViewPostManagement() {
+		theRootPane = new Pane();
+		theScene = new Scene(theRootPane, width, height);
+
+		// Header
+		setupLabelUI(label_PageTitle, "Arial", 24, width, Pos.CENTER, 0, 20);
+
+		// Title Input
+		Label label_Title = new Label("Post Title:");
+		setupLabelUI(label_Title, "Arial", 16, 100, Pos.BASELINE_LEFT, 50, 80);
+		text_Title.setLayoutX(50); text_Title.setLayoutY(110);
+		text_Title.setMinWidth(width - 100);
+
+		// Body Input
+		Label label_Body = new Label("Post Content:");
+		setupLabelUI(label_Body, "Arial", 16, 100, Pos.BASELINE_LEFT, 50, 160);
+		text_Body.setLayoutX(50); text_Body.setLayoutY(190);
+		text_Body.setPrefRowCount(10);
+		text_Body.setMinWidth(width - 100);
+
+		// Buttons
+		setupButtonUI(button_Submit, "Arial", 18, 150, Pos.CENTER, 50, 450);
+		button_Submit.setOnAction((_) -> { ControllerPostManagement.performCreatePost(); });
+
+		setupButtonUI(button_Back, "Arial", 18, 150, Pos.CENTER, 250, 450);
+		button_Back.setOnAction((_) -> { ControllerPostManagement.performBack(); });
+		
+		// GUI Area for Post List
+        setupLabelUI(label_PostList, "Arial", 16, 200, Pos.BASELINE_LEFT, 50, 480);
+        
+        // Configure the ListView
+        list_Posts.setLayoutX(50);
+        list_Posts.setLayoutY(510);
+        list_Posts.setPrefSize(width - 100, 150); // Adjust size as needed
+
+        // Configure the "Reply" Button
+        setupButtonUI(button_ReplyToSelected, "Arial", 18, 200, Pos.CENTER, 50, 670);
+        button_ReplyToSelected.setOnAction((_) -> { ControllerPostManagement.performReplyToSelected(); });
+
+        // Update the submit and back buttons to make room
+        setupButtonUI(button_Submit, "Arial", 18, 150, Pos.CENTER, 50, 430);
+        setupButtonUI(button_Back, "Arial", 18, 150, Pos.CENTER, 250, 430);
+        
+        theRootPane.getChildren().addAll(label_PageTitle, label_Title, text_Title, 
+                label_Body, text_Body, button_Submit, button_Back, 
+                label_PostList, list_Posts, button_ReplyToSelected);
+	}
+	
+	public static void displayPostManagement(Stage ps, User user) {
+	    theStage = ps;
+	    theUser = user;
+	    if (theView == null) theView = new ViewPostManagement();
+	    
+	    // Add this call here to refresh the list every time the page loads
+	    refreshPostList(); 
+	    
+	    theStage.setTitle("Post Management");
+	    theStage.setScene(theScene);
+	    theStage.show();
+	}
+	
+
+	// Helper methods copied from baseline to maintain consistency
+	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+		l.setFont(Font.font(ff, f)); l.setMinWidth(w); l.setAlignment(p); l.setLayoutX(x); l.setLayoutY(y);		
+	}
+	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+		b.setFont(Font.font(ff, f)); b.setMinWidth(w); b.setAlignment(p); b.setLayoutX(x); b.setLayoutY(y);		
+	}
+}

@@ -1,0 +1,136 @@
+package guiPostManagement;
+
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import entityClasses.User;
+
+/*******
+ * <p> Title: ViewPostManagement Class. </p>
+ * <p> Description: The "Reading Pane" for HW2. It features a sidebar for navigation
+ * and a large area for reading posts. Creation is handled on a separate page. </p>
+ */
+public class ViewPostManagement {
+	// Screen Dimensions
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+
+	// GUI Widgets - Navigation and Global Actions
+	protected static Label label_PageTitle = new Label("Discussion Board");
+	protected static Button button_ToCreatePage = new Button("Create New Post");
+	protected static Button button_Back = new Button("Back to Home");
+	protected static Button button_ViewReplies = new Button("View Replies");
+	
+	// Left Sidebar Widgets
+	protected static ListView<String> list_Posts = new ListView<>();
+	protected static Label label_SidebarHeader = new Label("Recent Posts");
+	
+	// Right Side "Full Reading View"
+	protected static Label label_FullTitle = new Label("Select a post to read...");
+	protected static Label label_FullAuthor = new Label();
+	protected static Label label_FullTimestamp = new Label();
+	protected static TextArea area_FullBody = new TextArea();
+	protected static Button button_ReplyToThis = new Button("Reply to this Post");
+	
+	// Tracking current selection
+	protected static int currentPostId = -1;
+
+	protected static Stage theStage;
+	protected static User theUser;
+	private static Pane theRootPane;
+	private static Scene theScene;
+	private static ViewPostManagement theView;
+
+	public static void displayPostManagement(Stage ps, User user) {
+		theStage = ps;
+		theUser = user;
+		if (theView == null) theView = new ViewPostManagement();
+		
+		// Refresh the sidebar every time we enter the page
+		refreshPostList(); 
+		
+		theStage.setTitle("CSE 360 Discussion Board");
+		theStage.setScene(theScene);
+		theStage.show();
+	}
+
+	private ViewPostManagement() {
+		theRootPane = new Pane();
+		theScene = new Scene(theRootPane, width, height);
+
+		// --- TOP GLOBAL AREA ---
+		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 10);
+		
+		// "Create New Post" button is always at the top
+		setupButtonUI(button_ToCreatePage, "Arial", 16, 200, Pos.CENTER, 20, 50);
+		button_ToCreatePage.setOnAction((_) -> { 
+			// Transition to the new separate creation view
+			ViewCreatePost.displayCreatePost(theStage, theUser); 
+		});
+
+		setupButtonUI(button_Back, "Arial", 14, 150, Pos.CENTER, width - 170, 50);
+		button_Back.setOnAction((_) -> { ControllerPostManagement.performBack(); });
+
+		// --- LEFT SIDEBAR (The Stats List) ---
+		setupLabelUI(label_SidebarHeader, "Arial", 18, 250, Pos.BASELINE_LEFT, 20, 100);
+		list_Posts.setLayoutX(20); 
+		list_Posts.setLayoutY(130);
+		list_Posts.setPrefSize(280, height - 200);
+		
+		// LISTENER: Update reading pane when an item is selected
+		list_Posts.getSelectionModel().selectedItemProperty().addListener((_) -> {
+			ControllerPostManagement.displaySelectedPost();
+		});
+
+		// --- RIGHT SIDE (The Reading Pane) ---
+		setupLabelUI(label_FullTitle, "Arial", 22, width - 350, Pos.BASELINE_LEFT, 320, 130);
+		setupLabelUI(label_FullAuthor, "Arial", 14, 400, Pos.BASELINE_LEFT, 320, 165);
+		setupLabelUI(label_FullTimestamp, "Arial", 12, 400, Pos.BASELINE_LEFT, 320, 185);
+		
+		area_FullBody.setLayoutX(320); 
+		area_FullBody.setLayoutY(210);
+		area_FullBody.setPrefSize(width - 350, height - 420);
+		area_FullBody.setEditable(false); // Reading only
+		area_FullBody.setWrapText(true);
+
+		// Reply button at the bottom of the content
+		setupButtonUI(button_ReplyToThis, "Arial", 16, 200, Pos.CENTER, 320, height - 150);
+		button_ReplyToThis.setOnAction((_) -> { ControllerPostManagement.performReply(); });
+		
+		setupButtonUI(button_ViewReplies, "Arial", 16, 200, Pos.CENTER, 550, height - 150);
+		button_ViewReplies.setOnAction((_) -> { 
+		    // Pass the currentPostId so it only loads replies for THIS post
+		    guiReplyManagement.ViewReplyList.displayReplyList(theStage, theUser, currentPostId); 
+		});
+
+		theRootPane.getChildren().addAll(label_PageTitle, button_ToCreatePage, button_Back, 
+				label_SidebarHeader, list_Posts, label_FullTitle, label_FullAuthor, 
+				label_FullTimestamp, area_FullBody, button_ReplyToThis);
+	}
+
+	public static void refreshPostList() {
+	    list_Posts.getItems().clear();
+	    // Define a readable format
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
+	    
+	    for (entityClasses.Post p : ModelPostManagement.getPostStorage().getAllPosts()) {
+	        // Use p.getTimestamp().format(formatter) to clean up the cryptic text
+	        String displayString = String.format("%s\nBy: %s | %s", 
+	                               p.getTitle(), 
+	                               p.getAuthor(), 
+	                               p.getTimestamp().format(formatter)); 
+	        list_Posts.getItems().add(displayString);
+	    }
+	}
+
+	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+		l.setFont(Font.font(ff, f)); l.setMinWidth(w); l.setAlignment(p); l.setLayoutX(x); l.setLayoutY(y);		
+	}
+	
+	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+		b.setFont(Font.font(ff, f)); b.setMinWidth(w); b.setAlignment(p); b.setLayoutX(x); b.setLayoutY(y);		
+	}
+}

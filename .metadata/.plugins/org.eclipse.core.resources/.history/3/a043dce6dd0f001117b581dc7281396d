@@ -1,0 +1,101 @@
+package entityClasses;
+import java.time.LocalDateTime;
+
+/**
+ * Represents a reply on a post.
+ * Keeps basic info about the reply.
+ */
+public class Reply {
+
+    private int id;
+    private int postId;
+    private String body;
+    private String author;
+    private LocalDateTime timestamp;
+
+    /**
+     * Creates a new reply.
+     */
+    public Reply(int id, int postId, String body, String author) {
+        validateCreate(body, author);
+        this.id = id;
+        this.postId = postId;
+        this.body = body;
+        this.author = author;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    /**
+     * Checks values when creating a reply.
+     */
+    private void validateCreate(String body, String author) {
+        if (body == null || body.trim().isEmpty()) {
+            throw new IllegalArgumentException("Reply body cannot be empty.");
+        }
+        if (body.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Post body exceeds maximum length.");
+        }
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Reply author cannot be empty.");
+        }
+    }
+
+    /**
+     * Updates the reply body.
+     */
+    public void update(String newBody) {
+        validateUpdate(newBody);
+        this.body = newBody;
+    }
+
+    /**
+     * Makes sure updated body isnt empty.
+     */
+    private void validateUpdate(String newBody) {
+        if (newBody == null || newBody.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated reply body cannot be empty.");
+        }
+    }
+    
+    /**
+     * Gets the id of the post this reply belongs to.
+     */
+    public int getParentPostId() {
+        return postId;
+    }
+
+    /**
+     * Returns the reply id.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Returns the post id.
+     */
+    public int getPostId() {
+        return postId;
+    }
+
+    /**
+     * Returns the reply text.
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     * Returns the username of who wrote this.
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Returns when this reply was made.
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+}

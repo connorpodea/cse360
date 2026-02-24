@@ -1,0 +1,148 @@
+package entityClasses;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Represents a discussion post in the system.
+ * Handles basic data and validation for posts.
+ */
+public class Post {
+
+    private int id;
+    private String title;
+    private String body;
+    private String author;
+    private LocalDateTime timestamp;
+    private String category;
+
+    public static final int MAX_TITLE_LENGTH = 200;
+    public static final int MAX_BODY_LENGTH = 5000;
+
+    /**
+     * Creates a new Post.
+     *
+     * @param id     the id of the post
+     * @param title  title of the post
+     * @param body   main content
+     * @param author user who made the post
+     */
+    public Post(int id, String title, String body, String author, String category) {
+        validateCreate(title, body, author);
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.author = author;
+        this.timestamp = LocalDateTime.now();
+        this.category = category;
+    }
+
+    /**
+     * Makes sure post data is valid before creating it.
+     */
+    private void validateCreate(String title, String body, String author) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post title cannot be empty.");
+        }
+        if (body == null || body.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post body cannot be empty.");
+        }
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post author cannot be empty.");
+        }
+        if (title.length() > MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Post title exceeds maximum length.");
+        }
+        if (body.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Post body exceeds maximum length.");
+        }
+    }
+
+    /**
+     * Updates title and body of the post.
+     */
+    public void update(String newTitle, String newBody) {
+        validateUpdate(newTitle, newBody);
+        this.title = newTitle;
+        this.body = newBody;
+    }
+
+    /**
+     * Checks updated values.
+     */
+    private void validateUpdate(String newTitle, String newBody) {
+        if (newTitle == null || newTitle.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated post title cannot be empty.");
+        }
+        if (newBody == null || newBody.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated post body cannot be empty.");
+        }
+    }
+    
+    /**
+     * Formats the time stamp into something readable.
+     * 
+     * @return formatted timestamp
+     */
+    public String getFormattedTimestamp() {
+        // This turns the weird default time format into something nicer
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, hh:mm a");
+        return this.timestamp.format(formatter);
+    }
+
+    /**
+     * @return post id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @return post title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @return post body
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     * @return post author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * @return when the post was created
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+    
+    /**
+     * @return category of the post
+     */
+    public String getCategory() {
+        return category;
+    }
+    
+    // Used when loading from the database
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    // Constructor used for database loading
+    public Post(int id, String title, String body, String author, String category, java.time.LocalDateTime timestamp) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.author = author;
+        this.category = category;
+        this.timestamp = timestamp;
+    }
+}

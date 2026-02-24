@@ -1,0 +1,24 @@
+package guiPostManagement;
+
+import entityClasses.Post;
+import entityClasses.PostStorage;
+
+public class ModelPostManagement {
+    
+    // Reference to the storage class created in entityClasses
+    private static PostStorage postStorage = new PostStorage();
+
+    public static void createPost(int id, String title, String body, String author) {
+        Post newPost = new Post(id, title, body, author);
+        postStorage.addPost(newPost);
+    }
+    
+    public static int getNextPostId() {
+        // Access your PostStorage to see how many posts exist and add 1
+        return postStorage.getAllPosts().size() + 1; 
+    }
+    
+    public static PostStorage getPostStorage() {
+        return postStorage;
+    }
+}

@@ -1,0 +1,23 @@
+package guiReplyManagement;
+
+import entityClasses.Reply;
+import entityClasses.ReplyStorage;
+
+public class ModelReplyManagement {
+    
+    // Accessing the static storage defined in entityClasses
+    private static ReplyStorage replyStorage = new ReplyStorage();
+
+    public static int getNextReplyId() {
+        return replyStorage.getAllReplies().size() + 1;
+    }
+
+    public static void createReply(int id, int postId, String body, String author) {
+        Reply newReply = new Reply(id, postId, body, author);
+        replyStorage.addReply(newReply);
+    }
+    
+    public static ReplyStorage getReplyStorage() {
+        return replyStorage; // Returns the static storage instance
+    }
+}

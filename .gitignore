@@ -1,2 +1,11 @@
-/.metadata/
-.DS_Store
+# Ignore compiled Java files
+*.class
+bin/
+
+# Ignore Eclipse project metadata
+.classpath
+.project
+.settings/
+
+# Ignore old homework
+HW1/

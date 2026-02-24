@@ -1,0 +1,178 @@
+package guiPostManagement;
+import entityClasses.Post;
+import database.Database;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+
+public class ControllerPostManagement {
+	protected static Database database = applicationMain.FoundationsMain.database;
+	
+	protected static void performCreatePost() {
+		int id = ModelPostManagement.getNextPostId();
+		String title = ViewCreatePost.text_Title.getText(); 
+		String body = ViewCreatePost.text_Body.getText();   
+		String category = ViewCreatePost.combo_Category.getValue();
+		String author = ViewPostManagement.theUser.getUserName();
+
+		if (title.isEmpty() || body.isEmpty() || category == null || category.isEmpty()) {
+			showAlert("Validation Error", "All fields including Category must be filled.");
+			return;
+		}
+		
+		if (title.length() > 200) {
+			showAlert("Validation Error", "Title cannot exceed 200 characters");
+			return;
+		}
+		
+		if (body.length() > 5000) {
+			showAlert("Validation Error", "Body cannot exceed 5000 characters");
+			return;
+		}
+
+		entityClasses.Post newPost = ModelPostManagement.createPost(id, title, body, author, category);
+		
+		try {
+			database.savePost(newPost); 
+			showAlert("Success", "Post created successfully!");
+		} catch (java.sql.SQLException e) {
+			showAlert("Database Error", "The post was created in memory but failed to save to disk.");
+			e.printStackTrace();
+		}
+		
+		showAlert("Success", "Post created successfully!");
+		
+		ViewCreatePost.text_Title.clear();
+		ViewCreatePost.text_Body.clear();
+		ViewPostManagement.displayPostManagement(ViewPostManagement.theStage, ViewPostManagement.theUser);
+	}
+	
+	// Method to handle when a user clicks a post in the sidebar
+	protected static void displaySelectedPost() {
+	    // 1. Find the post by ID (much more reliable than title-matching)
+	    entityClasses.Post p = ModelPostManagement.getPostStorage().getPostById(ViewPostManagement.currentPostId);
+	    
+	    if (p != null) {
+	        // 2. Populate UI Labels
+	        ViewPostManagement.label_FullTitle.setText("Title: " + p.getTitle());
+	        ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
+	        ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
+	        ViewPostManagement.area_FullBody.setText(p.getBody());
+
+	        // 3. Update the Dynamic Reply Count
+	        int count = guiReplyManagement.ModelReplyManagement.getReplyStorage()
+	                        .getRepliesForPost(p.getId()).size();
+	        ViewPostManagement.button_ViewReplies.setText("View Replies (" + count + ")");
+
+	        // 4. Permissions Check
+	        boolean canModify = ViewPostManagement.theUser.getUserName().equals(p.getAuthor()) 
+	                            || ViewPostManagement.theUser.getAdminRole();
+	        ViewPostManagement.button_Edit.setVisible(canModify);
+	        ViewPostManagement.button_Delete.setVisible(canModify);
+	    }
+	}
+    
+    // Method for the reply button at the bottom of the full post
+	protected static void performReply() {
+        // Validation: Ensure a post is actually selected
+        if (ViewPostManagement.currentPostId != -1) {
+            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+                ViewPostManagement.theStage, 
+                ViewPostManagement.theUser, 
+                ViewPostManagement.currentPostId
+            );
+        } else {
+            // Requirement: "Cannot reply to a post that does not exist"
+            showAlert("Selection Error", "Please select a post before replying.");
+        }
+    }
+    
+    protected static void performDelete() {
+        int idToDelete = ViewPostManagement.currentPostId;
+        
+        try {
+            // 1. Remove from local storage
+            ModelPostManagement.getPostStorage().deletePost(idToDelete);
+            
+            // 2. Remove from H2 Database
+            database.deletePost(idToDelete);
+            
+            // 3. UI Cleanup
+            ViewPostManagement.refreshPostList();
+            ViewPostManagement.area_FullBody.clear();
+            ViewPostManagement.label_FullTitle.setText("Post Deleted.");
+            ViewPostManagement.button_Edit.setVisible(false);
+            ViewPostManagement.button_Delete.setVisible(false);
+            
+            showAlert("Deleted", "Post has been removed permanently.");
+        } catch (Exception e) {
+            showAlert("Error", "Could not delete post from database.");
+        }
+    }
+    
+    protected static void performEdit() {
+        // 1. Get current text from the reading pane
+        String currentBody = ViewPostManagement.area_FullBody.getText();
+
+        // 2. Open the dialog with the existing text
+        javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog(currentBody);
+        dialog.setTitle("Edit Post");
+        dialog.setHeaderText("Modify your post content:");
+        dialog.setContentText("Body:");
+
+        dialog.showAndWait().ifPresent(newBody -> {
+            if (!newBody.isEmpty()) {
+                try {
+                    // 3. Update the local storage (RAM)
+                    ModelPostManagement.getPostStorage().getPostById(ViewPostManagement.currentPostId).setBody(newBody);
+                    
+                    // 4. Update the H2 Database (Disk)
+                    database.updatePost(ViewPostManagement.currentPostId, newBody);
+                    
+                    // 5. Update the UI immediately
+                    ViewPostManagement.area_FullBody.setText(newBody);
+                    showAlert("Success", "Post updated successfully!");
+                } catch (java.sql.SQLException e) {
+                    showAlert("Error", "Failed to save the edit to the database.");
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+	protected static void performBack() {
+		// Return to the home page (Role 2)
+		guiRole2.ViewRole2Home.displayRole2Home(ViewPostManagement.theStage, ViewPostManagement.theUser);
+	}
+
+	private static void showAlert(String title, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	// New method to handle transition to reply screen
+	protected static void performReplyToSelected() {
+        // Get the selected string from the list
+        String selected = ViewPostManagement.list_Posts.getSelectionModel().getSelectedItem();
+        
+        if (selected == null) {
+            // Error Message (Task 3 validation requirement)
+            showAlert("Selection Error", "Please select a post from the list to reply.");
+            return;
+        }
+
+        // Parse the ID out of the string (Assuming format "ID: Title")
+        try {
+            int postId = Integer.parseInt(selected.split(":")[0]);
+            // Navigate to Reply View (Task 7.5 demo requirement)
+            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+                ViewPostManagement.theStage, ViewPostManagement.theUser, postId);
+        } catch (Exception e) {
+            showAlert("Error", "Could not parse Post ID.");
+        }
+    }
+	
+}

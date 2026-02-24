@@ -1,0 +1,179 @@
+package entityClasses;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Represents a discussion post in the system.
+ * Supports creation and updating with input validation.
+ */
+public class Post {
+
+    private int id;
+    private String title;
+    private String body;
+    private String author;
+    private LocalDateTime timestamp;
+    private String category;
+
+    public static final int MAX_TITLE_LENGTH = 200;
+    public static final int MAX_BODY_LENGTH = 5000;
+
+    /**
+     * Creates a new Post with the given fields.
+     *
+     * @param id     the unique ID of the post
+     * @param title  the title of the post (must not be empty, max 200 characters)
+     * @param body   the body content of the post (must not be empty, max 5000 characters)
+     * @param author the author of the post (must not be empty)
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    public Post(int id, String title, String body, String author, String category) {
+        validateCreate(title, body, author);
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.author = author;
+        this.timestamp = LocalDateTime.now();
+        this.category = category;
+    }
+
+    /**
+     * Validates inputs for creating a post.
+     *
+     * @param title  the title of the post
+     * @param body   the body of the post
+     * @param author the author of the post
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    private void validateCreate(String title, String body, String author) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post title cannot be empty.");
+        }
+        if (body == null || body.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post body cannot be empty.");
+        }
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Post author cannot be empty.");
+        }
+        if (title.length() > MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Post title exceeds maximum length.");
+        }
+        if (body.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Post body exceeds maximum length.");
+        }
+    }
+
+    /**
+     * Updates the title and body of the post.
+     *
+     * @param newTitle the updated title (must not be empty)
+     * @param newBody  the updated body (must not be empty)
+     *
+     * @throws IllegalArgumentException if the updated title or body is invalid
+     */
+    public void update(String newTitle, String newBody) {
+        validateUpdate(newTitle, newBody);
+        this.title = newTitle;
+        this.body = newBody;
+    }
+
+    /**
+     * Validates inputs for updating a post.
+     *
+     * @param newTitle the updated title
+     * @param newBody  the updated body
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    private void validateUpdate(String newTitle, String newBody) {
+        if (newTitle == null || newTitle.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated post title cannot be empty.");
+        }
+        if (newBody == null || newBody.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated post body cannot be empty.");
+        }
+    }
+    
+    /**
+     * Cleans up the format of the times tamp
+     * 
+     * @return the formatted time stamp
+     */
+	public String getFormattedTimestamp() {
+	    // This turns the "cryptic shit" into "Feb 19, 02:09 AM"
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, hh:mm a");
+	    return this.timestamp.format(formatter);
+	}
+
+    /**
+     * Returns the unique ID of the post.
+     *
+     * @return the post ID
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Returns the title of the post.
+     *
+     * @return the post title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Returns the body of the post.
+     *
+     * @return the post body
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     * Returns the author of the post.
+     *
+     * @return the post author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Returns the timestamp when the post was created.
+     *
+     * @return the creation timestamp
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+    
+    /**
+     * Returns the category type of the post.
+     * 
+     * @return the post category
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * Returns a string representation of the post.
+     *
+     * @return a string describing the post
+     */
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", author='" + author + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
+}

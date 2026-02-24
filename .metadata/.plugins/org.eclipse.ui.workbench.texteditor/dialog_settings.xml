@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
+		<list key="findhistory">
+			<item value="check"/>
+			<item value="return id"/>
+			<item value="getreplies"/>
+			<item value="category"/>
+			<item value="discussion"/>
+			<item value="clear"/>
+			<item value="lab"/>
+			<item value="addAll"/>
+			<item value="performedit"/>
+			<item value="back"/>
+			<item value="protected static ListView&lt;String&gt; list_Replies = new ListView&lt;&gt;();&#x0A;"/>
+			<item value="discus"/>
+			<item value="refresh"/>
+			<item value="modelReplymanagement.get"/>
+			<item value="performCreateReply"/>
+		</list>
+	</section>
+</section>

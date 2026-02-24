@@ -1,0 +1,100 @@
+package guiReplyManagement;
+
+import database.Database;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+public class ControllerReplyManagement {
+	protected static Database database = applicationMain.FoundationsMain.database;
+	
+	protected static void performCreateReply() {
+		String body = ViewReplyManagement.text_Body.getText();
+		String author = ViewReplyManagement.theUser.getUserName();
+		int parentPostId = ViewReplyManagement.currentPostId;
+
+		if (body.isEmpty()) {
+			showAlert("Validation Error", "Reply body cannot be empty.");
+			return;
+		}
+		
+		if (parentPostId <= 0) {
+			showAlert("Validation Error", "Cannot reply to a post that does not exist.");
+			return;
+		}
+
+		int id = ModelReplyManagement.getNextReplyId();
+		entityClasses.Reply newReply = ModelReplyManagement.createReply(id, parentPostId, body, author);
+		
+		
+		try {
+	        database.saveReply(newReply); 
+	        showAlert("Success", "Reply added!");
+
+	        // Refresh the memory-resident list from the database
+	        ModelReplyManagement.getReplyStorage().clearAll();
+	        for (entityClasses.Reply r : database.loadAllReplies()) {
+	            ModelReplyManagement.getReplyStorage().addReply(r);
+	        }
+
+	    } catch (java.sql.SQLException e) {
+	        showAlert("Error", "Failed to save reply.");
+	    }
+		ViewReplyManagement.text_Body.clear();
+		
+		guiPostManagement.ViewPostManagement.displayPostManagement(
+	            ViewReplyManagement.theStage, 
+	            ViewReplyManagement.theUser
+	    );
+	}
+	
+	protected static void performDeleteReply() {
+        try {
+            // 1. Delete from local storage and Database
+            ModelReplyManagement.getReplyStorage().deleteReply(ViewReplyList.currentReplyId);
+            database.deleteReply(ViewReplyList.currentReplyId);
+            
+            // 2. Refresh UI
+            ViewReplyList.refreshReplyList();
+            ViewReplyList.area_ReplyBody.clear();
+            showAlert("Success", "Reply deleted.");
+        } catch (Exception e) {
+            showAlert("Error", "Could not delete reply.");
+        }
+    }
+
+    protected static void performEditReply() {
+        javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog(
+            ViewReplyList.area_ReplyBody.getText()
+        );
+        dialog.setTitle("Edit Reply");
+        dialog.setHeaderText("Update your reply:");
+
+        dialog.showAndWait().ifPresent(newBody -> {
+            if (!newBody.isEmpty()) {
+                try {
+                    // Update memory and DB
+                    ModelReplyManagement.getReplyStorage().updateReply(ViewReplyList.currentReplyId, newBody);
+                    database.updateReply(ViewReplyList.currentReplyId, newBody);
+                    
+                    ViewReplyList.area_ReplyBody.setText(newBody);
+                    showAlert("Success", "Reply updated.");
+                } catch (Exception e) {
+                    showAlert("Error", "Update failed.");
+                }
+            }
+        });
+    }
+
+	protected static void performBack() {
+		// Navigation back to the specific post view or home
+		guiRole2.ViewRole2Home.displayRole2Home(ViewReplyManagement.theStage, ViewReplyManagement.theUser);
+	}
+
+	private static void showAlert(String title, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+}

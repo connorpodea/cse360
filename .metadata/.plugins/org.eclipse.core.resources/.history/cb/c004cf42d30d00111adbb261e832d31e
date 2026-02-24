@@ -1,0 +1,181 @@
+package guiOneTimePassword;
+
+import database.Database;
+
+/**
+ * Controller class for managing the One-Time Password logic and UI updates.
+ * This class handles database interactions and view state for password resets.
+ */
+public class ControllerOneTimePassword {
+	
+	/** Access to the database to retrieve and update user account details. */
+	private static Database theDatabase = applicationMain.FoundationsMain.database; 
+	
+	/** Temporary storage for the first password entry. */
+	protected static String password1 = "";
+	
+	/** Temporary storage for the second password confirmation entry. */
+	protected static String password2 = "";
+	
+	/** Stores the current password of the selected user. */
+	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password1.getText();
+
+	/**
+	 * Handles the logic when a user is selected from the UI dropdown.
+	 * Retrieves account details and refreshes the setup.
+	 */
+	protected static void doSelectUser() {
+		ViewOneTimePassword.theSelectedUser = 
+				(String) ViewOneTimePassword.combobox_SelectUser.getValue();
+		theDatabase.getUserAccountDetails(ViewOneTimePassword.theSelectedUser);
+		
+		currentUsersPassword = theDatabase.getCurrentPassword();
+		
+		setupSelectedUser();
+	}
+	
+	/**
+	 * Refreshes the UI components displayed in the root pane based on the selection state.
+	 */
+	protected static void repaintWindow() {
+		ViewOneTimePassword.theRootPane.getChildren().clear();
+		
+		if (ViewOneTimePassword.theSelectedUser.compareTo("<Select a User>") == 0) {
+			ViewOneTimePassword.theRootPane.getChildren().addAll(
+		            ViewOneTimePassword.labelPageTitle,
+		            ViewOneTimePassword.label_SelectUser,
+		            ViewOneTimePassword.combobox_SelectUser,
+		            ViewOneTimePassword.button_Return,
+		            ViewOneTimePassword.button_Logout,
+		            ViewOneTimePassword.button_Quit);
+		}
+		else {
+			ViewOneTimePassword.theRootPane.getChildren().addAll(
+		            ViewOneTimePassword.labelPageTitle,
+		            ViewOneTimePassword.label_SelectUser,
+		            ViewOneTimePassword.combobox_SelectUser,
+		            ViewOneTimePassword.button_Return,
+		            ViewOneTimePassword.button_Logout,
+		            ViewOneTimePassword.button_Quit,
+		            ViewOneTimePassword.TempText_Password1,
+		            ViewOneTimePassword.TempText_Password2,
+		            ViewOneTimePassword.button_confirmPassword);
+		}
+	}
+	
+	/**
+	 * Configures the roles and permissions for the currently selected user.
+	 */
+	private static void setupSelectedUser() {
+		System.out.println("*** Entering setupSelectedUser");
+		
+		ViewOneTimePassword.addList.clear();
+		ViewOneTimePassword.addList.add("<Select a role>");
+		if (!theDatabase.getCurrentAdminRole())
+			ViewOneTimePassword.addList.add("Admin");
+		if (!theDatabase.getCurrentNewRole1())
+			ViewOneTimePassword.addList.add("Role1");
+		if (!theDatabase.getCurrentNewRole2())
+			ViewOneTimePassword.addList.add("Role2");
+
+		ViewOneTimePassword.removeList.clear();
+		ViewOneTimePassword.removeList.add("<Select a role>");
+		if (theDatabase.getCurrentAdminRole())
+			ViewOneTimePassword.removeList.add("Admin");
+		if (theDatabase.getCurrentNewRole1())
+			ViewOneTimePassword.removeList.add("Role1");
+		if (theDatabase.getCurrentNewRole2())
+			ViewOneTimePassword.removeList.add("Role2");
+		
+		boolean notTheFirst = false;
+		String theCurrentRoles = "";
+		
+		if (theDatabase.getCurrentAdminRole()) {
+			theCurrentRoles += "Admin";
+			notTheFirst = true;
+		}
+		
+		if (theDatabase.getCurrentNewRole1()) {
+			if (notTheFirst)
+				theCurrentRoles += ", Role1"; 
+			else {
+				theCurrentRoles += "Role1";
+				notTheFirst = true;
+			}
+		}
+
+		if (theDatabase.getCurrentNewRole2()) {
+			if (notTheFirst)
+				theCurrentRoles += ", Role2"; 
+			else {
+				theCurrentRoles += "Role2";
+				notTheFirst = true;
+			}
+		}
+		
+		repaintWindow();
+	}
+	
+	/**
+	 * Updates the internal password1 variable from the UI text field.
+	 */
+	protected static void setAdminPassword1() {
+		password1 = ViewOneTimePassword.TempText_Password1.getText();
+	}
+	
+	/**
+	 * Updates the internal password2 variable from the UI text field.
+	 */
+	protected static void setAdminPassword2() {
+		password2 = ViewOneTimePassword.TempText_Password2.getText();		
+	}
+	
+	/**
+	 * Validates the password entries and updates the database if they match.
+	 */
+	protected static void doOneTimePassword() {
+		if(ViewOneTimePassword.TempText_Password1.getText().isEmpty()) {
+			ViewOneTimePassword.TempText_Password1.setText("");
+			ViewOneTimePassword.TempText_Password2.setText("");
+			ViewOneTimePassword.displayError2.showAndWait();
+		}
+		else if(ViewOneTimePassword.TempText_Password1.getText().equals(ViewOneTimePassword.TempText_Password2.getText())) {
+			theDatabase.updatePassword(ViewOneTimePassword.theSelectedUser, ViewOneTimePassword.TempText_Password1.getText());
+			performConfirmation();
+		}
+		else {
+			ViewOneTimePassword.TempText_Password1.setText("");
+			ViewOneTimePassword.TempText_Password2.setText("");
+			ViewOneTimePassword.displayError.showAndWait();
+		}
+	}
+	 
+	/**
+	 * Navigates back to the Admin Home page.
+	 */
+	protected static void performReturn() {
+		guiAdminHome.ViewAdminHome.displayAdminHome(ViewOneTimePassword.theStage,
+				ViewOneTimePassword.theUser);
+	}
+	
+	/**
+	 * Logs the current user out and returns to the login screen.
+	 */
+	protected static void performLogout() {
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewOneTimePassword.theStage);
+	}
+	
+	/**
+	 * Terminates the application.
+	 */
+	protected static void performQuit() {
+		System.exit(0);
+	}
+	
+	/**
+	 * Displays a confirmation dialog upon successful password update.
+	 */
+	protected static void performConfirmation() {
+		ViewOneTimePassword.displayConfirmation.showAndWait();
+	}
+}

@@ -1,0 +1,123 @@
+package guiPostManagement;
+import entityClasses.Post;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+
+/*******
+ * <p> Title: ControllerPostManagement Class. </p>
+ * <p> Description: Controller for CRUD operations on Posts. </p>
+ * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ */
+public class ControllerPostManagement {
+
+	protected static void performCreatePost() {
+		int id = ModelPostManagement.getNextPostId();
+		String title = ViewCreatePost.text_Title.getText(); 
+		String body = ViewCreatePost.text_Body.getText();   
+		// FIX: Use the ComboBox for category, not the body text!
+		String category = ViewCreatePost.combo_Category.getValue();
+		String author = ViewPostManagement.theUser.getUserName();
+
+		if (title.isEmpty() || body.isEmpty() || category == null || category.isEmpty()) {
+			showAlert("Validation Error", "All fields including Category must be filled.");
+			return;
+		}
+
+		ModelPostManagement.createPost(id, title, body, author, category);
+		showAlert("Success", "Post created successfully!");
+		
+		ViewCreatePost.text_Title.clear();
+		ViewCreatePost.text_Body.clear();
+		// Return to board after creation
+		ViewPostManagement.displayPostManagement(ViewPostManagement.theStage, ViewPostManagement.theUser);
+	}
+	
+	// Method to handle when a user clicks a post in the sidebar
+	protected static void displaySelectedPost() {
+        String selected = ViewPostManagement.list_Posts.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        String title = selected.split("\n")[0];
+        
+        for (Post p : ModelPostManagement.getPostStorage().getAllPosts()) {
+            if (p.getTitle().equals(title)) {
+                // Populate UI
+                ViewPostManagement.label_FullTitle.setText("Title: " + p.getTitle());
+                ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
+                // FIX: Use the new formatted getter to remove "cryptic" text
+                ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
+                ViewPostManagement.area_FullBody.setText(p.getBody());
+                ViewPostManagement.currentPostId = p.getId();
+
+                // Dynamic Reply Count
+                int count = guiReplyManagement.ModelReplyManagement.getReplyStorage().getRepliesForPost(p.getId()).size();
+                ViewPostManagement.button_ViewReplies.setText("View Replies (" + count + ")");
+
+                // Permissions Check
+                boolean canEdit = ViewPostManagement.theUser.getUserName().equals(p.getAuthor()) || ViewPostManagement.theUser.isAdmin();
+                // Ensure these buttons are added to ViewPostManagement
+                // ViewPostManagement.button_Edit.setVisible(canEdit); 
+                // ViewPostManagement.button_Delete.setVisible(canEdit);
+                break;
+            }
+        }
+    }
+    
+    // Method for the reply button at the bottom of the full post
+    protected static void performReply() {
+        if (ViewPostManagement.currentPostId != -1) {
+            // Transition to the Reply screen with the selected Post ID
+            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+                ViewPostManagement.theStage, 
+                ViewPostManagement.theUser, 
+                ViewPostManagement.currentPostId
+            );
+        }
+    }
+    
+    protected static void performDelete() {
+        // 1. Remove from ModelStorage
+        ModelPostManagement.getPostStorage().deletePost(ViewPostManagement.currentPostId);
+        // 2. TODO: Remove from H2 Database
+        // 3. Refresh UI
+        ViewPostManagement.refreshPostList();
+        ViewPostManagement.area_FullBody.clear();
+    }
+
+	protected static void performBack() {
+		// Return to the home page (Role 2)
+		guiRole2.ViewRole2Home.displayRole2Home(ViewPostManagement.theStage, ViewPostManagement.theUser);
+	}
+
+	private static void showAlert(String title, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	// New method to handle transition to reply screen
+	protected static void performReplyToSelected() {
+        // Get the selected string from the list
+        String selected = ViewPostManagement.list_Posts.getSelectionModel().getSelectedItem();
+        
+        if (selected == null) {
+            // Error Message (Task 3 validation requirement)
+            showAlert("Selection Error", "Please select a post from the list to reply.");
+            return;
+        }
+
+        // Parse the ID out of the string (Assuming format "ID: Title")
+        try {
+            int postId = Integer.parseInt(selected.split(":")[0]);
+            // Navigate to Reply View (Task 7.5 demo requirement)
+            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+                ViewPostManagement.theStage, ViewPostManagement.theUser, postId);
+        } catch (Exception e) {
+            showAlert("Error", "Could not parse Post ID.");
+        }
+    }
+	
+}

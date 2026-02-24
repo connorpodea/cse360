@@ -1,0 +1,141 @@
+package entityClasses;
+import java.time.LocalDateTime;
+
+/**
+ * Represents a reply to a discussion post.
+ * Supports creation and updating with input validation.
+ */
+public class Reply {
+
+    private int id;
+    private int postId;
+    private String body;
+    private String author;
+    private LocalDateTime timestamp;
+
+    /**
+     * Creates a new Reply with the given fields.
+     *
+     * @param id     the unique ID of the reply
+     * @param postId the ID of the post this reply belongs to
+     * @param body   the body of the reply (must not be empty)
+     * @param author the author of the reply (must not be empty)
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    public Reply(int id, int postId, String body, String author) {
+        validateCreate(body, author);
+        this.id = id;
+        this.postId = postId;
+        this.body = body;
+        this.author = author;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    /**
+     * Validates inputs for creating a reply.
+     *
+     * @param body   the body of the reply
+     * @param author the author of the reply
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    private void validateCreate(String body, String author) {
+        if (body == null || body.trim().isEmpty()) {
+            throw new IllegalArgumentException("Reply body cannot be empty.");
+        }
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Reply author cannot be empty.");
+        }
+    }
+
+    /**
+     * Updates the body of the reply.
+     *
+     * @param newBody the updated reply body (must not be empty)
+     *
+     * @throws IllegalArgumentException if the updated body is invalid
+     */
+    public void update(String newBody) {
+        validateUpdate(newBody);
+        this.body = newBody;
+    }
+
+    /**
+     * Validates inputs for updating a reply.
+     *
+     * @param newBody the updated reply body
+     *
+     * @throws IllegalArgumentException if any validation rule is violated
+     */
+    private void validateUpdate(String newBody) {
+        if (newBody == null || newBody.trim().isEmpty()) {
+            throw new IllegalArgumentException("Updated reply body cannot be empty.");
+        }
+    }
+    
+    public int getParentPostId() {
+        return parentPostId; // Or whatever you named the variable for the Post ID
+    }
+
+    /**
+     * Returns the unique ID of the reply.
+     *
+     * @return the reply ID
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Returns the ID of the post this reply belongs to.
+     *
+     * @return the parent post ID
+     */
+    public int getPostId() {
+        return postId;
+    }
+
+    /**
+     * Returns the body of the reply.
+     *
+     * @return the reply body
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     * Returns the author of the reply.
+     *
+     * @return the reply author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Returns the timestamp when the reply was created.
+     *
+     * @return the creation timestamp
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Returns a string representation of the reply.
+     *
+     * @return a string describing the reply
+     */
+    @Override
+    public String toString() {
+        return "Reply{" +
+                "id=" + id +
+                ", postId=" + postId +
+                ", body='" + body + '\'' +
+                ", author='" + author + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
+}

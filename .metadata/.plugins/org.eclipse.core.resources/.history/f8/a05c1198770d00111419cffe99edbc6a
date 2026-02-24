@@ -1,0 +1,47 @@
+package guiReplyManagement;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+public class ControllerReplyManagement {
+
+	protected static void performCreateReply() {
+		String body = ViewReplyManagement.text_Body.getText();
+		String author = ViewReplyManagement.theUser.getUserName();
+		int parentPostId = ViewReplyManagement.currentPostId;
+
+		if (body.isEmpty()) {
+			showAlert("Validation Error", "Reply body cannot be empty.");
+			return;
+		}
+		
+		if (parentPostId <= 0) {
+			showAlert("Validation Error", "Cannot reply to a post that does not exist.");
+			return;
+		}
+
+		int id = ModelReplyManagement.getNextReplyId();
+		ModelReplyManagement.createReply(id, parentPostId, body, author);
+		
+		showAlert("Success", "Reply added successfully!");
+		ViewReplyManagement.text_Body.clear();
+		
+		guiPostManagement.ViewPostManagement.displayPostManagement(
+	            ViewReplyManagement.theStage, 
+	            ViewReplyManagement.theUser
+	        );
+	}
+
+	protected static void performBack() {
+		// Navigation back to the specific post view or home
+		guiRole2.ViewRole2Home.displayRole2Home(ViewReplyManagement.theStage, ViewReplyManagement.theUser);
+	}
+
+	private static void showAlert(String title, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+}
