@@ -9,3 +9,7 @@ bin/
 
 # Ignore old homework
 HW1/
+
+# Ignore metadata
+.metadata/
+
