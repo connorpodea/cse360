@@ -21,6 +21,10 @@ package guiRole2;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
+/**
+ * Controls the role 2 home screen.
+ * This class supports the assignment flow for users working with role 2 features.
+ */
 public class ControllerRole2Home {
 	
 	/*-*******************************************************************************************
@@ -35,6 +39,9 @@ public class ControllerRole2Home {
 
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerRole2Home() {
 	}

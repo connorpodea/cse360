@@ -29,6 +29,10 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Shows the screen used to add or remove roles from a user.
+ * This view supports the admin assignment story for managing user roles.
+ */
 public class ViewAddRemoveRoles {
 	
 	/*-*******************************************************************************************
@@ -97,6 +101,7 @@ public class ViewAddRemoveRoles {
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current user of the application
 	
+	/** Stores the scene used by the add/remove roles screen. */
 	public static Scene theAddRemoveRolesScene = null;	// The Scene each invocation populates
 	protected static String theSelectedUser = "";	// The user whose roles are being updated
 	protected static String theAddRole = "";		// The role being added
@@ -131,6 +136,12 @@ public class ViewAddRemoveRoles {
 	 * @param user specifies the User whose roles will be updated
 	 *
 	 */
+	/**
+	 * Displays the add/remove roles screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
+	 */
 	public static void displayAddRemoveRoles(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
@@ -164,6 +175,9 @@ public class ViewAddRemoveRoles {
 	 * This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
 	 * fields using the displayAddRempoveRoles method.</p>
 	 * 
+	 */
+	/**
+	 * Creates the add/remove roles view and its widgets.
 	 */
 	public ViewAddRemoveRoles() {
 		

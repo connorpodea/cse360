@@ -30,6 +30,10 @@ import guiOneTimePassword.ViewOneTimePassword;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
+/**
+ * Controls the login screen.
+ * This class supports assignment stories where users sign in and are routed to the correct pages.
+ */
 public class ControllerUserLogin {
 	
 	/*-********************************************************************************************
@@ -44,6 +48,9 @@ public class ControllerUserLogin {
 
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerUserLogin() {
 	}

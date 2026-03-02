@@ -24,6 +24,10 @@ package guiMultipleRoleDispatch;
  *  
  */
 
+/**
+ * Controls the multiple-role dispatch screen.
+ * This class supports the assignment login flow when a user must choose one role to use.
+ */
 public class ControllerMultipleRoleDispatch {
 
 	/*-********************************************************************************************
@@ -38,6 +42,9 @@ public class ControllerMultipleRoleDispatch {
 	
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerMultipleRoleDispatch() {
 	}

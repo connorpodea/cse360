@@ -14,6 +14,16 @@ package guiNewAccount;
  * @version 1.00		2025-08-15 Initial version
  *  
  */
+/**
+ * Holds model support for the new account screen.
+ * This class keeps the MVC structure used by the invitation and account-creation stories.
+ */
 public class ModelNewAccount {
+
+	/**
+	 * Creates the new-account model object.
+	 */
+	public ModelNewAccount() {
+	}
 
 }

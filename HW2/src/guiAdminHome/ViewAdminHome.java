@@ -53,6 +53,10 @@ import javafx.scene.control.TableView;
  *  
  */
 
+/**
+ * Shows the main home screen for admin users.
+ * This view supports assignment stories where admins manage users, roles, and account actions.
+ */
 public class ViewAdminHome {
 	
 	/*-*******************************************************************************************
@@ -173,6 +177,12 @@ public class ViewAdminHome {
 	 * 
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
+	 */
+	/**
+	 * Displays the admin home screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayAdminHome(Stage ps, User user) {
 		

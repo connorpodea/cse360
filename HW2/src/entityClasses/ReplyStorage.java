@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Stores replies in memory and lets other classes get them.
- * Handles basic operations on replies.
+ * Stores replies in memory for the discussion board.
+ * This class supports assignment stories that create, list, update, and remove replies.
  */
 public class ReplyStorage {
 
@@ -19,7 +19,9 @@ public class ReplyStorage {
     }
 
     /**
-     * Adds a reply to the list.
+     * Adds a reply to storage.
+     *
+     * @param reply the reply to add
      */
     public void addReply(Reply reply) {
         if (reply == null) {
@@ -30,6 +32,9 @@ public class ReplyStorage {
 
     /**
      * Finds a reply by id.
+     *
+     * @param id the reply id
+     * @return the matching reply
      */
     public Reply getReplyById(int id) {
         return replies.stream()
@@ -42,6 +47,9 @@ public class ReplyStorage {
 
     /**
      * Updates a reply body.
+     *
+     * @param id the reply id
+     * @param newBody the updated reply text
      */
     public void updateReply(int id, String newBody) {
         Reply reply = replies.stream()
@@ -56,6 +64,8 @@ public class ReplyStorage {
 
     /**
      * Deletes a reply by id.
+     *
+     * @param id the reply id
      */
     public void deleteReply(int id) {
         Reply reply = replies.stream()
@@ -70,6 +80,9 @@ public class ReplyStorage {
 
     /**
      * Gets all replies for a post.
+     *
+     * @param postId the post id
+     * @return the replies for that post
      */
     public List<Reply> getRepliesForPost(int postId) {
         return replies.stream()
@@ -78,7 +91,10 @@ public class ReplyStorage {
     }
 
     /**
-     * Filters replies by keyword.
+     * Finds replies that match the given text.
+     *
+     * @param filter the search text
+     * @return the matching replies
      */
     public List<Reply> getRepliesByFilter(String filter) {
         if (filter == null) {
@@ -91,21 +107,26 @@ public class ReplyStorage {
     }
 
     /**
-     * Returns all replies (copy of list).
+     * Returns all replies.
+     *
+     * @return a copy of the stored replies
      */
     public List<Reply> getAllReplies() {
         return new ArrayList<>(replies);
     }
 
     /**
-     * Checks if a reply exists.
+     * Checks whether a reply exists.
+     *
+     * @param id the reply id
+     * @return true when the reply exists
      */
     public boolean exists(int id) {
         return replies.stream().anyMatch(r -> r.getId() == id);
     }
     
     /**
-     * Clears the whole list.
+     * Clears all replies from storage.
      */
     public void clearAll() {
         replies.clear();

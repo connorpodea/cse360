@@ -21,23 +21,41 @@ package guiTools;
  * @version 2.00	2025-07-30 Rewrite of this application for the Fall 2025 offering of CSE 360
  * and other ASU courses.
  */
-
+/**
+ * Validates passwords against the project rules.
+ * This helper supports account user stories by checking password strength and reporting errors.
+ */
 public class PasswordRecognizer {
 
+	/** Stores the latest password validation message. */
 	public static String passwordErrorMessage = "";		// The error message text
+	/** Stores the latest password value being checked. */
 	public static String passwordInput = "";			// The input being processed
+	/** Stores the character index where validation failed. */
 	public static int passwordIndexofError = -1;		// The index where the error was located
+	/** Tracks whether an upper-case letter was found. */
 	public static boolean foundUpperCase = false;
+	/** Tracks whether a lower-case letter was found. */
 	public static boolean foundLowerCase = false;
+	/** Tracks whether a number was found. */
 	public static boolean foundNumericDigit = false;
+	/** Tracks whether a special character was found. */
 	public static boolean foundSpecialChar = false;
+	/** Tracks whether the password is long enough. */
 	public static boolean foundLongEnough = false;
+	/** Tracks whether the password is within the maximum length. */
 	public static boolean foundTooLong = false;
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line
 	private static int currentCharNdx;					// The index of the current character
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
+
+	/**
+	 * Creates the recognizer helper.
+	 */
+	public PasswordRecognizer() {
+	}
 
 	/*
 	 * This private method displays the input line and then on a line under it displays the input
@@ -57,18 +75,11 @@ public class PasswordRecognizer {
 	}
 	
 
-	/**********
-	 * <p> Title: evaluatePassword - Public Method </p>
-	 * 
-	 * <p> Description: This method is a mechanical transformation of a Directed Graph diagram 
-	 * into a Java method. This method is used by both the GUI version of the application as well
-	 * as the testing automation version.
-	 * 
-	 * @param input		The input string evaluated by the directed graph processing
-	 * @return			An output string that is empty if every things is okay or it will be
-	 * 						a string with a helpful description of the error follow by two lines
-	 * 						that shows the input line follow by a line with an up arrow at the
-	 *						point where the error was found.
+	/**
+	 * Checks whether the given password meets the project rules.
+	 *
+	 * @param input the password text to validate
+	 * @return an empty string when valid, or an error message when invalid
 	 */
 	
 	public static String evaluatePassword(String input) {

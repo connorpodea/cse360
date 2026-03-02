@@ -1,5 +1,9 @@
 package guiRole2;
 
+/**
+ * Holds model support for the role 2 home screen.
+ * This class is a placeholder for assignment work when the role 2 page needs shared data.
+ */
 public class ModelRole2Home {
 
 /*******
@@ -17,5 +21,11 @@ public class ModelRole2Home {
  * @version 1.01		2025-09-13 Updated JavaDoc description
  *  
  */
+
+	/**
+	 * Creates the role 2 home model object.
+	 */
+	public ModelRole2Home() {
+	}
 
 }

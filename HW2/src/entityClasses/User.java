@@ -12,7 +12,10 @@ package entityClasses;
  * 
  * 
  */ 
-
+/**
+ * Represents one user account in the system.
+ * This class stores account details and roles used by the assignment login and role stories.
+ */
 public class User {
 	
 	/*
@@ -34,6 +37,9 @@ public class User {
      * <p> Method: User() </p>
      * 
      * <p> Description: This default constructor is not used in this system. </p>
+     */
+    /**
+     * Creates an empty user object.
      */
     public User() {
     	
@@ -57,7 +63,20 @@ public class User {
      * @param r3 specifies the the Reviewer attribute (TRUE or FALSE) for this user
      * 
      */
-    // Constructor to initialize a new User object with userName, password, and role.
+    /**
+     * Creates a user object with account details and roles.
+     *
+     * @param userName the account username
+     * @param password the account password
+     * @param email the account email address
+     * @param fn the first name
+     * @param mn the middle name
+     * @param ln the last name
+     * @param pfn the preferred first name
+     * @param r1 true when the user has the admin role
+     * @param r2 true when the user has role 1
+     * @param r3 true when the user has role 2
+     */
     public User(String userName, String password, String email, String fn, String mn, String ln, String pfn, boolean r1, boolean r2, boolean r3) {
         this.userName = userName;
         this.password = password;
@@ -80,7 +99,11 @@ public class User {
      * @param role is a boolean that specifies if this user in playing the Admin role.
      * 
      */
-    // Sets the role of the Admin user.
+    /**
+     * Sets the admin role value.
+     *
+     * @param role the new admin role value
+     */
     public void setAdminRole(boolean role) {
     	this.adminRole=role;
     }
@@ -94,7 +117,11 @@ public class User {
      * @param role is a boolean that specifies if this user in playing role1.
      * 
      */
-    // Sets the role1 user.
+    /**
+     * Sets the role 1 value.
+     *
+     * @param role the new role 1 value
+     */
     public void setRole1User(boolean role) {
     	this.staffRole=role;
     }
@@ -108,7 +135,11 @@ public class User {
      * @param role is a boolean that specifies if this user in playing role2.
      * 
      */
-    // Sets the role2 user.
+    /**
+     * Sets the role 2 value.
+     *
+     * @param role the new role 2 value
+     */
     public void setRole2User(boolean role) {
     	this.studentRole=role;
     }
@@ -197,12 +228,47 @@ public class User {
     // Gets the current value of the Student role attribute.
     public String getEmailAddress() { return emailAddress; }
 
+    /**
+     * Sets the username.
+     *
+     * @param s the new username
+     */
     public void setUserName(String s) { userName = s; }
+    /**
+     * Sets the password.
+     *
+     * @param s the new password
+     */
     public void setPassword(String s) { password = s; }
+    /**
+     * Sets the first name.
+     *
+     * @param s the new first name
+     */
     public void setFirstName(String s) { firstName = s; }
+    /**
+     * Sets the middle name.
+     *
+     * @param s the new middle name
+     */
     public void setMiddleName(String s) { middleName = s; }
+    /**
+     * Sets the last name.
+     *
+     * @param s the new last name
+     */
     public void setLastName(String s) { lastName = s; }
+    /**
+     * Sets the preferred first name.
+     *
+     * @param s the new preferred first name
+     */
     public void setPreferredFirstName(String s) { preferredFirstName = s; }
+    /**
+     * Sets the email address.
+     *
+     * @param s the new email address
+     */
     public void setEmailAddress(String s) { emailAddress = s; }
 
     

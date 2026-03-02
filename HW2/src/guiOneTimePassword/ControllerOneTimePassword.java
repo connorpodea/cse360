@@ -3,6 +3,11 @@ package guiOneTimePassword;
 import database.Database;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
+/**
+ * Controls the one-time password screen.
+ * This class supports the admin workflow for resetting a user's password in the assignment.
+ */
 public class ControllerOneTimePassword {
 	
 	// having access to the data base so we can see the users.
@@ -10,6 +15,12 @@ public class ControllerOneTimePassword {
 	protected static String password1 = "";
 	protected static String password2 = "";
 	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password1.getText();;
+
+	/**
+	 * Creates the controller object.
+	 */
+	public ControllerOneTimePassword() {
+	}
 
 	
 	protected static void doSelectUser() {

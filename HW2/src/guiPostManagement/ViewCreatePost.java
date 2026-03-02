@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 import entityClasses.User;
 
 /**
- * View class for creating a new post.
- * Handles setting up the UI elements for the create post screen.
+ * Shows the screen used to create a new post.
+ * This view supports assignment stories where users add posts to the discussion board.
  */
 public class ViewCreatePost {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -30,7 +30,9 @@ public class ViewCreatePost {
 
 	/**
 	 * Shows the create post screen.
-	 * Reuses the view so it doesn’t rebuild the UI every time.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayCreatePost(Stage ps, User user) {
 		theStage = ps;

@@ -33,6 +33,10 @@ import entityClasses.User;
  * and performing operations such as user registration, login validation, handling invitation 
  * codes, and numerous other database related functions.
  */
+/**
+ * Manages the application's H2 database connection and queries.
+ * This class supports the assignment user stories for accounts, roles, posts, replies, and login.
+ */
 public class Database {
 	
 
@@ -68,6 +72,9 @@ public class Database {
 	 * 
 	 */
 	
+	/**
+	 * Creates the shared database helper object.
+	 */
 	public Database () {
 		
 	}
@@ -82,6 +89,11 @@ public class Database {
  * @throws SQLException when the DriverManager is unable to establish a connection
  * 
  */
+	/**
+	 * Opens the database connection and creates the required tables.
+	 *
+	 * @throws SQLException when the database cannot be opened
+	 */
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver
@@ -197,6 +209,12 @@ public class Database {
      * @throws SQLException when there is an issue executing the SQL query.
      */
 	
+	/**
+	 * Loads all posts from the database.
+	 *
+	 * @return all saved posts
+	 * @throws SQLException when the query fails
+	 */
 	public java.util.List<entityClasses.Post> loadAllPosts() throws SQLException {
 	    java.util.List<entityClasses.Post> results = new java.util.ArrayList<>();
 	    String query = "SELECT * FROM postDB";
@@ -220,6 +238,12 @@ public class Database {
      * @return a list of all Reply objects
      * @throws SQLException when there is an issue executing the SQL query
      */
+	/**
+	 * Loads all replies from the database.
+	 *
+	 * @return all saved replies
+	 * @throws SQLException when the query fails
+	 */
 	public java.util.List<entityClasses.Reply> loadAllReplies() throws java.sql.SQLException {
 	    java.util.List<entityClasses.Reply> results = new java.util.ArrayList<>();
 	    String query = "SELECT * FROM replyDB";
@@ -320,6 +344,11 @@ public class Database {
  * @return true if the database is empty, else it returns false
  * 
  */
+	/**
+	 * Checks whether the user table is empty.
+	 *
+	 * @return true when no user records exist
+	 */
 	public boolean isDatabaseEmpty() {
 		String query = "SELECT COUNT(*) AS count FROM userDB";
 		try {
@@ -333,6 +362,11 @@ public class Database {
 		return true;
 	}
 	
+	/**
+	 * Counts how many admin users exist.
+	 *
+	 * @return the number of admin users
+	 */
 	public int getNumberOfAdmins() {
 	    String query = "SELECT COUNT(*) AS count FROM userDB WHERE adminRole = TRUE";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -357,6 +391,11 @@ public class Database {
  * @return the number of user records in the database.
  * 
  */
+	/**
+	 * Counts how many users exist.
+	 *
+	 * @return the number of users
+	 */
 	public int getNumberOfUsers() {
 		String query = "SELECT COUNT(*) AS count FROM userDB";
 		try {
@@ -380,6 +419,12 @@ public class Database {
  * @param user specifies a user object to be added to the database.
  * 
  */
+	/**
+	 * Saves a new user record.
+	 *
+	 * @param user the user to register
+	 * @throws SQLException when the insert fails
+	 */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
 				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2, isOTP) "
@@ -428,6 +473,11 @@ public class Database {
  *  
  *  @return a list of userNames found in the database.
  */
+	/**
+	 * Returns usernames for the user selection lists.
+	 *
+	 * @return the usernames used by the GUI
+	 */
 	public List<String> getUserList () {
 		List<String> userList = new ArrayList<String>();
 		userList.add("<Select a User>");
@@ -444,6 +494,11 @@ public class Database {
 		return userList;
 	}
 	
+	/**
+	 * Returns all users for display.
+	 *
+	 * @return the users prepared for the GUI
+	 */
 	public List<User> getAllUsersForDisplay() {
 		List<User> users = new ArrayList<>();
 		
@@ -492,6 +547,12 @@ public class Database {
  * @return true if the specified user has been logged in as an Admin else false.
  * 
  */
+	/**
+	 * Checks whether the given user can log in as an admin.
+	 *
+	 * @param user the user being checked
+	 * @return true when the login is valid
+	 */
 	public boolean loginAdmin(User user){
 		// Validates an admin user's login credentials so the user can login in as an Admin.
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
@@ -519,6 +580,12 @@ public class Database {
  * @return true if the specified user has been logged in as an Student else false.
  * 
  */
+	/**
+	 * Checks whether the given user can log in with role 1.
+	 *
+	 * @param user the user being checked
+	 * @return true when the login is valid
+	 */
 	public boolean loginRole1(User user) {
 		// Validates a student user's login credentials.
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
@@ -546,6 +613,12 @@ public class Database {
 	 * 
 	 */
 	// Validates a reviewer user's login credentials.
+	/**
+	 * Checks whether the given user can log in with role 2.
+	 *
+	 * @param user the user being checked
+	 * @return true when the login is valid
+	 */
 	public boolean loginRole2(User user) {
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
 				+ "newRole2 = TRUE";
@@ -572,6 +645,12 @@ public class Database {
 	 * 
 	 */
 	// Checks if a user already exists in the database based on their userName.
+	/**
+	 * Checks whether a username already exists.
+	 *
+	 * @param userName the username to search for
+	 * @return true when the username exists
+	 */
 	public boolean doesUserExist(String userName) {
 	    String query = "SELECT COUNT(*) FROM userDB WHERE userName = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -601,6 +680,12 @@ public class Database {
 	 * 
 	 */	
 	// Get the number of roles that this user plays
+	/**
+	 * Counts how many roles a user has.
+	 *
+	 * @param user the user being checked
+	 * @return the number of roles for that user
+	 */
 	public int getNumberOfRoles (User user) {
 		int numberOfRoles = 0;
 		if (user.getAdminRole()) numberOfRoles++;
@@ -626,6 +711,13 @@ public class Database {
 	 * 
 	 */
 	// Generates a new invitation code and inserts it into the database.
+	/**
+	 * Creates and saves an invitation code.
+	 *
+	 * @param emailAddress the invited email address
+	 * @param role the invited role
+	 * @return the generated invitation code
+	 */
 	public String generateInvitationCode(String emailAddress, String role) {
 	    String code = UUID.randomUUID().toString().substring(0, 6); // Generate a random 6-character code
 	    String query = "INSERT INTO InvitationCodes (code, emailaddress, role) VALUES (?, ?, ?)";
@@ -651,6 +743,11 @@ public class Database {
 	 * 
 	 */
 	// Number of invitations in the database
+	/**
+	 * Counts how many invitation codes exist.
+	 *
+	 * @return the number of saved invitation codes
+	 */
 	public int getNumberOfInvitations() {
 		String query = "SELECT COUNT(*) AS count FROM InvitationCodes";
 		try {
@@ -676,6 +773,12 @@ public class Database {
 	 * 
 	 */
 	// Check to see if an email address is already in the database
+	/**
+	 * Checks whether an email address has already been used.
+	 *
+	 * @param emailAddress the email address to search for
+	 * @return true when the email address is already used
+	 */
 	public boolean emailaddressHasBeenUsed(String emailAddress) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE emailAddress = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -704,6 +807,12 @@ public class Database {
 	 * 
 	 */
 	// Obtain the roles associated with an invitation code.
+	/**
+	 * Finds the role stored for an invitation code.
+	 *
+	 * @param code the invitation code
+	 * @return the role for that code
+	 */
 	public String getRoleGivenAnInvitationCode(String code) {
 	    String query = "SELECT * FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -730,6 +839,12 @@ public class Database {
 	 * 
 	 */
 	// For a given invitation code, return the associated email address of an empty string
+	/**
+	 * Finds the email address stored for an invitation code.
+	 *
+	 * @param code the invitation code
+	 * @return the email address for that code
+	 */
 	public String getEmailAddressUsingCode (String code ) {
 	    String query = "SELECT emailAddress FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -754,6 +869,11 @@ public class Database {
 	 *  
 	 */
 	// Remove an invitation using an email address once the user account has been setup
+	/**
+	 * Removes an invitation code after it is used.
+	 *
+	 * @param code the invitation code to remove
+	 */
 	public void removeInvitationAfterUse(String code) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -790,6 +910,12 @@ public class Database {
 	 *  
 	 */
 	// Get the First Name
+	/**
+	 * Returns a user's first name.
+	 *
+	 * @param username the username to look up
+	 * @return the saved first name
+	 */
 	public String getFirstName(String username) {
 		String query = "SELECT firstName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -819,6 +945,12 @@ public class Database {
 	 *  
 	 */
 	// update the first name
+	/**
+	 * Updates a user's first name.
+	 *
+	 * @param username the username to update
+	 * @param firstName the new first name
+	 */
 	public void updateFirstName(String username, String firstName) {
 	    String query = "UPDATE userDB SET firstName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -843,6 +975,12 @@ public class Database {
 	 *  
 	 */
 	// get the middle name
+	/**
+	 * Returns a user's middle name.
+	 *
+	 * @param username the username to look up
+	 * @return the saved middle name
+	 */
 	public String getMiddleName(String username) {
 		String query = "SELECT MiddleName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -871,6 +1009,12 @@ public class Database {
 	 *  
 	 */
 	// update the middle name
+	/**
+	 * Updates a user's middle name.
+	 *
+	 * @param username the username to update
+	 * @param middleName the new middle name
+	 */
 	public void updateMiddleName(String username, String middleName) {
 	    String query = "UPDATE userDB SET middleName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -895,6 +1039,12 @@ public class Database {
 	 *  
 	 */
 	// get he last name
+	/**
+	 * Returns a user's last name.
+	 *
+	 * @param username the username to look up
+	 * @return the saved last name
+	 */
 	public String getLastName(String username) {
 		String query = "SELECT LastName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -923,6 +1073,12 @@ public class Database {
 	 *  
 	 */
 	// update the last name
+	/**
+	 * Updates a user's last name.
+	 *
+	 * @param username the username to update
+	 * @param lastName the new last name
+	 */
 	public void updateLastName(String username, String lastName) {
 	    String query = "UPDATE userDB SET lastName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -947,6 +1103,12 @@ public class Database {
 	 *  
 	 */
 	// get the preferred first name
+	/**
+	 * Returns a user's preferred first name.
+	 *
+	 * @param username the username to look up
+	 * @return the saved preferred first name
+	 */
 	public String getPreferredFirstName(String username) {
 		String query = "SELECT preferredFirstName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -976,6 +1138,12 @@ public class Database {
 	 *  
 	 */
 	// update the preferred first name of the user
+	/**
+	 * Updates a user's preferred first name.
+	 *
+	 * @param username the username to update
+	 * @param preferredFirstName the new preferred first name
+	 */
 	public void updatePreferredFirstName(String username, String preferredFirstName) {
 	    String query = "UPDATE userDB SET preferredFirstName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1000,6 +1168,12 @@ public class Database {
 	 *  
 	 */
 	// get the email address
+	/**
+	 * Returns a user's email address.
+	 *
+	 * @param username the username to look up
+	 * @return the saved email address
+	 */
 	public String getEmailAddress(String username) {
 		String query = "SELECT emailAddress FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1029,6 +1203,12 @@ public class Database {
 	 *  
 	 */
 	// update the email address
+	/**
+	 * Updates a user's email address.
+	 *
+	 * @param username the username to update
+	 * @param emailAddress the new email address
+	 */
 	public void updateEmailAddress(String username, String emailAddress) {
 	    String query = "UPDATE userDB SET emailAddress = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1053,6 +1233,12 @@ public class Database {
 	 *  
 	 */
 	// get the attributes for a specified user
+	/**
+	 * Loads a user's account details into the cached current-user fields.
+	 *
+	 * @param username the username to load
+	 * @return true when the user was found
+	 */
 	public boolean getUserAccountDetails(String username) {
 		String query = "SELECT * FROM userDB WHERE username = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1075,6 +1261,12 @@ public class Database {
 	    }
 	}
 	
+	/**
+	 * Resets a user's password to a temporary value.
+	 *
+	 * @param username the username to update
+	 * @param tempPass the temporary password
+	 */
 	public void resetUserPassword(String username, String tempPass) {
 		String query = "UPDATE userDB SET password = ?, isOTP = TRUE WHERE userName = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1103,6 +1295,14 @@ public class Database {
 	 *  
 	 */
 	// Update a users role
+	/**
+	 * Updates one role value for a user.
+	 *
+	 * @param username the username to update
+	 * @param role the role name to update
+	 * @param value the new role value
+	 * @return true when the role was updated
+	 */
 	public boolean updateUserRole(String username, String role, String value) {
 		// SAFETY: if attempting to remove Admin role, check invariants first
 	    if (role.compareTo("Admin") == 0 && value.compareToIgnoreCase("false") == 0) {
@@ -1179,6 +1379,12 @@ public class Database {
 	}
 	
 	// method to delete user
+	/**
+	 * Deletes a user from the database.
+	 *
+	 * @param username the username to delete
+	 * @return true when the user was deleted
+	 */
 	public boolean deleteUser(String username) {
 	    if (username == null) return false;
 
@@ -1230,10 +1436,22 @@ public class Database {
 	 * @return the username value is returned
 	 *  
 	 */
+	/**
+	 * Returns the cached current username.
+	 *
+	 * @return the cached current username
+	 */
 	public String getCurrentUsername() { return currentUsername;};
 
 	
 	// go into the database and change the current users password to temp password.
+	/**
+	 * Updates a user's password.
+	 *
+	 * @param username the username to update
+	 * @param newPassword the new password
+	 * @return true when the password was updated
+	 */
 	public boolean updatePassword(String username, String newPassword) {
 		// the query to change password.
 		String query = "UPDATE userDB SET password = ? WHERE userName = ?";
@@ -1259,6 +1477,11 @@ public class Database {
 	 * @return the password value is returned
 	 *  
 	 */
+	/**
+	 * Returns the cached current password.
+	 *
+	 * @return the cached current password
+	 */
 	public String getCurrentPassword() { return currentPassword;};
 
 	
@@ -1269,6 +1492,11 @@ public class Database {
 	 * 
 	 * @return the first name value is returned
 	 *  
+	 */
+	/**
+	 * Returns the cached current first name.
+	 *
+	 * @return the cached current first name
 	 */
 	public String getCurrentFirstName() { return currentFirstName;};
 
@@ -1281,6 +1509,11 @@ public class Database {
 	 * @return the middle name value is returned
 	 *  
 	 */
+	/**
+	 * Returns the cached current middle name.
+	 *
+	 * @return the cached current middle name
+	 */
 	public String getCurrentMiddleName() { return currentMiddleName;};
 
 	
@@ -1291,6 +1524,11 @@ public class Database {
 	 * 
 	 * @return the last name value is returned
 	 *  
+	 */
+	/**
+	 * Returns the cached current last name.
+	 *
+	 * @return the cached current last name
 	 */
 	public String getCurrentLastName() { return currentLastName;};
 
@@ -1303,6 +1541,11 @@ public class Database {
 	 * @return the preferred first name value is returned
 	 *  
 	 */
+	/**
+	 * Returns the cached current preferred first name.
+	 *
+	 * @return the cached current preferred first name
+	 */
 	public String getCurrentPreferredFirstName() { return currentPreferredFirstName;};
 
 	
@@ -1313,6 +1556,11 @@ public class Database {
 	 * 
 	 * @return the email address value is returned
 	 *  
+	 */
+	/**
+	 * Returns the cached current email address.
+	 *
+	 * @return the cached current email address
 	 */
 	public String getCurrentEmailAddress() { return currentEmailAddress;};
 
@@ -1325,6 +1573,11 @@ public class Database {
 	 * @return true if this user plays an Admin role, else false
 	 *  
 	 */
+	/**
+	 * Returns the cached admin role value.
+	 *
+	 * @return the cached admin role value
+	 */
 	public boolean getCurrentAdminRole() { return currentAdminRole;};
 
 	
@@ -1336,6 +1589,11 @@ public class Database {
 	 * @return true if this user plays a Student role, else false
 	 *  
 	 */
+	/**
+	 * Returns the cached role 1 value.
+	 *
+	 * @return the cached role 1 value
+	 */
 	public boolean getCurrentNewRole1() { return currentNewRole1;};
 
 	
@@ -1346,6 +1604,11 @@ public class Database {
 	 * 
 	 * @return true if this user plays a Reviewer role, else false
 	 *  
+	 */
+	/**
+	 * Returns the cached role 2 value.
+	 *
+	 * @return the cached role 2 value
 	 */
 	public boolean getCurrentNewRole2() { return currentNewRole2;};
 
@@ -1359,6 +1622,11 @@ public class Database {
 	 * 
 	 */
 	// Dumps the database.
+	/**
+	 * Prints the database tables for debugging.
+	 *
+	 * @throws SQLException when a query fails
+	 */
 	public void dump() throws SQLException {
 		String query = "SELECT * FROM userDB";
 		ResultSet resultSet = statement.executeQuery(query);
@@ -1376,6 +1644,12 @@ public class Database {
 	
 	/*******
 	 * Check if the user is currently flagged for a one-time password reset.
+	 */
+	/**
+	 * Checks whether a user's password is temporary.
+	 *
+	 * @param username the username to check
+	 * @return true when the password is marked temporary
 	 */
 	public boolean isPasswordTemporary(String username) {
 		String query = "SELECT isOTP FROM userDB WHERE userName = ?";
@@ -1395,6 +1669,11 @@ public class Database {
 	 * Clears the OTP flag. Call this in your Update Controller after the 
      * user successfully saves their new password.
 	 */
+	/**
+	 * Clears the temporary-password flag for a user.
+	 *
+	 * @param username the username to update
+	 */
 	public void clearOTPFlag(String username) {
 		String query = "UPDATE userDB SET isOTP = FALSE WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1413,6 +1692,9 @@ public class Database {
 	 * 
 	 */
 	// Closes the database statement and connection.
+	/**
+	 * Closes the database connection.
+	 */
 	public void closeConnection() {
 		try{ 
 			if(statement!=null) statement.close(); 

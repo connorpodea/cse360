@@ -27,6 +27,10 @@ import javafx.scene.control.ComboBox;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
+/**
+ * Controls the add/remove roles screen.
+ * This class supports the admin assignment story for updating which roles a user has.
+ */
 public class ControllerAddRemoveRoles {
 	
 	/*-********************************************************************************************
@@ -41,6 +45,9 @@ public class ControllerAddRemoveRoles {
 
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerAddRemoveRoles() {
 	}

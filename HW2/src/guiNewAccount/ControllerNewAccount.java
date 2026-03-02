@@ -25,6 +25,10 @@ import javafx.scene.control.Alert.AlertType;
  * * @version 1.00		2025-08-17 Initial version
  * */
 
+/**
+ * Controls the new account screen.
+ * This class supports the assignment story where invited users create accounts.
+ */
 public class ControllerNewAccount {
 	
 	/*-********************************************************************************************
@@ -51,6 +55,9 @@ public class ControllerNewAccount {
 
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerNewAccount() {
 	}

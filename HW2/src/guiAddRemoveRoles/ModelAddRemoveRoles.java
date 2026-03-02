@@ -15,6 +15,16 @@ package guiAddRemoveRoles;
  *  
  */
 
+/**
+ * Holds model support for the add/remove roles screen.
+ * This class keeps the MVC structure used by the assignment role-management story.
+ */
 public class ModelAddRemoveRoles {
+
+	/**
+	 * Creates the add/remove roles model object.
+	 */
+	public ModelAddRemoveRoles() {
+	}
 
 }

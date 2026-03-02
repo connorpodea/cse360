@@ -2,8 +2,8 @@ package entityClasses;
 import java.time.LocalDateTime;
 
 /**
- * Represents a reply on a post.
- * Keeps basic info about the reply.
+ * Represents a reply written for a post.
+ * This class supports assignment stories where users discuss a post with follow-up messages.
  */
 public class Reply {
 
@@ -12,10 +12,16 @@ public class Reply {
     private String body;
     private String author;
     private LocalDateTime timestamp;
+    /** Maximum number of characters allowed in a reply body. */
     public static final int MAX_BODY_LENGTH = 5000;
 
     /**
-     * Creates a new reply.
+     * Creates a reply object for a post.
+     *
+     * @param id the reply id
+     * @param postId the parent post id
+     * @param body the reply text
+     * @param author the username that wrote the reply
      */
     public Reply(int id, int postId, String body, String author) {
         validateCreate(body, author);
@@ -43,6 +49,8 @@ public class Reply {
 
     /**
      * Updates the reply body.
+     *
+     * @param newBody the updated reply text
      */
     public void update(String newBody) {
         validateUpdate(newBody);
@@ -64,6 +72,8 @@ public class Reply {
     
     /**
      * Gets the id of the post this reply belongs to.
+     *
+     * @return the parent post id
      */
     public int getParentPostId() {
         return postId;
@@ -71,6 +81,8 @@ public class Reply {
 
     /**
      * Returns the reply id.
+     *
+     * @return the reply id
      */
     public int getId() {
         return id;
@@ -78,6 +90,8 @@ public class Reply {
 
     /**
      * Returns the post id.
+     *
+     * @return the parent post id
      */
     public int getPostId() {
         return postId;
@@ -85,13 +99,17 @@ public class Reply {
 
     /**
      * Returns the reply text.
+     *
+     * @return the reply body
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * Returns the username of who wrote this.
+     * Returns the username of the reply author.
+     *
+     * @return the reply author username
      */
     public String getAuthor() {
         return author;
@@ -99,6 +117,8 @@ public class Reply {
 
     /**
      * Returns when this reply was made.
+     *
+     * @return the reply timestamp
      */
     public LocalDateTime getTimestamp() {
         return timestamp;

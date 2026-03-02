@@ -37,6 +37,10 @@ import entityClasses.User;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
+/**
+ * Controls the admin home screen.
+ * This class supports the admin assignment stories by reacting to the home page buttons.
+ */
 public class ControllerAdminHome {
 	
 	/*-*******************************************************************************************
@@ -51,6 +55,9 @@ public class ControllerAdminHome {
 	
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerAdminHome() {
 	}
@@ -305,4 +312,3 @@ public class ControllerAdminHome {
 		return true;
 	}
 }
-

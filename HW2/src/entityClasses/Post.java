@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Represents a discussion post.
- * Stores basic post data like title, body, author, and time created.
+ * Represents one discussion board post.
+ * This class supports assignment stories where users create, read, update, and soft-delete posts.
  */
 public class Post {
 
@@ -27,10 +27,13 @@ public class Post {
     /** Category the post belongs to */
     private String category;
 
-    /** Max allowed length for post titles */
+    /** Whether the post has been soft-deleted */
+    private boolean deleted;
+
+    /** Max allowed length for post titles. */
     public static final int MAX_TITLE_LENGTH = 200;
 
-    /** Max allowed length for post bodies */
+    /** Max allowed length for post bodies. */
     public static final int MAX_BODY_LENGTH = 5000;
 
     /**
@@ -50,6 +53,7 @@ public class Post {
         this.author = author;
         this.timestamp = LocalDateTime.now();
         this.category = category;
+        this.deleted = false;
     }
 
     /**
@@ -85,6 +89,9 @@ public class Post {
      * @param newBody  updated body
      */
     public void update(String newTitle, String newBody) {
+        if (deleted) {
+            return;
+        }
         validateUpdate(newTitle, newBody);
         this.title = newTitle;
         this.body = newBody;
@@ -123,6 +130,8 @@ public class Post {
     }
 
     /**
+     * Returns the post id.
+     *
      * @return the post id
      */
     public int getId() {
@@ -130,6 +139,17 @@ public class Post {
     }
 
     /**
+     * Returns the post id.
+     *
+     * @return the post id
+     */
+    public int getPostId() {
+        return id;
+    }
+
+    /**
+     * Returns the post title.
+     *
      * @return the post title
      */
     public String getTitle() {
@@ -137,6 +157,8 @@ public class Post {
     }
 
     /**
+     * Returns the post body.
+     *
      * @return the post body
      */
     public String getBody() {
@@ -144,6 +166,8 @@ public class Post {
     }
 
     /**
+     * Returns the post author's name.
+     *
      * @return the post author
      */
     public String getAuthor() {
@@ -151,6 +175,17 @@ public class Post {
     }
 
     /**
+     * Returns the post author's username.
+     *
+     * @return the author username
+     */
+    public String getAuthorUserName() {
+        return author;
+    }
+
+    /**
+     * Returns the time the post was created.
+     *
      * @return when the post was created
      */
     public LocalDateTime getTimestamp() {
@@ -158,10 +193,28 @@ public class Post {
     }
 
     /**
+     * Returns the post category.
+     *
      * @return the post category
      */
     public String getCategory() {
         return category;
+    }
+
+    /**
+     * Checks whether the post has been marked deleted.
+     *
+     * @return true when the post is deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Marks the post as logically deleted.
+     */
+    public void markDeleted() {
+        deleted = true;
     }
 
     /**
@@ -171,6 +224,9 @@ public class Post {
      * @param body post body
      */
     public void setBody(String body) {
+        if (deleted) {
+            return;
+        }
         this.body = body;
     }
 
@@ -191,5 +247,6 @@ public class Post {
         this.author = author;
         this.category = category;
         this.timestamp = timestamp;
+        this.deleted = false;
     }
 }

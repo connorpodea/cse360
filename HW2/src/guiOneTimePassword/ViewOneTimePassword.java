@@ -19,6 +19,10 @@ import database.Database;
 import entityClasses.User;
 import javafx.scene.control.Alert;
 
+/**
+ * Shows the screen used to assign a temporary password to a user.
+ * This view supports the admin user story for helping users regain account access.
+ */
 public class ViewOneTimePassword{
 	
 	// creating a new page, when the user clicks button it takes them to the page where they
@@ -34,6 +38,7 @@ public class ViewOneTimePassword{
 	
 	
 	// text fields, where the user will be prompted to enter a new one time password.
+	/** First password field used to enter the temporary password. */
 	public static PasswordField TempText_Password1 = new PasswordField();
 	protected static PasswordField TempText_Password2 = new PasswordField();
 	private static String TempPassword = TempText_Password1.getText();
@@ -48,6 +53,7 @@ public class ViewOneTimePassword{
 	
 	
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
+	/** Stores the scene used by the one-time password screen. */
 	public static Scene oneTimePasswordScene = null; 
 	protected static Label labelPageTitle = new Label();
 	
@@ -69,6 +75,12 @@ public class ViewOneTimePassword{
 	protected static Alert displayError2 = new Alert(AlertType.INFORMATION);
 	
 	
+	/**
+	 * Displays the one-time password screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user opening the screen
+	 */
 	public static void displayOneTimePassword(Stage ps, User user) {
 		theStage = ps;
 		theUser = user;
@@ -87,6 +99,9 @@ public class ViewOneTimePassword{
 		ControllerOneTimePassword.doSelectUser();
 	}
 	
+	/**
+	 * Creates the one-time password view and its widgets.
+	 */
 	public ViewOneTimePassword() {
 		theRootPane = new Pane();
 		

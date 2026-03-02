@@ -28,6 +28,10 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Shows the screen where a user picks one of several roles.
+ * This view supports the assignment login story for users with more than one role.
+ */
 public class ViewMultipleRoleDispatch {
 
 	/*-****************************************************************************************
@@ -90,6 +94,12 @@ public class ViewMultipleRoleDispatch {
 
 	 */
 
+	/**
+	 * Displays the multiple-role dispatch screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
+	 */
 	public static void displayMultipleRoleDispatch(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user

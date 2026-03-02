@@ -10,6 +10,12 @@ import javafx.scene.control.Alert.AlertType;
  */
 public class ControllerReplyManagement {
 	protected static Database database = applicationMain.FoundationsMain.database;
+
+	/**
+	 * Creates the controller object.
+	 */
+	public ControllerReplyManagement() {
+	}
 	
 	/**
 	 * Handles creating a new reply from the reply form.

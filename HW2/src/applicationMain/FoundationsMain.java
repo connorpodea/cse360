@@ -58,7 +58,10 @@ import javafx.scene.control.Alert.AlertType;
  * other ASU courses.
  * @version 3.02	2025-12-17 Enhancements in support of Spring 2026
  */
-
+/**
+ * Starts the Foundations application and opens the first JavaFX screen.
+ * This class sets up the shared database and sends users to the correct assignment flow.
+ */
 public class FoundationsMain extends Application {
 	
 	/*-*******************************************************************************************
@@ -69,17 +72,32 @@ public class FoundationsMain extends Application {
 	
 	// These are the application values required by the user interface.  All the other classes
 	// access these constants to provide a uniform window size.	
+	/** Shared window width used by the JavaFX screens. */
 	public final static double WINDOW_WIDTH = 800;
+	/** Shared window height used by the JavaFX screens. */
 	public final static double WINDOW_HEIGHT = 600;
 
 	// These attributes establish the database and the fixed reference to it for the rest of the
 	// application so we do not need to keep passing the reference in parameters to the rest of the
 	// system for other methods that need it can access it.
+	/** Shared database object used by the application. */
 	public static Database database = new Database();
     private Alert databaseInUse = new Alert(AlertType.INFORMATION);
 
+	/** Stores which role home page is currently active. */
 	public static int activeHomePage = 0;		// Which role's home page is currently active?
 												// Role 0 is the admin role number
+	/**
+	 * Creates the main application object.
+	 */
+	public FoundationsMain() {
+	}
+
+	/**
+	 * Starts the JavaFX application and opens the correct first screen.
+	 *
+	 * @param theStage the main JavaFX stage
+	 */
 	@Override
 	public void start(Stage theStage) {
 		
@@ -110,15 +128,10 @@ public class FoundationsMain extends Application {
 		// With the JavaFX pages set up, this thread of the execution comes to an end.
 	}
 
-	/*******
-	 * <p> Title: FoundationsMain main method that starts up JavaFX</p>
-	 * 
-	 * <p> Description: This main method does not perform any special function for this application
-	 * beyond launching JavaFX.  Java and Eclipse require the application to be able to used the
-	 * command line parameters, if needed.  This application does not use them.  If they are
-	 * provided, the application will ignore them.</p>
-	 * 
-	 * @param String[] args   The array of command lines parameters.  These are not used.
+	/**
+	 * Launches the JavaFX application.
+	 *
+	 * @param args command-line values passed to the program
 	 */
 	public static void main(String[] args) {
 		launch(args);	// The launch method loads JavaFX and invokes its initialization.  When it

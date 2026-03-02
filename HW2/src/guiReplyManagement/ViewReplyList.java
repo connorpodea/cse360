@@ -9,8 +9,8 @@ import entityClasses.User;
 import entityClasses.Reply;
 
 /**
- * View for displaying and managing replies for a selected post.
- * Handles listing replies and showing the full reply body.
+ * Shows the replies for a selected post.
+ * This view supports assignment stories where users read, edit, and delete replies.
  */
 public class ViewReplyList {
     private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -35,6 +35,10 @@ public class ViewReplyList {
 
     /**
      * Displays the reply list for a specific post.
+     *
+     * @param ps the JavaFX stage used for the screen
+     * @param user the signed-in user
+     * @param postId the post whose replies should be shown
      */
     public static void displayReplyList(Stage ps, User user, int postId) {
         currentPostId = postId;

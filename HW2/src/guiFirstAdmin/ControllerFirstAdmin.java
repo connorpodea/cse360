@@ -33,6 +33,10 @@ import guiTools.PasswordRecognizer;
  *  
  */
 
+/**
+ * Controls the first-admin setup screen.
+ * This class supports the assignment story where the first user creates the admin account.
+ */
 public class ControllerFirstAdmin {
 	/*-********************************************************************************************
 
@@ -64,6 +68,9 @@ public class ControllerFirstAdmin {
 	
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerFirstAdmin() {
 	}
@@ -209,4 +216,3 @@ public class ControllerFirstAdmin {
 		System.exit(0);
 	}	
 }
-

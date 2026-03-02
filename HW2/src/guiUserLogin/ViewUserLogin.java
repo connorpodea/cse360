@@ -26,6 +26,10 @@ import javafx.stage.Stage;
  *  
  */
 
+/**
+ * Shows the login screen for the application.
+ * This view supports assignment stories where users sign in or continue to create a new account.
+ */
 public class ViewUserLogin {
 
 	/*-********************************************************************************************
@@ -62,6 +66,7 @@ public class ViewUserLogin {
 
 	private static Stage theStage;	
 	private static Pane theRootPane;
+	/** Stores the scene used by the login screen. */
 	public static Scene theUserLoginScene = null;	
 
 
@@ -74,6 +79,11 @@ public class ViewUserLogin {
 
 	 *********************************************************************************************/
 
+	/**
+	 * Displays the login screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 */
 	public static void displayUserLogin(Stage ps) {
 		
 		// Establish the references to the GUI. There is no current user yet.

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Stores and manages Post objects.
- * Handles list operations.
+ * Stores posts in memory for the discussion board.
+ * This class supports assignment stories that create, list, update, and find posts.
  */
 public class PostStorage {
 
@@ -19,7 +19,9 @@ public class PostStorage {
     }
 
     /**
-     * Adds a post to the list.
+     * Adds a post to storage.
+     *
+     * @param post the post to add
      */
     public void addPost(Post post) {
         if (post == null) {
@@ -29,7 +31,9 @@ public class PostStorage {
     }
 
     /**
-     * Returns all posts
+     * Returns all stored posts.
+     *
+     * @return a copy of the stored posts
      */
     public List<Post> getAllPosts() {
         return new ArrayList<>(posts);
@@ -37,6 +41,9 @@ public class PostStorage {
 
     /**
      * Finds a post by id.
+     *
+     * @param id the post id
+     * @return the matching post
      */
     public Post getPostById(int id) {
         return posts.stream()
@@ -48,7 +55,10 @@ public class PostStorage {
     }
 
     /**
-     * Filters posts based on text in title or body.
+     * Finds posts that match the given text.
+     *
+     * @param filter the search text
+     * @return the matching posts
      */
     public List<Post> getPostsByFilter(String filter) {
         if (filter == null) {
@@ -64,7 +74,9 @@ public class PostStorage {
     }
 
     /**
-     * Removes a post using its id.
+     * Removes a post by id.
+     *
+     * @param id the post id
      */
     public void removePostById(int id) {
         Post postToRemove = posts.stream()
@@ -78,8 +90,7 @@ public class PostStorage {
     }
     
     /**
-     * Loads all posts from the H2 databse.
-  
+     * Loads posts from the database into memory.
      */
     public void loadAllPostsFromDatabase() {
         try {
@@ -93,13 +104,18 @@ public class PostStorage {
     
     /**
      * Deletes a post by id.
+     *
+     * @param id the post id
      */
     public void deletePost(int id) {
         posts.removeIf(p -> p.getId() == id);
     }
     
     /**
-     * Checks if a post exists in storage.
+     * Checks whether a post exists.
+     *
+     * @param id the post id
+     * @return true when the post exists
      */
     public boolean exists(int id) {
         return posts.stream().anyMatch(p -> p.getId() == id);

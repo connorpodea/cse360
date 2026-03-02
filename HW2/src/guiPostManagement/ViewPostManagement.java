@@ -10,8 +10,8 @@ import entityClasses.User;
 import java.time.format.DateTimeFormatter;
 
 /**
- * View class for managing and viewing discussion posts.
- * Handles the main discussion board UI.
+ * Shows the main discussion board screen.
+ * This view supports assignment stories where users browse posts, read details, and open replies.
  */
 public class ViewPostManagement {
 	// Screen Dimensions
@@ -44,7 +44,9 @@ public class ViewPostManagement {
 	// Keeps track of which post is currently selected
 	protected static int currentPostId = -1;
 
+	/** Stores the shared JavaFX stage for this screen. */
 	public static Stage theStage;
+	/** Stores the signed-in user viewing the screen. */
 	public static User theUser;
 	private static Pane theRootPane;
 	private static Scene theScene;
@@ -52,7 +54,9 @@ public class ViewPostManagement {
 
 	/**
 	 * Shows the post management screen.
-	 * Refreshes the list so new posts show up when coming back.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayPostManagement(Stage ps, User user) {
 		theStage = ps;

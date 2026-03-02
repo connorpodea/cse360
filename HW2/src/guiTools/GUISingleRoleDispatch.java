@@ -23,7 +23,10 @@ import entityClasses.User;
  * @version 1.00		2025-04-20 Initial version
  *  
  */
-
+/**
+ * Sends a user to the correct home page when that user has only one role.
+ * This helper supports the assignment login flow by opening the correct screen after sign-in.
+ */
 public class GUISingleRoleDispatch {
 	
 	/**********************************************************************************************
@@ -35,6 +38,7 @@ public class GUISingleRoleDispatch {
 	// These are the application values required by the user interface
 
 	
+	/** Stores a scene reference used by the single-role dispatch flow. */
 	public Scene theViewStudentHomeScene;
 
 
@@ -46,32 +50,18 @@ public class GUISingleRoleDispatch {
 	**********************************************************************************************/
 
 	
-	/**********
-	 * <p> Method: GUISingleRoleDispatch() </p>
-	 * 
-	 * <p> Description: This method initializes all the elements of the graphical user interface. 
-	 * This method determines the location, size, font, color, and change and event handlers for 
-	 * each GUI object. </p>
-	 * 
+	/**
+	 * Creates the single-role dispatch helper.
 	 */
 	public GUISingleRoleDispatch() {
 	}
 
 	
-	/**********
-	 * <p> Method: doSingleRoleDispatch(Stage ps, Pane theRoot, Database database, User user) </p>
-	 * 
-	 * <p> Description: This method is called after a GUI page has already been established and
-	 * it is being display with potentially new contents for the various GUI elements. </p>
-	 * 
-	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
-	 * 
-	 * @param theRoot specifies the JavaFX Pane to be used for this GUI and it's methods
-	 * 
-	 * @param database specifies the Database to be used by this GUI and it's methods
-	 * 
-	 * @param user specifies the User for this GUI and it's methods
-	 * 
+	/**
+	 * Opens the correct home page for a user with one role.
+	 *
+	 * @param ps the JavaFX stage used for navigation
+	 * @param user the signed-in user
 	 */
 	public static void doSingleRoleDispatch(Stage ps, User user) {
 		System.out.println("************** Just entered single role dispatch page");

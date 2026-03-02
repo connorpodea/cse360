@@ -29,6 +29,10 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Shows the screen used to create a new account from an invitation code.
+ * This view supports the assignment account-creation story for new users.
+ */
 public class ViewNewAccount {
 	
 	/*-********************************************************************************************
@@ -83,6 +87,7 @@ public class ViewNewAccount {
     											// and a role for this user
     protected static String emailAddress;		// Established here for use by the controller
     protected static String theRole;			// Established here for use by the controller
+	/** Stores the scene used by the new account screen. */
 	public static Scene theNewAccountScene = null;	// Access to the User Update page's GUI Widgets
 	
 
@@ -112,6 +117,12 @@ public class ViewNewAccount {
 	 * 
 	 * @param ic specifies the user's invitation code for this GUI and it's methods
 	 * 
+	 */
+	/**
+	 * Displays the new account screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param ic the invitation code used to open the screen
 	 */
 	public static void displayNewAccount(Stage ps, String ic) {
 		// This is the only way some component of the system can cause a New User Account page to

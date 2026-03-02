@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 import entityClasses.User;
 
 /**
- * View for creating a reply to a selected post.
- * Handles basic input and navigation back to the post view.
+ * Shows the screen used to create a reply for a post.
+ * This view supports assignment stories where users respond to posts.
  */
 public class ViewReplyManagement {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -31,6 +31,10 @@ public class ViewReplyManagement {
 
 	/**
 	 * Opens the reply creation screen for a specific post.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
+	 * @param postId the post that will receive the reply
 	 */
 	public static void displayReplyManagement(Stage ps, User user, int postId) {
 		theStage = ps;

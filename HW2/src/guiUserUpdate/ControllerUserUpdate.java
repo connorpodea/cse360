@@ -9,6 +9,10 @@ import guiTools.UserNameRecognizer;
 import database.Database;
 import javafx.stage.Stage;
 
+/**
+ * Controls the user update screen.
+ * This class supports assignment stories where users update account details and return to home.
+ */
 public class ControllerUserUpdate {
 	/*-********************************************************************************************
 
@@ -26,6 +30,12 @@ public class ControllerUserUpdate {
 	
 	// attributes
 	private static Database db = applicationMain.FoundationsMain.database;
+
+	/**
+	 * Creates the controller object.
+	 */
+	public ControllerUserUpdate() {
+	}
 
 	/*-********************************************************************************************
 

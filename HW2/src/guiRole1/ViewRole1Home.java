@@ -27,6 +27,10 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Shows the main home screen for role 1 users.
+ * This view supports assignment stories where users work from the role 1 home page.
+ */
 public class ViewRole1Home {
 	
 	/*-*******************************************************************************************
@@ -109,6 +113,12 @@ public class ViewRole1Home {
 	 * 
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
+	 */
+	/**
+	 * Displays the role 1 home screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayRole1Home(Stage ps, User user) {
 		

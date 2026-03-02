@@ -1,6 +1,9 @@
 package guiTools;
 
-
+/**
+ * Validates usernames with a finite-state-machine approach.
+ * This helper supports assignment account screens by checking username format and reporting errors.
+ */
 public class UserNameRecognizer {
 	/**
 	 * <p> Title: FSM-translated UserNameRecognizer. </p>
@@ -26,8 +29,11 @@ public class UserNameRecognizer {
 	 * 
 	 */
 
+	/** Stores the latest validation error message. */
 	public static String userNameRecognizerErrorMessage = "";	// The error message text
+	/** Stores the latest input value being checked. */
 	public static String userNameRecognizerInput = "";			// The input being processed
+	/** Stores the character index where validation failed. */
 	public static int userNameRecognizerIndexofError = -1;		// The index of error location
 	private static int state = 0;						// The current state value
 	private static int nextState = 0;					// The next state value
@@ -38,6 +44,12 @@ public class UserNameRecognizer {
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
 	private static int userNameSize = 0;			// A numeric value may not exceed 32 characters
+
+	/**
+	 * Creates the recognizer helper.
+	 */
+	public UserNameRecognizer() {
+	}
 
 	// Private method to display debugging data
 	private static void displayDebuggingInfo() {
@@ -64,13 +76,11 @@ public class UserNameRecognizer {
 		}
 	}
 
-	/**********
-	 * This method is a mechanical transformation of a Finite State Machine diagram into a Java
-	 * method.
-	 * 
-	 * @param input		The input string for the Finite State Machine
-	 * @return			An output string that is empty if every things is okay or it is a String
-	 * 						with a helpful description of the error
+	/**
+	 * Checks whether the given username is valid.
+	 *
+	 * @param input the username text to validate
+	 * @return an empty string when valid, or an error message when invalid
 	 */
 	public static String checkForValidUserName(String input) {
 		// Check to ensure that there is input to process

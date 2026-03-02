@@ -30,6 +30,10 @@ import javafx.scene.Scene;
  *  
  */
 
+/**
+ * Shows the first-run screen for creating the first admin account.
+ * This view supports the assignment story for initial system setup.
+ */
 public class ViewFirstAdmin {
 
 	/*-********************************************************************************************
@@ -97,6 +101,11 @@ public class ViewFirstAdmin {
 	 * will only be called once.  For this reason, we directly call the private class constructor.
 	 * 
 	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
+	 */
+	/**
+	 * Displays the first-admin setup screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
 	 */
 	public static void displayFirstAdmin(Stage ps) {
 		

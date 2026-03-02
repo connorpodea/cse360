@@ -28,6 +28,10 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Shows the main home screen for role 2 users.
+ * This view supports assignment stories where users open the discussion board and other role 2 work.
+ */
 public class ViewRole2Home {
 	
 	/*-*******************************************************************************************
@@ -107,6 +111,12 @@ public class ViewRole2Home {
 	 * 
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
+	 */
+	/**
+	 * Displays the role 2 home screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayRole2Home(Stage ps, User user) {
 		

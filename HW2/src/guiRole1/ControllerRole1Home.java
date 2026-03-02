@@ -21,6 +21,10 @@ package guiRole1;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
+/**
+ * Controls the role 1 home screen.
+ * This class supports the assignment flow for users working with role 1 features.
+ */
 public class ControllerRole1Home {
 
 	/*-*******************************************************************************************
@@ -35,6 +39,9 @@ public class ControllerRole1Home {
 
 	/**
 	 * Default constructor is not used.
+	 */
+	/**
+	 * Creates the controller object.
 	 */
 	public ControllerRole1Home() {
 	}

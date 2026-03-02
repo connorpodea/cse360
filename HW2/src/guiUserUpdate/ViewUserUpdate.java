@@ -39,6 +39,10 @@ import javafx.scene.control.Alert.AlertType;
  *  
  */
 
+/**
+ * Shows the screen used to update account information.
+ * This view supports assignment stories where users edit profile and account details.
+ */
 public class ViewUserUpdate {
 
 	/*-********************************************************************************************
@@ -123,6 +127,7 @@ public class ViewUserUpdate {
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets
 	private static User theUser;				// The current user of the application
 
+	/** Stores the scene used by the user update screen. */
 	public static Scene theUserUpdateScene = null;	// The Scene each invocation populates
 
 	private static Optional<String> result;		// The result from a pop-up dialog
@@ -154,6 +159,12 @@ public class ViewUserUpdate {
 	 * 
 	 * @param user specifies the User whose roles will be updated
 	 *
+	 */
+	/**
+	 * Displays the user update screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 * @param user the signed-in user
 	 */
 	public static void displayUserUpdate(Stage ps, User user) {
 		

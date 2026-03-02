@@ -18,9 +18,18 @@ import entityClasses.User;
  *  
  */
 
+/**
+ * Holds model support for the admin home screen.
+ * This class keeps the MVC structure used by the assignment admin stories.
+ */
 public class ModelAdminHome {
+	/**
+	 * Creates the admin home model object.
+	 */
+	public ModelAdminHome() {
+	}
+
 	protected static List<User> getAllUsers(Database db) {
 		   return db.getAllUsersForDisplay();
 	}
 }
-

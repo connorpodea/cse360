@@ -20,6 +20,10 @@ import javafx.stage.Stage;
 // Application Specific Imports
 import database.Database;
 
+/**
+ * Shows the screen that lists registered users.
+ * This view supports the admin assignment story for reviewing system accounts.
+ */
 public class ViewListUsers {
 	
 	/*-*******************************************************************************************
@@ -61,6 +65,11 @@ public class ViewListUsers {
 	Methods
 	*/
 
+	/**
+	 * Displays the user list screen.
+	 *
+	 * @param ps the JavaFX stage used for the screen
+	 */
 	public static void displayListUsers(Stage ps) {
 		if (theView == null) theView = new ViewListUsers();
 		
