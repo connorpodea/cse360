@@ -20,11 +20,4 @@ package guiFirstAdmin;
  * This class keeps the MVC structure used by the first-run admin story.
  */
 public class ModelFirstAdmin {
-
-	/**
-	 * Creates the first-admin model object.
-	 */
-	public ModelFirstAdmin() {
-	}
-
 }

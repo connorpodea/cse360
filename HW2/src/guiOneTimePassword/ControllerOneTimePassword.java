@@ -16,13 +16,6 @@ public class ControllerOneTimePassword {
 	protected static String password2 = "";
 	protected static String currentUsersPassword = ViewOneTimePassword.TempText_Password1.getText();;
 
-	/**
-	 * Creates the controller object.
-	 */
-	public ControllerOneTimePassword() {
-	}
-
-	
 	protected static void doSelectUser() {
 		ViewOneTimePassword.theSelectedUser = 
 				(String) ViewOneTimePassword.combobox_SelectUser.getValue();

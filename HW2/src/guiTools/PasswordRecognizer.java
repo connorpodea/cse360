@@ -51,12 +51,6 @@ public class PasswordRecognizer {
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
 
-	/**
-	 * Creates the recognizer helper.
-	 */
-	public PasswordRecognizer() {
-	}
-
 	/*
 	 * This private method displays the input line and then on a line under it displays the input
 	 * up to the point of the error.  At that point, a question mark is place and the rest of the 

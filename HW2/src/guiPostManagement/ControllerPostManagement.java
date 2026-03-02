@@ -12,13 +12,6 @@ import javafx.scene.control.Alert.AlertType;
 public class ControllerPostManagement {
 
 	protected static Database database = applicationMain.FoundationsMain.database;
-
-	/**
-	 * Creates the controller object.
-	 */
-	public ControllerPostManagement() {
-	}
-	
 	/**
 	 * Creates a new post using the values from the UI.
 	 * Performs basic validation before saving.

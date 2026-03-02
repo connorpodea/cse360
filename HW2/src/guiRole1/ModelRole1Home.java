@@ -22,10 +22,4 @@ public class ModelRole1Home {
  *  
  */
 
-	/**
-	 * Creates the role 1 home model object.
-	 */
-	public ModelRole1Home() {
-	}
-
 }

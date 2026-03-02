@@ -45,12 +45,6 @@ public class EmailRecognizer {
 														// running
 	private static int userNameSize = 0;			// A numeric value may not exceed 16 characters
 
-	/**
-	 * Creates the recognizer helper.
-	 */
-	public EmailRecognizer() {
-	}
-
 	// Private method to display debugging data
 	private static void displayDebuggingInfo() {
 		// Display the current state of the FSM as part of an execution trace

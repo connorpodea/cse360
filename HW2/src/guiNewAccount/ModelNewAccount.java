@@ -19,11 +19,4 @@ package guiNewAccount;
  * This class keeps the MVC structure used by the invitation and account-creation stories.
  */
 public class ModelNewAccount {
-
-	/**
-	 * Creates the new-account model object.
-	 */
-	public ModelNewAccount() {
-	}
-
 }

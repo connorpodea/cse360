@@ -20,11 +20,4 @@ package guiMultipleRoleDispatch;
  * This class keeps the MVC structure used by the assignment role-selection story.
  */
 public class ModelMultipleRoleDispatch {
-
-	/**
-	 * Creates the multiple-role dispatch model object.
-	 */
-	public ModelMultipleRoleDispatch() {
-	}
-
 }

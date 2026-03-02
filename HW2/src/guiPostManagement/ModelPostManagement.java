@@ -11,13 +11,6 @@ public class ModelPostManagement {
     
     // Reference to the storage class created in entityClasses
     private static PostStorage postStorage = new PostStorage();
-
-    /**
-     * Creates the post management model object.
-     */
-    public ModelPostManagement() {
-    }
-
     /**
      * Creates a post and adds it to storage.
      *

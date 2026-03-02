@@ -31,12 +31,6 @@ public class ControllerUserUpdate {
 	// attributes
 	private static Database db = applicationMain.FoundationsMain.database;
 
-	/**
-	 * Creates the controller object.
-	 */
-	public ControllerUserUpdate() {
-	}
-
 	/*-********************************************************************************************
 
 	The User Interface Actions for this page

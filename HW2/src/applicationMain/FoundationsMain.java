@@ -88,12 +88,6 @@ public class FoundationsMain extends Application {
 	public static int activeHomePage = 0;		// Which role's home page is currently active?
 												// Role 0 is the admin role number
 	/**
-	 * Creates the main application object.
-	 */
-	public FoundationsMain() {
-	}
-
-	/**
 	 * Starts the JavaFX application and opens the correct first screen.
 	 *
 	 * @param theStage the main JavaFX stage

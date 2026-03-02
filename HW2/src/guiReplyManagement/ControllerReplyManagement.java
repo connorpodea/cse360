@@ -12,12 +12,6 @@ public class ControllerReplyManagement {
 	protected static Database database = applicationMain.FoundationsMain.database;
 
 	/**
-	 * Creates the controller object.
-	 */
-	public ControllerReplyManagement() {
-	}
-	
-	/**
 	 * Handles creating a new reply from the reply form.
 	 */
 	protected static void performCreateReply() {

@@ -11,13 +11,6 @@ public class ModelReplyManagement {
     
     // Stores replies while the app is running
     private static ReplyStorage replyStorage = new ReplyStorage();
-
-    /**
-     * Creates the reply management model object.
-     */
-    public ModelReplyManagement() {
-    }
-
     /**
      * Generates the next available reply id.
      *
