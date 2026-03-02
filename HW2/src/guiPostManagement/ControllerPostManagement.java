@@ -11,6 +11,8 @@ import javafx.scene.control.ButtonType;
  * deleting, and replying to posts.
  */
 public class ControllerPostManagement {
+	/** Creates the controller object. */
+	public ControllerPostManagement() {}
 
 	protected static Database database = applicationMain.FoundationsMain.database;
 	

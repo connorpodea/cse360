@@ -12,10 +12,15 @@ public class Reply {
     private String body;
     private String author;
     private LocalDateTime timestamp;
+    /** The maximum reply body length. */
     public static final int MAX_BODY_LENGTH = 5000;
 
     /**
      * Creates a new reply.
+     * @param id the reply id
+     * @param postId the post id
+     * @param body the reply body
+     * @param author the reply author
      */
     public Reply(int id, int postId, String body, String author) {
         validateCreate(body, author);
@@ -43,6 +48,7 @@ public class Reply {
 
     /**
      * Updates the reply body.
+     * @param newBody the updated body
      */
     public void update(String newBody) {
         validateUpdate(newBody);
@@ -64,6 +70,7 @@ public class Reply {
     
     /**
      * Gets the id of the post this reply belongs to.
+     * @return the post id
      */
     public int getParentPostId() {
         return postId;
@@ -71,6 +78,7 @@ public class Reply {
 
     /**
      * Returns the reply id.
+     * @return the reply id
      */
     public int getId() {
         return id;
@@ -78,6 +86,7 @@ public class Reply {
 
     /**
      * Returns the post id.
+     * @return the post id
      */
     public int getPostId() {
         return postId;
@@ -85,6 +94,7 @@ public class Reply {
 
     /**
      * Returns the reply text.
+     * @return the reply text
      */
     public String getBody() {
         return body;
@@ -92,6 +102,7 @@ public class Reply {
 
     /**
      * Returns the username of who wrote this.
+     * @return the author user name
      */
     public String getAuthor() {
         return author;
@@ -99,6 +110,7 @@ public class Reply {
 
     /**
      * Returns when this reply was made.
+     * @return the reply time
      */
     public LocalDateTime getTimestamp() {
         return timestamp;

@@ -12,8 +12,12 @@ public class ModelReplyManagement {
     // Stores replies while the app is running
     private static ReplyStorage replyStorage = new ReplyStorage();
 
+    /** Creates the model object. */
+    public ModelReplyManagement() {}
+
     /**
      * Generates the next available reply ID.
+     * @return the next reply id
      */
     public static int getNextReplyId() {
         // Start IDs at 1 if there are no replies yet
@@ -30,6 +34,11 @@ public class ModelReplyManagement {
 
     /**
      * Creates a new reply and stores it in memory.
+     * @param id the reply id
+     * @param parentPostId the parent post id
+     * @param body the reply body
+     * @param author the reply author
+     * @return the new reply
      */
     public static entityClasses.Reply createReply(int id, int parentPostId, String body, String author) {
         entityClasses.Reply newReply = new entityClasses.Reply(id, parentPostId, body, author);
@@ -41,6 +50,7 @@ public class ModelReplyManagement {
     
     /**
      * Provides access to the reply storage.
+     * @return the reply storage
      */
     public static ReplyStorage getReplyStorage() {
         return replyStorage; // Shared storage instance

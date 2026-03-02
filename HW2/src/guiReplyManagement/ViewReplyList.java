@@ -35,6 +35,9 @@ public class ViewReplyList {
 
     /**
      * Displays the reply list for a specific post.
+     * @param ps the stage for this page
+     * @param user the current user
+     * @param postId the selected post id
      */
     public static void displayReplyList(Stage ps, User user, int postId) {
         currentPostId = postId;

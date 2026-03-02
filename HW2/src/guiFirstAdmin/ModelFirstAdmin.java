@@ -15,6 +15,9 @@ package guiFirstAdmin;
  *  
  */
 
+/** Model for the first admin page. */
 public class ModelFirstAdmin {
+	/** Creates the model object. */
+	public ModelFirstAdmin() {}
 
 }

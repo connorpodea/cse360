@@ -90,6 +90,10 @@ public class ViewMultipleRoleDispatch {
 
 	 */
 
+	/** Displays the multiple role page.
+	 * @param ps the stage for this page
+	 * @param user the current user
+	 */
 	public static void displayMultipleRoleDispatch(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
@@ -131,10 +135,6 @@ public class ViewMultipleRoleDispatch {
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for
 	 * each GUI object. </p>
-	 * 
-	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
-	 * 
-	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
 	private ViewMultipleRoleDispatch() {

@@ -31,6 +31,8 @@ public class ViewCreatePost {
 	/**
 	 * Shows the create post screen.
 	 * Reuses the view so it doesn’t rebuild the UI every time.
+	 * @param ps the stage for this page
+	 * @param user the current user
 	 */
 	public static void displayCreatePost(Stage ps, User user) {
 		theStage = ps;

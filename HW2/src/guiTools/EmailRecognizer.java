@@ -1,6 +1,6 @@
 package guiTools;
 
-
+/** Recognizes valid email-style input. */
 public class EmailRecognizer {
 	/**
 	 * <p> Title: FSM-translated UserNameRecognizer. </p>
@@ -26,9 +26,14 @@ public class EmailRecognizer {
 	 * 
 	 */
 
+	/** The error message text. */
 	public static String userNameRecognizerErrorMessage = "";	// The error message text
+	/** The input being processed. */
 	public static String userNameRecognizerInput = "";			// The input being processed
+	/** The index of error location. */
 	public static int userNameRecognizerIndexofError = -1;		// The index of error location
+	/** Creates the recognizer object. */
+	public EmailRecognizer() {}
 	private static int state = 0;						// The current state value
 	private static int nextState = 0;					// The next state value
 	private static boolean finalState = false;			// Is this state a final state?

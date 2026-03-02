@@ -44,7 +44,9 @@ public class ViewPostManagement {
 	// Keeps track of which post is currently selected
 	protected static int currentPostId = -1;
 
+	/** The stage for this page. */
 	public static Stage theStage;
+	/** The current user. */
 	public static User theUser;
 	private static Pane theRootPane;
 	private static Scene theScene;
@@ -53,6 +55,8 @@ public class ViewPostManagement {
 	/**
 	 * Shows the post management screen.
 	 * Refreshes the list so new posts show up when coming back.
+	 * @param ps the stage for this page
+	 * @param user the current user
 	 */
 	public static void displayPostManagement(Stage ps, User user) {
 		theStage = ps;

@@ -1,6 +1,7 @@
 package guiTools;
 
 
+/** Recognizes valid usernames. */
 public class UserNameRecognizer {
 	/**
 	 * <p> Title: FSM-translated UserNameRecognizer. </p>
@@ -27,7 +28,9 @@ public class UserNameRecognizer {
 	 */
 
 	public static String userNameRecognizerErrorMessage = "";	// The error message text
+	/** The input being processed. */
 	public static String userNameRecognizerInput = "";			// The input being processed
+	/** The index of error location. */
 	public static int userNameRecognizerIndexofError = -1;		// The index of error location
 	private static int state = 0;						// The current state value
 	private static int nextState = 0;					// The next state value
@@ -38,6 +41,9 @@ public class UserNameRecognizer {
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
 	private static int userNameSize = 0;			// A numeric value may not exceed 32 characters
+
+	/** Creates the recognizer object. */
+	public UserNameRecognizer() {}
 
 	// Private method to display debugging data
 	private static void displayDebuggingInfo() {

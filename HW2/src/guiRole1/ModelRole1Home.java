@@ -1,5 +1,6 @@
 package guiRole1;
 
+/** Model for the role 1 home page. */
 public class ModelRole1Home {
 
 /*******
@@ -18,4 +19,6 @@ public class ModelRole1Home {
  *  
  */
 
+	/** Creates the model object. */
+	public ModelRole1Home() {}
 }

@@ -18,9 +18,11 @@ import entityClasses.User;
  *  
  */
 
+/** Model for the admin home page. */
 public class ModelAdminHome {
+	/** Creates the model object. */
+	public ModelAdminHome() {}
 	protected static List<User> getAllUsers(Database db) {
 		   return db.getAllUsersForDisplay();
 	}
 }
-

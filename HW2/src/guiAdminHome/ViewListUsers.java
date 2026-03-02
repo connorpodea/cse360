@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 // Application Specific Imports
 import database.Database;
 
+/** View for listing all users. */
 public class ViewListUsers {
 	
 	/*-*******************************************************************************************
@@ -61,6 +62,9 @@ public class ViewListUsers {
 	Methods
 	*/
 
+	/** Displays the list users page.
+	 * @param ps the stage for this page
+	 */
 	public static void displayListUsers(Stage ps) {
 		if (theView == null) theView = new ViewListUsers();
 		

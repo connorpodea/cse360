@@ -14,6 +14,9 @@ package guiNewAccount;
  * @version 1.00		2025-08-15 Initial version
  *  
  */
+/** Model for the new account page. */
 public class ModelNewAccount {
+	/** Creates the model object. */
+	public ModelNewAccount() {}
 
 }

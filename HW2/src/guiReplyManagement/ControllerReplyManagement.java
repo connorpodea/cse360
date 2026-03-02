@@ -10,6 +10,8 @@ import javafx.scene.control.ButtonType;
  * Connects the reply views with the model and database.
  */
 public class ControllerReplyManagement {
+	/** Creates the controller object. */
+	public ControllerReplyManagement() {}
 	protected static Database database = applicationMain.FoundationsMain.database;
 	
 	/**

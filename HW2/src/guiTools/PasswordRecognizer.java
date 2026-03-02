@@ -24,20 +24,31 @@ package guiTools;
 
 public class PasswordRecognizer {
 
+	/** The error message text. */
 	public static String passwordErrorMessage = "";		// The error message text
+	/** The input being processed. */
 	public static String passwordInput = "";			// The input being processed
+	/** The index where the error was located. */
 	public static int passwordIndexofError = -1;		// The index where the error was located
+	/** True when an upper-case letter was found. */
 	public static boolean foundUpperCase = false;
+	/** True when a lower-case letter was found. */
 	public static boolean foundLowerCase = false;
+	/** True when a numeric digit was found. */
 	public static boolean foundNumericDigit = false;
+	/** True when a special character was found. */
 	public static boolean foundSpecialChar = false;
+	/** True when the password is long enough. */
 	public static boolean foundLongEnough = false;
+	/** True when the password is not too long. */
 	public static boolean foundTooLong = false;
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line
 	private static int currentCharNdx;					// The index of the current character
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
+	/** Creates the recognizer object. */
+	public PasswordRecognizer() {}
 
 	/*
 	 * This private method displays the input line and then on a line under it displays the input

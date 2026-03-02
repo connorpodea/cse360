@@ -130,17 +130,23 @@ public class Post {
     }
 
     /**
+     * Returns the post id.
      * @return the post id
      */
     public int getId() {
         return id;
     }
 
+    /**
+     * Returns the post id.
+     * @return the post id
+     */
     public int getPostId() {
         return id;
     }
 
     /**
+     * Returns the post title.
      * @return the post title
      */
     public String getTitle() {
@@ -148,6 +154,7 @@ public class Post {
     }
 
     /**
+     * Returns the post body.
      * @return the post body
      */
     public String getBody() {
@@ -155,17 +162,23 @@ public class Post {
     }
 
     /**
+     * Returns the post author.
      * @return the post author
      */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Returns the author user name.
+     * @return the author user name
+     */
     public String getAuthorUserName() {
         return author;
     }
 
     /**
+     * Returns when the post was created.
      * @return when the post was created
      */
     public LocalDateTime getTimestamp() {
@@ -173,16 +186,24 @@ public class Post {
     }
 
     /**
+     * Returns the post category.
      * @return the post category
      */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Returns true if the post is deleted.
+     * @return true if deleted
+     */
     public boolean isDeleted() {
         return deleted;
     }
 
+    /**
+     * Marks the post as deleted.
+     */
     public void markDeleted() {
         deleted = true;
     }
