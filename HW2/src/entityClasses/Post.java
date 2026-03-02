@@ -27,6 +27,9 @@ public class Post {
     /** Category the post belongs to */
     private String category;
 
+    /** Whether the post has been logically deleted */
+    private boolean deleted;
+
     /** Max allowed length for post titles */
     public static final int MAX_TITLE_LENGTH = 200;
 
@@ -50,6 +53,7 @@ public class Post {
         this.author = author;
         this.timestamp = LocalDateTime.now();
         this.category = category;
+        this.deleted = false;
     }
 
     /**
@@ -85,6 +89,9 @@ public class Post {
      * @param newBody  updated body
      */
     public void update(String newTitle, String newBody) {
+        if (deleted) {
+            return;
+        }
         validateUpdate(newTitle, newBody);
         this.title = newTitle;
         this.body = newBody;
@@ -129,6 +136,10 @@ public class Post {
         return id;
     }
 
+    public int getPostId() {
+        return id;
+    }
+
     /**
      * @return the post title
      */
@@ -150,6 +161,10 @@ public class Post {
         return author;
     }
 
+    public String getAuthorUserName() {
+        return author;
+    }
+
     /**
      * @return when the post was created
      */
@@ -164,6 +179,14 @@ public class Post {
         return category;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void markDeleted() {
+        deleted = true;
+    }
+
     /**
      * Sets the body of the post.
      * Used when loading data from the database.
@@ -171,6 +194,9 @@ public class Post {
      * @param body post body
      */
     public void setBody(String body) {
+        if (deleted) {
+            return;
+        }
         this.body = body;
     }
 
@@ -191,5 +217,6 @@ public class Post {
         this.author = author;
         this.category = category;
         this.timestamp = timestamp;
+        this.deleted = false;
     }
 }
