@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 import entityClasses.User;
 
@@ -127,8 +128,10 @@ public class Database {
 				+ "body CLOB, "
 				+ "author VARCHAR(255), "
 				+ "category VARCHAR(255), "
-				+ "timestamp VARCHAR(255))";
+				+ "timestamp VARCHAR(255), "
+				+ "deleted BOOL DEFAULT FALSE)";
 		statement.execute(postTable);
+		statement.execute("ALTER TABLE postDB ADD COLUMN IF NOT EXISTS deleted BOOL DEFAULT FALSE");
 		
 		// Create the replies table
 		String replyTable = "CREATE TABLE IF NOT EXISTS replyDB ("
@@ -157,7 +160,7 @@ public class Database {
 	 * @throws SQLException when there is an issue creating the SQL command or executing it
 	 */
 	public void savePost(entityClasses.Post p) throws SQLException {
-		String query = "INSERT INTO postDB (id, title, body, author, category, timestamp) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO postDB (id, title, body, author, category, timestamp, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (java.sql.PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setInt(1, p.getId());
 			pstmt.setString(2, p.getTitle());
@@ -165,6 +168,7 @@ public class Database {
 			pstmt.setString(4, p.getAuthor());
 			pstmt.setString(5, p.getCategory());
 			pstmt.setString(6, p.getTimestamp().toString());
+			pstmt.setBoolean(7, p.isDeleted());
 			pstmt.executeUpdate();
 		}
 	}
@@ -202,13 +206,36 @@ public class Database {
 	    String query = "SELECT * FROM postDB";
 	    try (java.sql.ResultSet rs = statement.executeQuery(query)) {
 	        while (rs.next()) {
-	            results.add(new entityClasses.Post(
+	        	entityClasses.Post post = new entityClasses.Post(
 	                rs.getInt("id"), rs.getString("title"), rs.getString("body"),
-	                rs.getString("author"), rs.getString("category"))
+	                rs.getString("author"), rs.getString("category"),
+	                LocalDateTime.parse(rs.getString("timestamp"))
 	            );
+	        	if (rs.getBoolean("deleted")) {
+	        		post.markDeleted();
+	        	}
+	            results.add(post);
 	        }
 	    }
 	    return results;
+	}
+
+    /*******
+     * <p> Method: markPostDeleted(int id) </p>
+     * 
+     * <p> Description: Marks a post as deleted without removing it from the database.</p>
+     * 
+     * @param id the ID of the post to mark deleted
+     * @param deletedBody the deleted message body
+     * @throws SQLException when there is an issue executing the SQL command
+     */
+	public void markPostDeleted(int id, String deletedBody) throws java.sql.SQLException {
+	    String query = "UPDATE postDB SET body = ?, deleted = TRUE WHERE id = ?";
+	    try (java.sql.PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, deletedBody);
+	        pstmt.setInt(2, id);
+	        pstmt.executeUpdate();
+	    }
 	}
 	
 

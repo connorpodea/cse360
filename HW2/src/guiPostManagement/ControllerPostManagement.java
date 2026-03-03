@@ -14,6 +14,8 @@ public class ControllerPostManagement {
 	/** Creates the controller object. */
 	public ControllerPostManagement() {}
 
+	private static final String DELETED_POST_MESSAGE = "This post was deleted. You can still see replies";
+
 	protected static Database database = applicationMain.FoundationsMain.database;
 	
 	/**
@@ -75,7 +77,7 @@ public class ControllerPostManagement {
 	        ViewPostManagement.label_FullTitle.setText("Title: " + p.getTitle());
 	        ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
 	        ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
-	        ViewPostManagement.area_FullBody.setText(p.isDeleted() ? "[DELETED]" : p.getBody());
+	        ViewPostManagement.area_FullBody.setText(p.isDeleted() ? DELETED_POST_MESSAGE : p.getBody());
 
 	        // Update reply count so user can see activity
 	        int count = guiReplyManagement.ModelReplyManagement.getReplyStorage()
@@ -120,7 +122,9 @@ public class ControllerPostManagement {
 
             java.util.Optional<ButtonType> result = confirm.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                post.setBody(DELETED_POST_MESSAGE);
                 post.markDeleted();
+                database.markPostDeleted(idToDelete, DELETED_POST_MESSAGE);
                 ViewPostManagement.refreshPostList();
                 displaySelectedPost();
             }
@@ -161,7 +165,7 @@ public class ControllerPostManagement {
                     database.updatePost(ViewPostManagement.currentPostId, newBody);
                     
                     // Update UI text
-                    ViewPostManagement.area_FullBody.setText(post.isDeleted() ? "[DELETED]" : newBody);
+                    ViewPostManagement.area_FullBody.setText(post.isDeleted() ? DELETED_POST_MESSAGE : newBody);
                     showAlert("Success", "Post updated successfully!");
                 } catch (java.sql.SQLException e) {
                     showAlert("Error", "Failed to save the edit to the database.");

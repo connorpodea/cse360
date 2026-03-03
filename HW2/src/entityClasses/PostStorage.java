@@ -114,4 +114,11 @@ public class PostStorage {
     public boolean exists(int id) {
         return posts.stream().anyMatch(p -> p.getId() == id);
     }
+
+    /**
+     * Clears the whole list.
+     */
+    public void clearAll() {
+        posts.clear();
+    }
 }
