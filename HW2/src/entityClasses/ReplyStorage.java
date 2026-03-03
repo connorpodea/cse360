@@ -20,6 +20,7 @@ public class ReplyStorage {
 
     /**
      * Adds a reply to the list.
+     * @param reply the reply to add
      */
     public void addReply(Reply reply) {
         if (reply == null) {
@@ -30,6 +31,8 @@ public class ReplyStorage {
 
     /**
      * Finds a reply by id.
+     * @param id the reply id
+     * @return the reply
      */
     public Reply getReplyById(int id) {
         return replies.stream()
@@ -42,6 +45,8 @@ public class ReplyStorage {
 
     /**
      * Updates a reply body.
+     * @param id the reply id
+     * @param newBody the updated body
      */
     public void updateReply(int id, String newBody) {
         Reply reply = replies.stream()
@@ -56,6 +61,7 @@ public class ReplyStorage {
 
     /**
      * Deletes a reply by id.
+     * @param id the reply id
      */
     public void deleteReply(int id) {
         Reply reply = replies.stream()
@@ -70,6 +76,8 @@ public class ReplyStorage {
 
     /**
      * Gets all replies for a post.
+     * @param postId the post id
+     * @return the replies for the post
      */
     public List<Reply> getRepliesForPost(int postId) {
         return replies.stream()
@@ -79,6 +87,8 @@ public class ReplyStorage {
 
     /**
      * Filters replies by keyword.
+     * @param filter the search text
+     * @return the matching replies
      */
     public List<Reply> getRepliesByFilter(String filter) {
         if (filter == null) {
@@ -92,6 +102,7 @@ public class ReplyStorage {
 
     /**
      * Returns all replies (copy of list).
+     * @return all replies
      */
     public List<Reply> getAllReplies() {
         return new ArrayList<>(replies);
@@ -99,6 +110,8 @@ public class ReplyStorage {
 
     /**
      * Checks if a reply exists.
+     * @param id the reply id
+     * @return true if the reply exists
      */
     public boolean exists(int id) {
         return replies.stream().anyMatch(r -> r.getId() == id);

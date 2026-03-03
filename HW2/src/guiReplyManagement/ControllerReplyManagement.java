@@ -3,12 +3,15 @@ package guiReplyManagement;
 import database.Database;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
  * Controller for handling reply-related actions from the UI.
  * Connects the reply views with the model and database.
  */
 public class ControllerReplyManagement {
+	/** Creates the controller object. */
+	public ControllerReplyManagement() {}
 	protected static Database database = applicationMain.FoundationsMain.database;
 	
 	/**
@@ -62,14 +65,22 @@ public class ControllerReplyManagement {
 	 */
 	protected static void performDeleteReply() {
         try {
-            // Remove reply from memory and database
-            ModelReplyManagement.getReplyStorage().deleteReply(ViewReplyList.currentReplyId);
-            database.deleteReply(ViewReplyList.currentReplyId);
-            
-            // Update the UI so the deleted reply disappears
-            ViewReplyList.refreshReplyList();
-            ViewReplyList.area_ReplyBody.clear();
-            showAlert("Success", "Reply deleted.");
+            Alert confirm = new Alert(AlertType.CONFIRMATION);
+            confirm.setTitle("Delete Reply");
+            confirm.setHeaderText("Are you sure?");
+            confirm.setContentText("Deleting this reply will remove it.");
+
+            java.util.Optional<ButtonType> result = confirm.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Remove reply from memory and database
+                ModelReplyManagement.getReplyStorage().deleteReply(ViewReplyList.currentReplyId);
+                database.deleteReply(ViewReplyList.currentReplyId);
+                
+                // Update the UI so the deleted reply disappears
+                ViewReplyList.refreshReplyList();
+                ViewReplyList.area_ReplyBody.clear();
+                showAlert("Success", "Reply deleted.");
+            }
         } catch (Exception e) {
             showAlert("Error", "Could not delete reply.");
         }

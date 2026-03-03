@@ -8,8 +8,10 @@ import javafx.scene.control.Alert.AlertType;
 import guiTools.UserNameRecognizer;
 import database.Database;
 import javafx.stage.Stage;
-
+/** Controller for the user update page. */
 public class ControllerUserUpdate {
+	/** Creates the controller object. */
+	public ControllerUserUpdate() {}
 	/*-********************************************************************************************
 
 	The Controller for ViewUserUpdate 

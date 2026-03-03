@@ -3,7 +3,10 @@ package guiOneTimePassword;
 import database.Database;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+/** Controller for the one-time password page. */
 public class ControllerOneTimePassword {
+	/** Creates the controller object. */
+	public ControllerOneTimePassword() {}
 	
 	// having access to the data base so we can see the users.
 	private static Database theDatabase = applicationMain.FoundationsMain.database; 

@@ -20,6 +20,7 @@ public class PostStorage {
 
     /**
      * Adds a post to the list.
+     * @param post the post to add
      */
     public void addPost(Post post) {
         if (post == null) {
@@ -30,6 +31,7 @@ public class PostStorage {
 
     /**
      * Returns all posts
+     * @return all posts
      */
     public List<Post> getAllPosts() {
         return new ArrayList<>(posts);
@@ -37,6 +39,8 @@ public class PostStorage {
 
     /**
      * Finds a post by id.
+     * @param id the post id
+     * @return the post
      */
     public Post getPostById(int id) {
         return posts.stream()
@@ -49,6 +53,8 @@ public class PostStorage {
 
     /**
      * Filters posts based on text in title or body.
+     * @param filter the search text
+     * @return the matching posts
      */
     public List<Post> getPostsByFilter(String filter) {
         if (filter == null) {
@@ -65,6 +71,7 @@ public class PostStorage {
 
     /**
      * Removes a post using its id.
+     * @param id the post id
      */
     public void removePostById(int id) {
         Post postToRemove = posts.stream()
@@ -93,6 +100,7 @@ public class PostStorage {
     
     /**
      * Deletes a post by id.
+     * @param id the post id
      */
     public void deletePost(int id) {
         posts.removeIf(p -> p.getId() == id);
@@ -100,6 +108,8 @@ public class PostStorage {
     
     /**
      * Checks if a post exists in storage.
+     * @param id the post id
+     * @return true if the post exists
      */
     public boolean exists(int id) {
         return posts.stream().anyMatch(p -> p.getId() == id);

@@ -4,12 +4,15 @@ import entityClasses.Post;
 import database.Database;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
  * Handles user actions for creating, viewing, editing,
  * deleting, and replying to posts.
  */
 public class ControllerPostManagement {
+	/** Creates the controller object. */
+	public ControllerPostManagement() {}
 
 	protected static Database database = applicationMain.FoundationsMain.database;
 	
@@ -72,7 +75,7 @@ public class ControllerPostManagement {
 	        ViewPostManagement.label_FullTitle.setText("Title: " + p.getTitle());
 	        ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
 	        ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
-	        ViewPostManagement.area_FullBody.setText(p.getBody());
+	        ViewPostManagement.area_FullBody.setText(p.isDeleted() ? "[DELETED]" : p.getBody());
 
 	        // Update reply count so user can see activity
 	        int count = guiReplyManagement.ModelReplyManagement.getReplyStorage()
@@ -82,8 +85,8 @@ public class ControllerPostManagement {
 	        // Only allow editing if user owns the post or is admin
 	        boolean canModify = ViewPostManagement.theUser.getUserName().equals(p.getAuthor()) 
 	                            || ViewPostManagement.theUser.getAdminRole();
-	        ViewPostManagement.button_Edit.setVisible(canModify);
-	        ViewPostManagement.button_Delete.setVisible(canModify);
+	        ViewPostManagement.button_Edit.setVisible(canModify && !p.isDeleted());
+	        ViewPostManagement.button_Delete.setVisible(canModify && !p.isDeleted());
 	    }
 	}
     
@@ -109,22 +112,20 @@ public class ControllerPostManagement {
         int idToDelete = ViewPostManagement.currentPostId;
         
         try {
-            // Remove from memory
-            ModelPostManagement.getPostStorage().deletePost(idToDelete);
-            
-            // Remove from database
-            database.deletePost(idToDelete);
-            
-            // Update UI so user sees change
-            ViewPostManagement.refreshPostList();
-            ViewPostManagement.area_FullBody.clear();
-            ViewPostManagement.label_FullTitle.setText("Post Deleted.");
-            ViewPostManagement.button_Edit.setVisible(false);
-            ViewPostManagement.button_Delete.setVisible(false);
-            
-            showAlert("Deleted", "Post has been removed permanently.");
+            Post post = ModelPostManagement.getPostStorage().getPostById(idToDelete);
+            Alert confirm = new Alert(AlertType.CONFIRMATION);
+            confirm.setTitle("Delete Post");
+            confirm.setHeaderText("Are you sure?");
+            confirm.setContentText("Deleting this post keeps all replies and marks the post as deleted.");
+
+            java.util.Optional<ButtonType> result = confirm.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                post.markDeleted();
+                ViewPostManagement.refreshPostList();
+                displaySelectedPost();
+            }
         } catch (Exception e) {
-            showAlert("Error", "Could not delete post from database.");
+            showAlert("Error", "Could not delete post.");
         }
     }
     
@@ -132,7 +133,15 @@ public class ControllerPostManagement {
      * Allows editing of the selected post body.
      */
     protected static void performEdit() {
-        String currentBody = ViewPostManagement.area_FullBody.getText();
+        Post post = ModelPostManagement.getPostStorage()
+                .getPostById(ViewPostManagement.currentPostId);
+
+        if (post.isDeleted()) {
+            showAlert("Error", "Deleted posts cannot be updated.");
+            return;
+        }
+
+        String currentBody = post.getBody();
 
         javafx.scene.control.TextInputDialog dialog = 
                 new javafx.scene.control.TextInputDialog(currentBody);
@@ -141,18 +150,18 @@ public class ControllerPostManagement {
         dialog.setContentText("Body:");
 
         dialog.showAndWait().ifPresent(newBody -> {
-            if (!newBody.isEmpty()) {
+            if (newBody.trim().isEmpty()) {
+                showAlert("Validation Error", "Post body cannot be empty.");
+            } else {
                 try {
                     // Update memory version
-                    ModelPostManagement.getPostStorage()
-                        .getPostById(ViewPostManagement.currentPostId)
-                        .setBody(newBody);
+                    post.setBody(newBody);
                     
                     // Update database version
                     database.updatePost(ViewPostManagement.currentPostId, newBody);
                     
                     // Update UI text
-                    ViewPostManagement.area_FullBody.setText(newBody);
+                    ViewPostManagement.area_FullBody.setText(post.isDeleted() ? "[DELETED]" : newBody);
                     showAlert("Success", "Post updated successfully!");
                 } catch (java.sql.SQLException e) {
                     showAlert("Error", "Failed to save the edit to the database.");

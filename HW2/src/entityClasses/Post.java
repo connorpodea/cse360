@@ -27,6 +27,9 @@ public class Post {
     /** Category the post belongs to */
     private String category;
 
+    /** Whether the post has been logically deleted */
+    private boolean deleted;
+
     /** Max allowed length for post titles */
     public static final int MAX_TITLE_LENGTH = 200;
 
@@ -50,6 +53,7 @@ public class Post {
         this.author = author;
         this.timestamp = LocalDateTime.now();
         this.category = category;
+        this.deleted = false;
     }
 
     /**
@@ -85,6 +89,9 @@ public class Post {
      * @param newBody  updated body
      */
     public void update(String newTitle, String newBody) {
+        if (deleted) {
+            return;
+        }
         validateUpdate(newTitle, newBody);
         this.title = newTitle;
         this.body = newBody;
@@ -123,6 +130,7 @@ public class Post {
     }
 
     /**
+     * Returns the post id.
      * @return the post id
      */
     public int getId() {
@@ -130,6 +138,15 @@ public class Post {
     }
 
     /**
+     * Returns the post id.
+     * @return the post id
+     */
+    public int getPostId() {
+        return id;
+    }
+
+    /**
+     * Returns the post title.
      * @return the post title
      */
     public String getTitle() {
@@ -137,6 +154,7 @@ public class Post {
     }
 
     /**
+     * Returns the post body.
      * @return the post body
      */
     public String getBody() {
@@ -144,6 +162,7 @@ public class Post {
     }
 
     /**
+     * Returns the post author.
      * @return the post author
      */
     public String getAuthor() {
@@ -151,6 +170,15 @@ public class Post {
     }
 
     /**
+     * Returns the author user name.
+     * @return the author user name
+     */
+    public String getAuthorUserName() {
+        return author;
+    }
+
+    /**
+     * Returns when the post was created.
      * @return when the post was created
      */
     public LocalDateTime getTimestamp() {
@@ -158,10 +186,26 @@ public class Post {
     }
 
     /**
+     * Returns the post category.
      * @return the post category
      */
     public String getCategory() {
         return category;
+    }
+
+    /**
+     * Returns true if the post is deleted.
+     * @return true if deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Marks the post as deleted.
+     */
+    public void markDeleted() {
+        deleted = true;
     }
 
     /**
@@ -171,6 +215,9 @@ public class Post {
      * @param body post body
      */
     public void setBody(String body) {
+        if (deleted) {
+            return;
+        }
         this.body = body;
     }
 
@@ -191,5 +238,6 @@ public class Post {
         this.author = author;
         this.category = category;
         this.timestamp = timestamp;
+        this.deleted = false;
     }
 }

@@ -1,5 +1,6 @@
 package guiRole2;
 
+/** Model for the role 2 home page. */
 public class ModelRole2Home {
 
 /*******
@@ -18,4 +19,6 @@ public class ModelRole2Home {
  *  
  */
 
+	/** Creates the model object. */
+	public ModelRole2Home() {}
 }

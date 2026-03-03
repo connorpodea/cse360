@@ -333,6 +333,10 @@ public class Database {
 		return true;
 	}
 	
+	/**
+	 * Returns the number of admin users.
+	 * @return the number of admin users
+	 */
 	public int getNumberOfAdmins() {
 	    String query = "SELECT COUNT(*) AS count FROM userDB WHERE adminRole = TRUE";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -424,7 +428,7 @@ public class Database {
  *  <p> Method: List getUserList() </p>
  *  
  *  <P> Description: Generate an List of Strings, one for each user in the database,
- *  starting with "<Select User>" at the start of the list. </p>
+ *  starting with {@code <Select a User>} at the start of the list. </p>
  *  
  *  @return a list of userNames found in the database.
  */
@@ -444,6 +448,10 @@ public class Database {
 		return userList;
 	}
 	
+	/**
+	 * Returns all users for display.
+	 * @return the users for display
+	 */
 	public List<User> getAllUsersForDisplay() {
 		List<User> users = new ArrayList<>();
 		
@@ -1075,6 +1083,11 @@ public class Database {
 	    }
 	}
 	
+	/**
+	 * Resets a user's password.
+	 * @param username the username to update
+	 * @param tempPass the temporary password
+	 */
 	public void resetUserPassword(String username, String tempPass) {
 		String query = "UPDATE userDB SET password = ?, isOTP = TRUE WHERE userName = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1178,7 +1191,11 @@ public class Database {
 	    return false;
 	}
 	
-	// method to delete user
+	/**
+	 * Deletes a user.
+	 * @param username the username to delete
+	 * @return true if the delete succeeds
+	 */
 	public boolean deleteUser(String username) {
 	    if (username == null) return false;
 
@@ -1233,7 +1250,12 @@ public class Database {
 	public String getCurrentUsername() { return currentUsername;};
 
 	
-	// go into the database and change the current users password to temp password.
+	/**
+	 * Updates a user's password.
+	 * @param username the username to update
+	 * @param newPassword the new password
+	 * @return true if the update succeeds
+	 */
 	public boolean updatePassword(String username, String newPassword) {
 		// the query to change password.
 		String query = "UPDATE userDB SET password = ? WHERE userName = ?";
@@ -1376,6 +1398,8 @@ public class Database {
 	
 	/*******
 	 * Check if the user is currently flagged for a one-time password reset.
+	 * @param username the username to check
+	 * @return true if the password is temporary
 	 */
 	public boolean isPasswordTemporary(String username) {
 		String query = "SELECT isOTP FROM userDB WHERE userName = ?";
@@ -1394,6 +1418,7 @@ public class Database {
 	/*******
 	 * Clears the OTP flag. Call this in your Update Controller after the 
      * user successfully saves their new password.
+	 * @param username the username to update
 	 */
 	public void clearOTPFlag(String username) {
 		String query = "UPDATE userDB SET isOTP = FALSE WHERE userName = ?";

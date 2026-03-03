@@ -31,6 +31,9 @@ public class ViewReplyManagement {
 
 	/**
 	 * Opens the reply creation screen for a specific post.
+	 * @param ps the stage for this page
+	 * @param user the current user
+	 * @param postId the selected post id
 	 */
 	public static void displayReplyManagement(Stage ps, User user, int postId) {
 		theStage = ps;
