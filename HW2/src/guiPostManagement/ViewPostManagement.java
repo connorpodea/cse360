@@ -113,7 +113,8 @@ public class ViewPostManagement {
 		list_Posts.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, selected) -> {
 		    if (selected != null) {
 		        for (entityClasses.Post p : ModelPostManagement.getPostStorage().getAllPosts()) {
-		            String matchString = String.format("[%s] %s", p.getCategory(), p.getTitle());
+		        	String titleText = p.isDeleted() ? "[Deleted] " + p.getTitle() : p.getTitle();
+		            String matchString = String.format("[%s] %s", p.getCategory(), titleText);
 		            
 		            if (selected.startsWith(matchString)) {
 		                // Save the ID so other buttons know what post is active
@@ -177,9 +178,10 @@ public class ViewPostManagement {
 	    	boolean matchesCat = filterCat.equals("All") || p.getCategory().equals(filterCat);
 	    	
 	    	if (matchesSearch && matchesCat) {
+	    		String titleText = p.isDeleted() ? "[Deleted] " + p.getTitle() : p.getTitle();
 		        String displayString = String.format("[%s] %s\nBy: %s | %s", 
 		        					   p.getCategory(),
-		                               p.getTitle(), 
+		                               titleText, 
 		                               p.getAuthor(), 
 		                               p.getTimestamp().format(formatter)); 
 		        list_Posts.getItems().add(displayString);

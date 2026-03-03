@@ -135,6 +135,8 @@ public class ControllerUserLogin {
     	
     	// Right after database is initialized, load existing content into memory
     	try {
+    	    guiPostManagement.ModelPostManagement.getPostStorage().clearAll();
+    	    guiReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
     	    for (entityClasses.Post p : theDatabase.loadAllPosts()) 
     	        guiPostManagement.ModelPostManagement.getPostStorage().addPost(p);
     	        
@@ -188,7 +190,7 @@ public class ControllerUserLogin {
 		
 		try {
 		    // Clear memory to prevent duplicates
-		    guiReplyManagement.ModelReplyManagement.getReplyStorage().getAllReplies().clear();
+		    guiReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
 		    
 		    // Fill memory with data from the disk
 		    for (entityClasses.Reply r : theDatabase.loadAllReplies()) {
