@@ -38,7 +38,8 @@ public class Post {
 
     /**
      * Creates a new Post with the current timestamp.
-     *
+     * This function satisfies the CREATE functionality by creating the users post.
+     * it gets all the users details and succesfully creates a post.
      * @param id       the id of the post
      * @param title    the post title
      * @param body     the post content
@@ -84,7 +85,9 @@ public class Post {
 
     /**
      * Updates the title and body of the post.
-     *
+     * the satisfies the update functionality for the CRUD.
+     * this will take the users new body of text and or title and set it to the current.
+     * replacing the old body and title with the new. 
      * @param newTitle updated title
      * @param newBody  updated body
      */
@@ -131,6 +134,7 @@ public class Post {
 
     /**
      * Returns the post id.
+     * Satifies the Read for CRUD
      * @return the post id
      */
     public int getId() {
@@ -138,6 +142,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the post id.
      * @return the post id
      */
@@ -146,6 +151,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the post title.
      * @return the post title
      */
@@ -154,6 +160,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the post body.
      * @return the post body
      */
@@ -162,6 +169,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the post author.
      * @return the post author
      */
@@ -170,6 +178,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the author user name.
      * @return the author user name
      */
@@ -177,7 +186,8 @@ public class Post {
         return author;
     }
 
-    /**
+    /**\
+     * Satifies the Read for CRUD
      * Returns when the post was created.
      * @return when the post was created
      */
@@ -186,6 +196,7 @@ public class Post {
     }
 
     /**
+     * Satifies the Read for CRUD
      * Returns the post category.
      * @return the post category
      */
@@ -195,6 +206,8 @@ public class Post {
 
     /**
      * Returns true if the post is deleted.
+     * Satisfies the Deleted functionality for the CRUD.
+     * will just check to see if a post is deleted, this function is mostly for the test cases of our program. 
      * @return true if deleted
      */
     public boolean isDeleted() {
@@ -203,6 +216,9 @@ public class Post {
 
     /**
      * Marks the post as deleted.
+     * This just returns a boolean value of true if the users post is deleted.
+     * this way when the post is clicked on, the program will check to see if it is deleted and if so then 
+     * replace the body of test and title with the word "DELETED".
      */
     public void markDeleted() {
         deleted = true;

@@ -1,5 +1,5 @@
 /** The FoundationsF26 module. */
-module FoundationsF26 {
+module FoundationF26{
 	requires javafx.controls;
 	requires java.sql;
 	
