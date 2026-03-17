@@ -1,4 +1,4 @@
-package guiReplyManagement;
+package MVCReplyManagement;
 
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -79,9 +79,9 @@ public class ViewReplyList {
         // Back button
         button_Back.setLayoutX(20); button_Back.setLayoutY(height - 60);
         button_Back.setOnAction((_) -> {
-            guiPostManagement.ViewPostManagement.displayPostManagement(
-                guiPostManagement.ViewPostManagement.theStage, 
-                guiPostManagement.ViewPostManagement.theUser);
+            MVCPostManagement.ViewPostManagement.displayPostManagement(
+                MVCPostManagement.ViewPostManagement.theStage, 
+                MVCPostManagement.ViewPostManagement.theUser);
         });
         
         // Edit/Delete buttons
@@ -100,8 +100,8 @@ public class ViewReplyList {
                 area_ReplyBody.setText(selected.getBody());
                 currentReplyId = selected.getId(); 
 
-                boolean canModify = guiPostManagement.ViewPostManagement.theUser.getUserName().equals(selected.getAuthor()) 
-                                    || guiPostManagement.ViewPostManagement.theUser.getAdminRole();
+                boolean canModify = MVCPostManagement.ViewPostManagement.theUser.getUserName().equals(selected.getAuthor()) 
+                                    || MVCPostManagement.ViewPostManagement.theUser.getAdminRole();
                 
                 button_EditReply.setVisible(canModify);
                 button_DeleteReply.setVisible(canModify);

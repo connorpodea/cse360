@@ -135,13 +135,13 @@ public class ControllerUserLogin {
     	
     	// Right after database is initialized, load existing content into memory
     	try {
-    	    guiPostManagement.ModelPostManagement.getPostStorage().clearAll();
-    	    guiReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
+    	    MVCPostManagement.ModelPostManagement.getPostStorage().clearAll();
+    	    MVCReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
     	    for (entityClasses.Post p : theDatabase.loadAllPosts()) 
-    	        guiPostManagement.ModelPostManagement.getPostStorage().addPost(p);
+    	        MVCPostManagement.ModelPostManagement.getPostStorage().addPost(p);
     	        
     	    for (entityClasses.Reply r : theDatabase.loadAllReplies()) 
-    	        guiReplyManagement.ModelReplyManagement.getReplyStorage().addReply(r);
+    	        MVCReplyManagement.ModelReplyManagement.getReplyStorage().addReply(r);
     	} catch (Exception e) { e.printStackTrace(); }
     	
     	// 7. Determine Home Page Redirection
@@ -190,11 +190,11 @@ public class ControllerUserLogin {
 		
 		try {
 		    // Clear memory to prevent duplicates
-		    guiReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
+		    MVCReplyManagement.ModelReplyManagement.getReplyStorage().clearAll();
 		    
 		    // Fill memory with data from the disk
 		    for (entityClasses.Reply r : theDatabase.loadAllReplies()) {
-		        guiReplyManagement.ModelReplyManagement.getReplyStorage().addReply(r);
+		        MVCReplyManagement.ModelReplyManagement.getReplyStorage().addReply(r);
 		    }
 		} catch (Exception e) { e.printStackTrace(); }
 	}	

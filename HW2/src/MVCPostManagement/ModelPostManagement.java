@@ -1,4 +1,4 @@
-package guiPostManagement;
+package MVCPostManagement;
 
 import entityClasses.Post;
 import entityClasses.PostStorage;

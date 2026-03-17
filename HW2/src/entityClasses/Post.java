@@ -131,6 +131,10 @@ public class Post {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, hh:mm a");
         return this.timestamp.format(formatter);
     }
+    
+    public void setTitle(String input) {
+    	this.title = input;
+    }
 
     /**
      * Returns the post id.

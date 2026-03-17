@@ -1,4 +1,4 @@
-package guiPostManagement;
+package MVCPostManagement;
 
 import entityClasses.Post;
 import database.Database;
@@ -74,13 +74,13 @@ public class ControllerPostManagement {
 	            .getPostById(ViewPostManagement.currentPostId);
 	    
 	    if (p != null) {
-	        ViewPostManagement.label_FullTitle.setText("Title: " + p.getTitle());
+	        ViewPostManagement.label_FullTitle.setText(p.isDeleted() ? DELETED_POST_MESSAGE : "Title: " + p.getTitle());
 	        ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
 	        ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
 	        ViewPostManagement.area_FullBody.setText(p.isDeleted() ? DELETED_POST_MESSAGE : p.getBody());
 
 	        // Update reply count so user can see activity
-	        int count = guiReplyManagement.ModelReplyManagement.getReplyStorage()
+	        int count = MVCReplyManagement.ModelReplyManagement.getReplyStorage()
 	                        .getRepliesForPost(p.getId()).size();
 	        ViewPostManagement.button_ViewReplies.setText("View Replies (" + count + ")");
 
@@ -97,7 +97,7 @@ public class ControllerPostManagement {
      */
 	protected static void performReply() {
         if (ViewPostManagement.currentPostId != -1) {
-            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+            MVCReplyManagement.ViewReplyManagement.displayReplyManagement(
                 ViewPostManagement.theStage, 
                 ViewPostManagement.theUser, 
                 ViewPostManagement.currentPostId
@@ -123,6 +123,7 @@ public class ControllerPostManagement {
             java.util.Optional<ButtonType> result = confirm.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 post.setBody(DELETED_POST_MESSAGE);
+                post.setTitle("Post Deleted");
                 post.markDeleted();
                 database.markPostDeleted(idToDelete, DELETED_POST_MESSAGE);
                 ViewPostManagement.refreshPostList();
@@ -206,7 +207,7 @@ public class ControllerPostManagement {
 
         try {
             int postId = Integer.parseInt(selected.split(":")[0]);
-            guiReplyManagement.ViewReplyManagement.displayReplyManagement(
+            MVCReplyManagement.ViewReplyManagement.displayReplyManagement(
                 ViewPostManagement.theStage, 
                 ViewPostManagement.theUser, 
                 postId);

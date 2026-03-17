@@ -1,4 +1,4 @@
-package guiReplyManagement;
+package MVCReplyManagement;
 
 import entityClasses.Reply;
 import entityClasses.ReplyStorage;

@@ -1,4 +1,4 @@
-package guiReplyManagement;
+package MVCReplyManagement;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -71,7 +71,7 @@ public class ViewReplyManagement {
 		// Back button to return to post view
 		setupButtonUI(button_Back, "Arial", 18, 150, Pos.CENTER, 250, 400);
 		button_Back.setOnAction((_) -> { 
-			guiPostManagement.ViewPostManagement.displayPostManagement(
+			MVCPostManagement.ViewPostManagement.displayPostManagement(
 	            ViewReplyManagement.theStage, 
 	            ViewReplyManagement.theUser
 	        ); 

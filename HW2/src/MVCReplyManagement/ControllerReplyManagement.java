@@ -1,4 +1,4 @@
-package guiReplyManagement;
+package MVCReplyManagement;
 
 import database.Database;
 import javafx.scene.control.Alert;
@@ -54,7 +54,7 @@ public class ControllerReplyManagement {
 		ViewReplyManagement.text_Body.clear();
 		
 		// Go back to the post view after submitting
-		guiPostManagement.ViewPostManagement.displayPostManagement(
+		MVCPostManagement.ViewPostManagement.displayPostManagement(
 	            ViewReplyManagement.theStage, 
 	            ViewReplyManagement.theUser
 	    );

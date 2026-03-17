@@ -1,4 +1,4 @@
-package guiPostManagement;
+package MVCPostManagement;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -144,7 +144,7 @@ public class ViewPostManagement {
 		
 		setupButtonUI(button_ViewReplies, "Arial", 16, 200, Pos.CENTER, 550, height - 150);
 		button_ViewReplies.setOnAction((_) -> { 
-		    guiReplyManagement.ViewReplyList.displayReplyList(theStage, theUser, currentPostId); 
+		    MVCReplyManagement.ViewReplyList.displayReplyList(theStage, theUser, currentPostId); 
 		});
 
 		setupButtonUI(button_Edit, "Arial", 14, 100, Pos.CENTER, 320, height - 100);

@@ -79,6 +79,6 @@ public class ControllerRole2Home {
 	 * * <p> Description: This method directs the user to the Post Management Page. </p>
 	 * */
 	protected static void performManagePosts() {
-		guiPostManagement.ViewPostManagement.displayPostManagement(ViewRole2Home.theStage, ViewRole2Home.theUser);
+		MVCPostManagement.ViewPostManagement.displayPostManagement(ViewRole2Home.theStage, ViewRole2Home.theUser);
 	}
 }
