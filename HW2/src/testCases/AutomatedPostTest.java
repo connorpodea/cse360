@@ -6,8 +6,18 @@ import entityClasses.Reply;
 import entityClasses.ReplyStorage;
 import java.util.List;
 
+/**
+ * Provides automated testing for the Create and Read (CR) functionality 
+ * of the Post and Reply systems. This class verifies constraints such 
+ * as field length, mandatory fields, and correct object storage.
+ */
 public class AutomatedPostTest {
 
+    /**
+     * Executes a suite of automated tests to verify business rules for 
+     * creating and reading posts and replies.
+     * * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         PostStorage postStore = new PostStorage();
         ReplyStorage replyStore = new ReplyStorage();
@@ -100,7 +110,6 @@ public class AutomatedPostTest {
             System.out.println("PASS: User can view replies under a post (Count: " + postReplies.size() + ")");
         }
         
-        // Note: Your Reply class doesn't have isDeleted, so we check the logic for Post deletion
         System.out.println("PASS: Read tests complete.");
     }
 }

@@ -1,9 +1,21 @@
 package testCases;
+
 import entityClasses.Post;
 import entityClasses.PostStorage;
 import entityClasses.Reply;
 
+/**
+ * Provides a manual verification driver for the Post system. 
+ * This class outputs results to the console to allow for human verification 
+ * of the system state, specifically post listing and deletion status.
+ */
 public class ManualPostTest {
+
+    /**
+     * Entry point for the manual test driver. Performs standard CRUD 
+     * operations and prints status updates to the console.
+     * * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         PostStorage storage = new PostStorage();
         
