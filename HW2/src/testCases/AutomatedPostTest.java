@@ -110,6 +110,109 @@ public class AutomatedPostTest {
             System.out.println("PASS: User can view replies under a post (Count: " + postReplies.size() + ")");
         }
         
+        System.out.println("\n=== UPDATE FUNCTIONALITY TESTS ===");
+
+        // 1. Update Post (Positive)
+        try {
+            Post updatePost = new Post(20, "Old Title", "Old Body", "Student1", "General");
+            updatePost.update("New Title", "New Body");
+            if (updatePost.getTitle().equals("New Title") && updatePost.getBody().equals("New Body")) {
+                System.out.println("PASS: Existing post updated with valid new title/body.");
+            } else {
+                System.out.println("FAIL: Post update did not apply new values.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Valid post update."); }
+
+        // 2. Update Post (Negative)
+        try {
+            Post deletedUpdatePost = new Post(21, "Keep Title", "Keep Body", "Student1", "General");
+            deletedUpdatePost.markDeleted();
+            deletedUpdatePost.update("Blocked Title", "Blocked Body");
+            if (deletedUpdatePost.getTitle().equals("Keep Title") && deletedUpdatePost.getBody().equals("Keep Body")) {
+                System.out.println("PASS: System blocked updating a deleted post.");
+            } else {
+                System.out.println("FAIL: Deleted post was updated.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Deleted post update block."); }
+
+        try {
+            Post emptyUpdatedTitle = new Post(22, "Start Title", "Start Body", "Student1", "General");
+            emptyUpdatedTitle.update("", "Still Good Body");
+            System.out.println("FAIL: System allowed empty updated title.");
+        } catch (IllegalArgumentException e) { System.out.println("PASS: System prevented empty updated title."); }
+
+        try {
+            Post emptyUpdatedBody = new Post(23, "Start Title", "Start Body", "Student1", "General");
+            emptyUpdatedBody.update("Still Good Title", "   ");
+            System.out.println("FAIL: System allowed empty updated body.");
+        } catch (IllegalArgumentException e) { System.out.println("PASS: System prevented empty updated body."); }
+
+        try {
+            Post longUpdatedTitle = new Post(24, "Start Title", "Start Body", "Student1", "General");
+            longUpdatedTitle.update(longTitle, "Valid Body");
+            System.out.println("FAIL: System allowed updated title > 200.");
+        } catch (IllegalArgumentException e) { System.out.println("PASS: System rejected updated title > 200."); }
+
+        try {
+            Post longUpdatedBody = new Post(25, "Start Title", "Start Body", "Student1", "General");
+            longUpdatedBody.update("Valid Title", longBody);
+            System.out.println("FAIL: System allowed updated body > 5000.");
+        } catch (IllegalArgumentException e) { System.out.println("PASS: System rejected updated body > 5000."); }
+
+        try {
+            Post maxUpdatedPost = new Post(26, "Start Title", "Start Body", "Student1", "General");
+            maxUpdatedPost.update(maxT, maxB);
+            if (maxUpdatedPost.getTitle().equals(maxT) && maxUpdatedPost.getBody().equals(maxB)) {
+                System.out.println("PASS: Post updated at exactly max lengths.");
+            } else {
+                System.out.println("FAIL: Max length post update did not apply new values.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Post update at max lengths."); }
+
+        // 3. Update Reply (Positive)
+        try {
+            Reply updatedReply = new Reply(60, 10, "Old reply body", "User2");
+            updatedReply.update("New reply body");
+            if (updatedReply.getBody().equals("New reply body")) {
+                System.out.println("PASS: Existing reply updated with valid new body.");
+            } else {
+                System.out.println("FAIL: Reply update did not apply new body.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Valid reply update."); }
+
+        System.out.println("\n=== DELETE FUNCTIONALITY TESTS ===");
+
+        // 1. Delete Post (Positive)
+        try {
+            Post deletePost = new Post(30, "Delete Me", "Delete Body", "Student1", "General");
+            Reply keepReply = new Reply(70, 30, "Reply stays", "User3");
+            postStore.addPost(deletePost);
+            replyStore.addReply(keepReply);
+            deletePost.markDeleted();
+            if (deletePost.isDeleted()) {
+                System.out.println("PASS: Existing post marked deleted and not removed.");
+            } else {
+                System.out.println("FAIL: Post deleted flag was not set.");
+            }
+            if (replyStore.getRepliesForPost(30).size() > 0) {
+                System.out.println("PASS: Replies still exist and are accessible after post deletion.");
+            } else {
+                System.out.println("FAIL: Replies did not remain after post deletion.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Positive post delete rule test."); }
+
+        // 2. Delete Reply (Positive)
+        try {
+            Reply deleteReply = new Reply(80, 10, "Delete reply", "User4");
+            replyStore.addReply(deleteReply);
+            replyStore.deleteReply(80);
+            if (!replyStore.exists(80)) {
+                System.out.println("PASS: Reply removed successfully.");
+            } else {
+                System.out.println("FAIL: Reply still exists after delete.");
+            }
+        } catch (Exception e) { System.out.println("FAIL: Positive reply delete test."); }
+
         System.out.println("PASS: Read tests complete.");
     }
 }
