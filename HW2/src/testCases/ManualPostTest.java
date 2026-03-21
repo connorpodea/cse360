@@ -13,9 +13,15 @@ import entityClasses.ReplyStorage;
 public class ManualPostTest {
 
     /**
+     * Creates the manual post test object.
+     */
+    public ManualPostTest() {
+    }
+
+    /**
      * Entry point for the manual test driver. Performs standard CRUD 
      * operations and prints status updates to the console.
-     * * @param args command line arguments (not used)
+     * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
         PostStorage storage = new PostStorage();

@@ -14,9 +14,15 @@ import java.util.List;
 public class AutomatedPostTest {
 
     /**
+     * Creates the automated post test object.
+     */
+    public AutomatedPostTest() {
+    }
+
+    /**
      * Executes a suite of automated tests to verify business rules for 
      * creating and reading posts and replies.
-     * * @param args command line arguments (not used)
+     * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
         PostStorage postStore = new PostStorage();

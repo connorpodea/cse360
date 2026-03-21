@@ -132,6 +132,10 @@ public class Post {
         return this.timestamp.format(formatter);
     }
     
+    /**
+     * Sets the post title.
+     * @param input the post title
+     */
     public void setTitle(String input) {
     	this.title = input;
     }
