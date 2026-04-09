@@ -64,7 +64,7 @@ public class ViewRole1Home {
 	// logging out.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
-	protected static Button button_DiscuessionsBoard = new Button("Discuession");
+	protected static Button button_DiscuessionsBoard = new Button("Discussion");
 	protected static Button button_RequestBoard = new Button("Requests");
 
 	// This is the end of the GUI objects for the page.
