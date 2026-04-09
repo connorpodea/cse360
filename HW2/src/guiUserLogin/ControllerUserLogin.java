@@ -197,7 +197,16 @@ public class ControllerUserLogin {
 		        MVCReplyManagement.ModelReplyManagement.getReplyStorage().addReply(r);
 		    }
 		} catch (Exception e) { e.printStackTrace(); }
-	}	
+	}
+	
+	public static boolean validAdminUser(User user) {
+		// will just check to see if the admin role is true.
+		if(theDatabase.loginAdmin(user)) {
+			return true;
+		}
+		
+		return false;
+	}
 		
 	/**********
 	 * <p> Method: setup() </p>

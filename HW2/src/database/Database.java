@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
+
 import entityClasses.User;
 
 /*******
@@ -39,7 +40,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase112342asdfasdfqwesd342hakjassfklsjd1234123aa4";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase112342asdfasdfqwesd342hakjassfklsjd1234123aa40a";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -141,6 +142,18 @@ public class Database {
                 + "author VARCHAR(255), "
                 + "timestamp VARCHAR(255))";
 		statement.execute(replyTable);
+		
+		// create the request table
+		String request = "CREATE TABLE IF NOT EXISTS requestDB ("
+		        + "id INT AUTO_INCREMENT PRIMARY KEY, "
+		        + "title VARCHAR(255), "
+		        + "description CLOB, "
+		        + "author VARCHAR(255), "
+		        + "status VARCHAR(50) DEFAULT 'OPEN', "
+		        + "resolutionNotes CLOB, "
+		        + "originalRequestId INT DEFAULT NULL, "
+		        + "timestamp VARCHAR(255))";
+		statement.execute(request);
 		
 		// Create the invitation codes table
 	    String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
@@ -1455,6 +1468,89 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*******
+	 * <p> Method: saveRequest </p>
+	 * <p> Description: Saves a new staff request to the database.</p>
+	 * @param title the request title
+	 * @param description the request description
+	 * @param author the staff member submitting the request
+	 * @throws SQLException when there is an issue executing the SQL command
+	 */
+	public void saveRequest(String title, String description, String author) throws SQLException {
+	    String query = "INSERT INTO requestDB (title, description, author, status, timestamp) "
+	            + "VALUES (?, ?, ?, 'OPEN', ?)";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, title);
+	        pstmt.setString(2, description);
+	        pstmt.setString(3, author);
+	        pstmt.setString(4, LocalDateTime.now().toString());
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	/*******
+	 * <p> Method: loadAllRequests </p>
+	 * <p> Description: Loads all staff requests from the database.</p>
+	 * @return a list of all requests as String arrays
+	 * @throws SQLException when there is an issue executing the SQL query
+	 */
+	public List<String[]> loadAllRequests() throws SQLException {
+	    List<String[]> results = new ArrayList<>();
+	    String query = "SELECT * FROM requestDB ORDER BY id DESC";
+	    try (ResultSet rs = statement.executeQuery(query)) {
+	        while (rs.next()) {
+	            results.add(new String[]{
+	                String.valueOf(rs.getInt("id")),
+	                rs.getString("title"),
+	                rs.getString("description"),
+	                rs.getString("author"),
+	                rs.getString("status"),
+	                rs.getString("resolutionNotes"),
+	                String.valueOf(rs.getInt("originalRequestId")),
+	                rs.getString("timestamp")
+	            });
+	        }
+	    }
+	    return results;
+	}
+
+	/*******
+	 * <p> Method: closeRequest </p>
+	 * <p> Description: Closes a request and saves the admin's resolution notes.</p>
+	 * @param id the request ID to close
+	 * @param resolutionNotes what the admin did to resolve it
+	 * @throws SQLException when there is an issue executing the SQL command
+	 */
+	public void closeRequest(int id, String resolutionNotes) throws SQLException {
+	    String query = "UPDATE requestDB SET status = 'CLOSED', resolutionNotes = ? WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, resolutionNotes);
+	        pstmt.setInt(2, id);
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	/*******
+	 * <p> Method: reopenRequest </p>
+	 * <p> Description: Reopens a closed request and links it to the original.</p>
+	 * @param originalId the ID of the original closed request
+	 * @param description the new description explaining why it's being reopened
+	 * @param author the staff member reopening it
+	 * @throws SQLException when there is an issue executing the SQL command
+	 */
+	public void reopenRequest(int originalId, String description, String author) throws SQLException {
+	    String query = "INSERT INTO requestDB (title, description, author, status, "
+	            + "originalRequestId, timestamp) VALUES (?, ?, ?, 'REOPENED', ?, ?)";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, "REOPENED REQUEST #" + originalId);
+	        pstmt.setString(2, description);
+	        pstmt.setString(3, author);
+	        pstmt.setInt(4, originalId);
+	        pstmt.setString(5, LocalDateTime.now().toString());
+	        pstmt.executeUpdate();
+	    }
 	}
 
 
