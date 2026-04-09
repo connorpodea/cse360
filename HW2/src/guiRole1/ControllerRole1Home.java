@@ -1,5 +1,7 @@
 package guiRole1;
 
+import guiRole2.ViewRole2Home;
+import MVCPostManagement.*;
 
 /*******
  * <p> Title: ControllerRole1Home Class. </p>
@@ -72,5 +74,18 @@ public class ControllerRole1Home {
 	 */	
 	protected static void performQuit() {
 		System.exit(0);
+	}
+	
+	/**
+	 * <p> Method: performManagePosts() </p>
+	 * * <p> Description: This method directs the user to the Post Management Page. </p>
+	 * */
+	protected static void performManagePosts() {
+		MVCPostManagement.ViewPostManagement.displayPostManagement(ViewRole1Home.theStage, ViewRole1Home.theUser);
+	}
+	
+	protected static void performRequestPosts() {
+	    MVCRequestManagement.ViewRequestManagement.displayRequestManagement(
+	        ViewRole1Home.theStage, ViewRole1Home.theUser);
 	}
 }

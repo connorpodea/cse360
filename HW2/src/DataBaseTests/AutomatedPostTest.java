@@ -1,4 +1,4 @@
-package testCases;
+package DataBaseTests;
 
 import entityClasses.Post;
 import entityClasses.PostStorage;

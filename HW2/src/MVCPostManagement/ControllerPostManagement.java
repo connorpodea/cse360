@@ -22,7 +22,7 @@ public class ControllerPostManagement {
 	 * Creates a new post using the values from the UI.
 	 * Performs basic validation before saving.
 	 */
-	protected static void performCreatePost() {
+	public static void performCreatePost() {
 		int id = ModelPostManagement.getNextPostId();
 		String title = ViewCreatePost.text_Title.getText(); 
 		String body = ViewCreatePost.text_Body.getText();   
@@ -184,6 +184,7 @@ public class ControllerPostManagement {
 
 	/**
 	 * Shows a basic popup message.
+	 * 
 	 */
 	private static void showAlert(String title, String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);

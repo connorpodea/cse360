@@ -64,6 +64,8 @@ public class ViewRole1Home {
 	// logging out.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
+	protected static Button button_DiscuessionsBoard = new Button("Discuession");
+	protected static Button button_RequestBoard = new Button("Requests");
 
 	// This is the end of the GUI objects for the page.
 	
@@ -174,13 +176,20 @@ public class ViewRole1Home {
         
         setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
         button_Quit.setOnAction((_) -> {ControllerRole1Home.performQuit(); });
-
+        
+        // allows the staff user to go to the discuessions post for students and delete or edit some posts if needed.
+        setupButtonUI(button_DiscuessionsBoard, "Dialog", 18, 250, Pos.CENTER, 200, 200);
+        button_DiscuessionsBoard.setOnAction((_) -> {ControllerRole1Home.performManagePosts(); });
+        
+        setupButtonUI(button_RequestBoard, "Dialog", 18, 250, Pos.CENTER, 200, 100);
+        button_RequestBoard.setOnAction((_) -> {ControllerRole1Home.performRequestPosts(); });
+        
 		// This is the end of the GUI initialization code
 		
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit);
+	        line_Separator4, button_Logout, button_Quit, button_DiscuessionsBoard, button_RequestBoard);
 }
 	
 	
