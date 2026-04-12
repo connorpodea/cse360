@@ -35,6 +35,9 @@ public class Post {
 
     /** Max allowed length for post bodies */
     public static final int MAX_BODY_LENGTH = 5000;
+    
+    private String staffFeedback;
+    private boolean anonymousFeedback;
 
     /**
      * Creates a new Post with the current timestamp.
@@ -264,4 +267,12 @@ public class Post {
         this.timestamp = timestamp;
         this.deleted = false;
     }
+    
+    public void setStaffFeedback(String feedback, boolean isAnonymous) {
+        this.staffFeedback = feedback;
+        this.anonymousFeedback = isAnonymous;
+    }
+
+    public String getStaffFeedback() { return staffFeedback; }
+    public boolean isAnonymousFeedback() { return anonymousFeedback; }
 }

@@ -124,15 +124,16 @@ public class Database {
 		
 		// Create the posts table
 		String postTable = "CREATE TABLE IF NOT EXISTS postDB ("
-				+ "id INT PRIMARY KEY, "
-				+ "title VARCHAR(255), "
-				+ "body CLOB, "
-				+ "author VARCHAR(255), "
-				+ "category VARCHAR(255), "
-				+ "timestamp VARCHAR(255), "
-				+ "deleted BOOL DEFAULT FALSE)";
+		    + "id INT PRIMARY KEY, "
+		    + "title VARCHAR(255), "
+		    + "body CLOB, "
+		    + "author VARCHAR(255), "
+		    + "category VARCHAR(255), "
+		    + "timestamp VARCHAR(255), "
+		    + "deleted BOOL DEFAULT FALSE, "
+		    + "staffFeedback CLOB, "
+		    + "anonymousFeedback BOOL DEFAULT FALSE)";
 		statement.execute(postTable);
-		statement.execute("ALTER TABLE postDB ADD COLUMN IF NOT EXISTS deleted BOOL DEFAULT FALSE");
 		
 		// Create the replies table
 		String replyTable = "CREATE TABLE IF NOT EXISTS replyDB ("
@@ -161,6 +162,46 @@ public class Database {
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
+	    
+	    String parameterTable = "CREATE TABLE IF NOT EXISTS reviewParameters ("
+	         + "id INT AUTO_INCREMENT PRIMARY KEY, "
+	         + "paramName VARCHAR(255), "
+	         + "criteria CLOB)";
+	    statement.execute(parameterTable);
+
+	    statement.execute("ALTER TABLE postDB ADD COLUMN IF NOT EXISTS staffFeedback CLOB");
+	    statement.execute("ALTER TABLE postDB ADD COLUMN IF NOT EXISTS anonymousFeedback BOOL DEFAULT FALSE");
+	}
+	
+	public void saveEvaluationParameter(String name, String criteria) throws SQLException {
+	    String query = "INSERT INTO reviewParameters (paramName, criteria) VALUES (?, ?)";
+	    try (java.sql.PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, name);
+	        pstmt.setString(2, criteria);
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	public List<String[]> getEvaluationParameters() throws SQLException {
+	    List<String[]> list = new java.util.ArrayList<>();
+	    ResultSet rs = statement.executeQuery("SELECT * FROM reviewParameters");
+	    while (rs.next()) {
+	        list.add(new String[]{rs.getString("paramName"), rs.getString("criteria")});
+	    }
+	    return list;
+	}
+	
+	/**
+	 * Emiliano's Story: Saves private feedback to a post.
+	 */
+	public void updatePostFeedback(int postId, String feedback, boolean isAnonymous) throws SQLException {
+	    String query = "UPDATE postDB SET staffFeedback = ?, anonymousFeedback = ? WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, feedback);
+	        pstmt.setBoolean(2, isAnonymous);
+	        pstmt.setInt(3, postId);
+	        pstmt.executeUpdate();
+	    }
 	}
 
 	

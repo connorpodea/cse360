@@ -2,9 +2,14 @@ package MVCPostManagement;
 
 import entityClasses.Post;
 import database.Database;
+import java.sql.SQLException;
+import javafx.scene.layout.VBox;           // Essential
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;      // Essential
+import javafx.scene.control.CheckBox;      // Essential
+import javafx.scene.control.Label;         // Essential
 
 /**
  * Handles user actions for creating, viewing, editing,
@@ -69,7 +74,10 @@ public class ControllerPostManagement {
 	 * Displays the selected post details in the main view.
 	 */
 	protected static void displaySelectedPost() {
-	    // Get post by ID instead of relying on strings
+		boolean isStaffOrAdmin = ViewPostManagement.theUser.getAdminRole() || 
+                ViewPostManagement.theUser.getNewRole1(); // staff role
+		
+		// Get post by ID instead of relying on strings
 	    entityClasses.Post p = ModelPostManagement.getPostStorage()
 	            .getPostById(ViewPostManagement.currentPostId);
 	    
@@ -84,11 +92,16 @@ public class ControllerPostManagement {
 	                        .getRepliesForPost(p.getId()).size();
 	        ViewPostManagement.button_ViewReplies.setText("View Replies (" + count + ")");
 
-	        // Only allow editing if user owns the post or is admin
+	        // Only allow editing if user owns the post, is admin, or is staff
 	        boolean canModify = ViewPostManagement.theUser.getUserName().equals(p.getAuthor()) 
-	                            || ViewPostManagement.theUser.getAdminRole();
+	                            || ViewPostManagement.theUser.getAdminRole()
+	                            || ViewPostManagement.theUser.getNewRole1();
 	        ViewPostManagement.button_Edit.setVisible(canModify && !p.isDeleted());
 	        ViewPostManagement.button_Delete.setVisible(canModify && !p.isDeleted());
+	        
+	        if (ViewPostManagement.button_Whisper != null) {
+	            ViewPostManagement.button_Whisper.setVisible(isStaffOrAdmin);
+	        }
 	    }
 	}
     
@@ -216,4 +229,92 @@ public class ControllerPostManagement {
             showAlert("Error", "Could not parse Post ID.");
         }
     }
+	
+	protected static void performWhisperFeedback() {
+	    Post p = ModelPostManagement.getPostStorage()
+	            .getPostById(ViewPostManagement.currentPostId);
+	    
+	    if (p == null) return;
+
+	    // 1. Create a Dialog to get the feedback
+	    javafx.scene.control.TextArea feedbackArea = new javafx.scene.control.TextArea();
+	    javafx.scene.control.CheckBox anonCheck = new javafx.scene.control.CheckBox("Hide my name (Anonymous)");
+	    
+	    VBox content = new VBox(10); 
+
+	 // 2. Add the components to the VBox
+	    content.getChildren().addAll(
+	     new Label("Provide private feedback to " + p.getAuthor() + ":"),
+	     feedbackArea, 
+	     anonCheck
+	     );
+
+	    Alert dialog = new Alert(AlertType.CONFIRMATION);
+	    dialog.setTitle("Staff Whisper System");
+	    dialog.getDialogPane().setContent(content);
+
+	    dialog.showAndWait().ifPresent(response -> {
+	        if (response == ButtonType.OK && !feedbackArea.getText().trim().isEmpty()) {
+	            try {
+	                String staffName = anonCheck.isSelected() ? "Anonymous Staff" : ViewPostManagement.theUser.getUserName();
+	                String messageBody = "[PRIVATE FEEDBACK regarding post #" + p.getId() + "]: " + feedbackArea.getText();
+	                
+	                // We use the Request table to store this "Whisper" so the student can see it
+	                // in their "Request Management" or "Notifications" area later.
+	                database.saveRequest(
+	                    "Feedback: " + p.getTitle(), 
+	                    messageBody, 
+	                    staffName
+	                );
+	                
+	                showAlert("Sent", "Your feedback has been sent privately to " + p.getAuthor());
+	            } catch (Exception e) {
+	                showAlert("Error", "Failed to send whisper feedback.");
+	            }
+	        }
+	    });
+	}
+	
+	protected static void performWhisper() {
+	    Post p = ModelPostManagement.getPostStorage().getPostById(ViewPostManagement.currentPostId);
+	    if (p == null) return;
+
+	    // 1. Setup UI
+	    javafx.scene.control.TextArea feedbackArea = new javafx.scene.control.TextArea();
+	    javafx.scene.control.CheckBox anonCheck = new javafx.scene.control.CheckBox("Hide my name (Anonymous)");
+	    javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10, 
+	        new javafx.scene.control.Label("Provide private feedback to " + p.getAuthor() + ":"),
+	        feedbackArea, 
+	        anonCheck
+	    );
+
+	    Alert dialog = new Alert(AlertType.CONFIRMATION);
+	    dialog.setTitle("Staff Whisper System");
+	    dialog.getDialogPane().setContent(content);
+
+	    // 2. Handle Action
+	    dialog.showAndWait().ifPresent(response -> {
+	        if (response == ButtonType.OK && !feedbackArea.getText().trim().isEmpty()) {
+	            try {
+	                String feedback = feedbackArea.getText().trim();
+	                boolean isAnon = anonCheck.isSelected();
+	                
+	                // Save to the postDB specifically
+	                database.updatePostFeedback(p.getId(), feedback, isAnon);
+	                
+	                // OPTIONAL: Also save as a Request so Admins see the "Action Taken"
+	                // This satisfies Gabriel/Connor's transparency requirement
+	                database.saveRequest(
+	                    "Feedback Sent to " + p.getAuthor(),
+	                    "Staff provided feedback on post #" + p.getId() + ": " + feedback,
+	                    isAnon ? "Anonymous Staff" : ViewPostManagement.theUser.getUserName()
+	                );
+
+	                showAlert("Sent", "Feedback saved successfully.");
+	            } catch (SQLException e) {
+	                showAlert("Error", "Database failure while sending feedback.");
+	            }
+	        }
+	    });
+	}
 }
