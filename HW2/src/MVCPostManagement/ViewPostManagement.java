@@ -40,6 +40,7 @@ public class ViewPostManagement {
 	protected static Button button_ReplyToThis = new Button("Reply to this Post");
 	protected static Button button_Edit = new Button("Edit Post");
     protected static Button button_Delete = new Button("Delete Post");
+    protected static Button button_Whisper = new Button("Whisper");
 	
 	// Keeps track of which post is currently selected
 	protected static int currentPostId = -1;
@@ -149,6 +150,7 @@ public class ViewPostManagement {
 
 		setupButtonUI(button_Edit, "Arial", 14, 100, Pos.CENTER, 320, height - 100);
 	    setupButtonUI(button_Delete, "Arial", 14, 100, Pos.CENTER, 440, height - 100);
+	    setupButtonUI(button_Whisper, "Arial", 14, 100, Pos.CENTER, 560, height - 100);
 
 	    // Only show edit/delete when the user is allowed to modify the post
 	    button_Edit.setVisible(false);
@@ -156,10 +158,17 @@ public class ViewPostManagement {
 	    button_Delete.setVisible(false);
 	    button_Delete.setOnAction((_) -> { ControllerPostManagement.performDelete(); });
 	    
-	    theRootPane.getChildren().addAll(label_PageTitle, button_ToCreatePage, button_Back, 
-	            label_SidebarHeader, text_SearchPosts, combo_FilterCategory, list_Posts, 
-	            label_FullTitle, label_FullAuthor, label_FullTimestamp, area_FullBody, 
-	            button_ReplyToThis, button_ViewReplies, button_Edit, button_Delete);
+	    
+	    button_Whisper.setVisible(false); // Hidden by default, Controller will show it to Staff
+	    button_Whisper.setOnAction((_) -> { ControllerPostManagement.performWhisper(); });
+	    
+	    theRootPane.getChildren().addAll(
+	    	    label_PageTitle, button_ToCreatePage, button_Back, 
+	    	    label_SidebarHeader, text_SearchPosts, combo_FilterCategory, list_Posts, 
+	    	    label_FullTitle, label_FullAuthor, label_FullTimestamp, area_FullBody, 
+	    	    button_ReplyToThis, button_ViewReplies, button_Edit, button_Delete, 
+	    	    button_Whisper
+	    	);
 	}
 
 	/**
