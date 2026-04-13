@@ -10,23 +10,18 @@ import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
-
 import entityClasses.User;
 
 /*******
  * <p> Title: Database Class. </p>
- * 
- * <p> Description: This is an in-memory database built on H2.  Detailed documentation of H2 can
+ * * <p> Description: This is an in-memory database built on H2.  Detailed documentation of H2 can
  * be found at https://www.h2database.com/html/main.html (Click on "PDF (2MP) for a PDF of 438 pages
  * on the H2 main page.)  This class leverages H2 and provides numerous special supporting methods.
  * </p>
- * 
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
- * 
- * @author Lynn Robert Carter
- * 
- * @version 2.00		2025-04-29 Updated and expanded from the version produce by on a previous
- * 							version by Pravalika Mukkiri and Ishwarya Hidkimath Basavaraj
+ * * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * * @author Lynn Robert Carter
+ * * @version 2.00		2025-04-29 Updated and expanded from the version produce by on a previous
+ * version by Pravalika Mukkiri and Ishwarya Hidkimath Basavaraj
  * @version 2.01		2025-12-17 Minor updates for Spring 2026
  */
 
@@ -65,10 +60,8 @@ public class Database {
 
 	/*******
 	 * <p> Method: Database </p>
-	 * 
-	 * <p> Description: The default constructor used to establish this singleton object.</p>
-	 * 
-	 */
+	 * * <p> Description: The default constructor used to establish this singleton object.</p>
+	 * */
 	
 	public Database () {
 		
@@ -77,13 +70,11 @@ public class Database {
 	
 /*******
  * <p> Method: connectToDatabase </p>
- * 
- * <p> Description: Used to establish the in-memory instance of the H2 database from secondary
+ * * <p> Description: Used to establish the in-memory instance of the H2 database from secondary
  *		storage.</p>
  *
  * @throws SQLException when the DriverManager is unable to establish a connection
- * 
- */
+ * */
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver
@@ -101,10 +92,8 @@ public class Database {
 	
 /*******
  * <p> Method: createTables </p>
- * 
- * <p> Description: Used to create new instances of the two database tables used by this class.</p>
- * 
- */
+ * * <p> Description: Used to create new instances of the database tables used by this class.</p>
+ * */
 	private void createTables() throws SQLException {
 		// Create the user database
 		String userTable = "CREATE TABLE IF NOT EXISTS userDB ("
@@ -173,6 +162,14 @@ public class Database {
 	    statement.execute("ALTER TABLE postDB ADD COLUMN IF NOT EXISTS anonymousFeedback BOOL DEFAULT FALSE");
 	}
 	
+	/*******
+	 * <p> Method: saveEvaluationParameter </p>
+	 * * <p> Description: Yuvi's Story: Saves a new evaluation parameter to the database for staff use.</p>
+	 * * @param name the name of the parameter
+	 * @param criteria the description of the criteria
+	 * @throws SQLException when there is an issue executing the SQL command
+	 * @see DataBaseTests.StaffComprehensiveTest
+	 */
 	public void saveEvaluationParameter(String name, String criteria) throws SQLException {
 	    String query = "INSERT INTO reviewParameters (paramName, criteria) VALUES (?, ?)";
 	    try (java.sql.PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -182,6 +179,12 @@ public class Database {
 	    }
 	}
 
+	/*******
+	 * <p> Method: getEvaluationParameters </p>
+	 * * <p> Description: Retrieves all evaluation parameters defined by the staff.</p>
+	 * * @return a list of string arrays containing the parameter name and criteria
+	 * @throws SQLException when there is an issue executing the SQL query
+	 */
 	public List<String[]> getEvaluationParameters() throws SQLException {
 	    List<String[]> list = new java.util.ArrayList<>();
 	    ResultSet rs = statement.executeQuery("SELECT * FROM reviewParameters");
@@ -191,8 +194,14 @@ public class Database {
 	    return list;
 	}
 	
-	/**
-	 * Emiliano's Story: Saves private feedback to a post.
+	/*******
+	 * <p> Method: updatePostFeedback </p>
+	 * * <p> Description: Emiliano's Story: Saves private, potentially anonymous feedback to a post.</p>
+	 * * @param postId the ID of the post receiving feedback
+	 * @param feedback the feedback text string
+	 * @param isAnonymous whether the feedback should be displayed anonymously
+	 * @throws SQLException when there is an issue executing the SQL command
+	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void updatePostFeedback(int postId, String feedback, boolean isAnonymous) throws SQLException {
 	    String query = "UPDATE postDB SET staffFeedback = ?, anonymousFeedback = ? WHERE id = ?";
@@ -207,10 +216,8 @@ public class Database {
 	
 	/**
 	 * <p> Method: savePost(Post p) </p>
-	 * 
-	 * <p> Description: Saves a Post object into the H2 database for persistence.</p>
-	 * 
-	 * @param p the Post object to save
+	 * * <p> Description: Saves a Post object into the H2 database for persistence.</p>
+	 * * @param p the Post object to save
 	 * @throws SQLException when there is an issue creating the SQL command or executing it
 	 */
 	public void savePost(entityClasses.Post p) throws SQLException {
@@ -228,10 +235,8 @@ public class Database {
 	}
     /**
      * <p> Method: saveReply(Reply r) </p>
-     * 
-     * <p> Description: Saves a reply object into the H2 database </p>
-     * 
-     * @param r the Reply object to save
+     * * <p> Description: Saves a reply object into the H2 database </p>
+     * * @param r the Reply object to save
      * @throws SQLException when there is an issue creating the SQL command or executing it
      */
 	public void saveReply(entityClasses.Reply r) throws SQLException {
@@ -248,10 +253,8 @@ public class Database {
 	
     /*******
      * <p> Method: loadAllPosts() </p>
-     * 
-     * <p> Load all Post records from the database.</p>
-     * 
-     * @return a list of all Post objects
+     * * <p> Load all Post records from the database.</p>
+     * * @return a list of all Post objects
      * @throws SQLException when there is an issue executing the SQL query.
      */
 	
@@ -276,10 +279,8 @@ public class Database {
 
     /*******
      * <p> Method: markPostDeleted(int id) </p>
-     * 
-     * <p> Description: Marks a post as deleted without removing it from the database.</p>
-     * 
-     * @param id the ID of the post to mark deleted
+     * * <p> Description: Marks a post as deleted without removing it from the database.</p>
+     * * @param id the ID of the post to mark deleted
      * @param deletedBody the deleted message body
      * @throws SQLException when there is an issue executing the SQL command
      */
@@ -295,10 +296,8 @@ public class Database {
 
     /*******
      * <p> Method: loadAllReplies() </p>
-     * 
-     * <p> Description: Load all Reply records from the database.</p>
-     * 
-     * @return a list of all Reply objects
+     * * <p> Description: Load all Reply records from the database.</p>
+     * * @return a list of all Reply objects
      * @throws SQLException when there is an issue executing the SQL query
      */
 	public java.util.List<entityClasses.Reply> loadAllReplies() throws java.sql.SQLException {
@@ -319,11 +318,10 @@ public class Database {
 	
     /*******
      * <p> Method: deletePost(int id) </p>
-     * 
-     * <p> Description: Deletes a post by its ID and also removes all replies associated with that post.</p>
-     * 
-     * @param id the ID of the post to delete
+     * * <p> Description: Deletes a post by its ID and also removes all replies associated with that post.</p>
+     * * @param id the ID of the post to delete
      * @throws SQLException when there is an issue executing the SQL command
+     * @see DataBaseTests.StaffComprehensiveTest
      */
 	public void deletePost(int id) throws java.sql.SQLException {
 	    // 1. Delete the post
@@ -343,12 +341,11 @@ public class Database {
 	
     /*******
      * <p> Method: updatePost(int id, String newBody) </p>
-     * 
-     * <p> Description: Updates the body of a specified post.</p>
-     * 
-     * @param id the post ID
+     * * <p> Description: Lans's Story: Updates the body of a specified post for moderation purposes.</p>
+     * * @param id the post ID
      * @param newBody the new body text
      * @throws SQLException when there is an issue executing the SQL command
+     * @see DataBaseTests.StaffComprehensiveTest
      */
 	public void updatePost(int id, String newBody) throws java.sql.SQLException {
 	    String query = "UPDATE postDB SET body = ? WHERE id = ?";
@@ -361,10 +358,8 @@ public class Database {
 	
     /*******
      * <p> Method: deleteReply(int id) </p>
-     * 
-     * <p> Deletes a reply by its ID from the database.</p>
-     * 
-     * @param id the reply ID
+     * * <p> Deletes a reply by its ID from the database.</p>
+     * * @param id the reply ID
      * @throws SQLException when there is an issue executing the SQL command
      */
 	public void deleteReply(int id) throws java.sql.SQLException {
@@ -377,10 +372,8 @@ public class Database {
 
     /*******
      * <p> Method: updateReply(int id, String newBody) </p>
-     * 
-     * <p> Description: Updates the body of a specified reply.</p>
-     * 
-     * @param id the reply ID
+     * * <p> Description: Updates the body of a specified reply.</p>
+     * * @param id the reply ID
      * @param newBody the new body text
      * @throws SQLException when there is an issue executing the SQL command
      */
@@ -395,12 +388,9 @@ public class Database {
 
 /*******
  * <p> Method: isDatabaseEmpty </p>
- * 
- * <p> Description: If the user database has no rows, true is returned, else false.</p>
- * 
- * @return true if the database is empty, else it returns false
- * 
- */
+ * * <p> Description: If the user database has no rows, true is returned, else false.</p>
+ * * @return true if the database is empty, else it returns false
+ * */
 	public boolean isDatabaseEmpty() {
 		String query = "SELECT COUNT(*) AS count FROM userDB";
 		try {
@@ -414,9 +404,10 @@ public class Database {
 		return true;
 	}
 	
-	/**
-	 * Returns the number of admin users.
-	 * @return the number of admin users
+	/*******
+	 * <p> Method: getNumberOfAdmins </p>
+	 * * <p> Description: Returns the number of users with administrative privileges.</p>
+	 * * @return the number of admin users
 	 */
 	public int getNumberOfAdmins() {
 	    String query = "SELECT COUNT(*) AS count FROM userDB WHERE adminRole = TRUE";
@@ -436,12 +427,9 @@ public class Database {
 	
 /*******
  * <p> Method: getNumberOfUsers </p>
- * 
- * <p> Description: Returns an integer .of the number of users currently in the user database. </p>
- * 
- * @return the number of user records in the database.
- * 
- */
+ * * <p> Description: Returns an integer .of the number of users currently in the user database. </p>
+ * * @return the number of user records in the database.
+ * */
 	public int getNumberOfUsers() {
 		String query = "SELECT COUNT(*) AS count FROM userDB";
 		try {
@@ -457,14 +445,10 @@ public class Database {
 
 /*******
  * <p> Method: register(User user) </p>
- * 
- * <p> Description: Creates a new row in the database using the user parameter. </p>
- * 
- * @throws SQLException when there is an issue creating the SQL command or executing it.
- * 
- * @param user specifies a user object to be added to the database.
- * 
- */
+ * * <p> Description: Creates a new row in the database using the user parameter. </p>
+ * * @throws SQLException when there is an issue creating the SQL command or executing it.
+ * * @param user specifies a user object to be added to the database.
+ * */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
 				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2, isOTP) "
@@ -506,12 +490,10 @@ public class Database {
 	}
 	
 /*******
- *  <p> Method: List getUserList() </p>
- *  
- *  <P> Description: Generate an List of Strings, one for each user in the database,
- *  starting with {@code <Select a User>} at the start of the list. </p>
- *  
- *  @return a list of userNames found in the database.
+ * <p> Method: List getUserList() </p>
+ * * <P> Description: Generate an List of Strings, one for each user in the database,
+ * starting with {@code <Select a User>} at the start of the list. </p>
+ * * @return a list of userNames found in the database.
  */
 	public List<String> getUserList () {
 		List<String> userList = new ArrayList<String>();
@@ -529,9 +511,10 @@ public class Database {
 		return userList;
 	}
 	
-	/**
-	 * Returns all users for display.
-	 * @return the users for display
+	/*******
+	 * <p> Method: getAllUsersForDisplay </p>
+	 * * <p> Description: Returns a list of all User objects sorted by username for display purposes.</p>
+	 * * @return the users for display
 	 */
 	public List<User> getAllUsersForDisplay() {
 		List<User> users = new ArrayList<>();
@@ -544,7 +527,7 @@ public class Database {
 			""";
 		
 		try (PreparedStatement pstmt = connection.prepareStatement(query);
-		         ResultSet rs = pstmt.executeQuery()) {
+		     ResultSet rs = pstmt.executeQuery()) {
 		        while (rs.next()) {
 		            User u = new User();
 		            // Username (DO NOT overwrite later)
@@ -572,15 +555,11 @@ public class Database {
 
 /*******
  * <p> Method: boolean loginAdmin(User user) </p>
- * 
- * <p> Description: Check to see that a user with the specified username, password, and role
- * 		is the same as a row in the table for the username, password, and role. </p>
- * 
- * @param user specifies the specific user that should be logged in playing the Admin role.
- * 
- * @return true if the specified user has been logged in as an Admin else false.
- * 
- */
+ * * <p> Description: Check to see that a user with the specified username, password, and role
+ * is the same as a row in the table for the username, password, and role. </p>
+ * * @param user specifies the specific user that should be logged in playing the Admin role.
+ * * @return true if the specified user has been logged in as an Admin else false.
+ * */
 	public boolean loginAdmin(User user){
 		// Validates an admin user's login credentials so the user can login in as an Admin.
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
@@ -599,15 +578,11 @@ public class Database {
 	
 /*******
  * <p> Method: boolean loginRole1(User user) </p>
- * 
- * <p> Description: Check to see that a user with the specified username, password, and role
- * 		is the same as a row in the table for the username, password, and role. </p>
- * 
- * @param user specifies the specific user that should be logged in playing the Student role.
- * 
- * @return true if the specified user has been logged in as an Student else false.
- * 
- */
+ * * <p> Description: Check to see that a user with the specified username, password, and role
+ * is the same as a row in the table for the username, password, and role. </p>
+ * * @param user specifies the specific user that should be logged in playing the Student role.
+ * * @return true if the specified user has been logged in as an Student else false.
+ * */
 	public boolean loginRole1(User user) {
 		// Validates a student user's login credentials.
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
@@ -625,15 +600,11 @@ public class Database {
 
 	/*******
 	 * <p> Method: boolean loginRole2(User user) </p>
-	 * 
-	 * <p> Description: Check to see that a user with the specified username, password, and role
-	 * 		is the same as a row in the table for the username, password, and role. </p>
-	 * 
-	 * @param user specifies the specific user that should be logged in playing the Reviewer role.
-	 * 
-	 * @return true if the specified user has been logged in as an Student else false.
-	 * 
-	 */
+	 * * <p> Description: Check to see that a user with the specified username, password, and role
+	 * is the same as a row in the table for the username, password, and role. </p>
+	 * * @param user specifies the specific user that should be logged in playing the Reviewer role.
+	 * * @return true if the specified user has been logged in as an Student else false.
+	 * */
 	// Validates a reviewer user's login credentials.
 	public boolean loginRole2(User user) {
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
@@ -652,14 +623,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: boolean doesUserExist(User user) </p>
-	 * 
-	 * <p> Description: Check to see that a user with the specified username is  in the table. </p>
-	 * 
-	 * @param userName specifies the specific user that we want to determine if it is in the table.
-	 * 
-	 * @return true if the specified user is in the table else false.
-	 * 
-	 */
+	 * * <p> Description: Check to see that a user with the specified username is  in the table. </p>
+	 * * @param userName specifies the specific user that we want to determine if it is in the table.
+	 * * @return true if the specified user is in the table else false.
+	 * */
 	// Checks if a user already exists in the database based on their userName.
 	public boolean doesUserExist(String userName) {
 	    String query = "SELECT COUNT(*) FROM userDB WHERE userName = ?";
@@ -681,14 +648,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: int getNumberOfRoles(User user) </p>
-	 * 
-	 * <p> Description: Determine the number of roles a specified user plays. </p>
-	 * 
-	 * @param user specifies the specific user that we want to determine if it is in the table.
-	 * 
-	 * @return the number of roles this user plays (0 - 5).
-	 * 
-	 */	
+	 * * <p> Description: Determine the number of roles a specified user plays. </p>
+	 * * @param user specifies the specific user that we want to determine if it is in the table.
+	 * * @return the number of roles this user plays (0 - 5).
+	 * */	
 	// Get the number of roles that this user plays
 	public int getNumberOfRoles (User user) {
 		int numberOfRoles = 0;
@@ -701,19 +664,14 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String generateInvitationCode(String emailAddress, String role) </p>
-	 * 
-	 * <p> Description: Given an email address and a roles, this method establishes and invitation
+	 * * <p> Description: Given an email address and a roles, this method establishes and invitation
 	 * code and adds a record to the InvitationCodes table.  When the invitation code is used, the
 	 * stored email address is used to establish the new user and the record is removed from the
 	 * table.</p>
-	 * 
-	 * @param emailAddress specifies the email address for this new user.
-	 * 
-	 * @param role specified the role that this new user will play.
-	 * 
-	 * @return the code of six characters so the new user can use it to securely setup an account.
-	 * 
-	 */
+	 * * @param emailAddress specifies the email address for this new user.
+	 * * @param role specified the role that this new user will play.
+	 * * @return the code of six characters so the new user can use it to securely setup an account.
+	 * */
 	// Generates a new invitation code and inserts it into the database.
 	public String generateInvitationCode(String emailAddress, String role) {
 	    String code = UUID.randomUUID().toString().substring(0, 6); // Generate a random 6-character code
@@ -733,12 +691,9 @@ public class Database {
 	
 	/*******
 	 * <p> Method: int getNumberOfInvitations() </p>
-	 * 
-	 * <p> Description: Determine the number of outstanding invitations in the table.</p>
-	 *  
-	 * @return the number of invitations in the table.
-	 * 
-	 */
+	 * * <p> Description: Determine the number of outstanding invitations in the table.</p>
+	 * * @return the number of invitations in the table.
+	 * */
 	// Number of invitations in the database
 	public int getNumberOfInvitations() {
 		String query = "SELECT COUNT(*) AS count FROM InvitationCodes";
@@ -756,21 +711,17 @@ public class Database {
 	
 	/*******
 	 * <p> Method: boolean emailaddressHasBeenUsed(String emailAddress) </p>
-	 * 
-	 * <p> Description: Determine if an email address has been user to establish a user.</p>
-	 * 
-	 * @param emailAddress is a string that identifies a user in the table
-	 *  
-	 * @return true if the email address is in the table, else return false.
-	 * 
-	 */
+	 * * <p> Description: Determine if an email address has been user to establish a user.</p>
+	 * * @param emailAddress is a string that identifies a user in the table
+	 * * @return true if the email address is in the table, else return false.
+	 * */
 	// Check to see if an email address is already in the database
 	public boolean emailaddressHasBeenUsed(String emailAddress) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE emailAddress = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setString(1, emailAddress);
 	        ResultSet rs = pstmt.executeQuery();
-	 //     System.out.println(rs);
+	 //      System.out.println(rs);
 	        if (rs.next()) {
 	            // Mark the code as used
 	        	return rs.getInt("count")>0;
@@ -784,14 +735,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getRoleGivenAnInvitationCode(String code) </p>
-	 * 
-	 * <p> Description: Get the role associated with an invitation code.</p>
-	 * 
-	 * @param code is the 6 character String invitation code
-	 *  
-	 * @return the role for the code or an empty string.
-	 * 
-	 */
+	 * * <p> Description: Get the role associated with an invitation code.</p>
+	 * * @param code is the 6 character String invitation code
+	 * * @return the role for the code or an empty string.
+	 * */
 	// Obtain the roles associated with an invitation code.
 	public String getRoleGivenAnInvitationCode(String code) {
 	    String query = "SELECT * FROM InvitationCodes WHERE code = ?";
@@ -810,14 +757,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getEmailAddressUsingCode (String code ) </p>
-	 * 
-	 * <p> Description: Get the email addressed associated with an invitation code.</p>
-	 * 
-	 * @param code is the 6 character String invitation code
-	 *  
-	 * @return the email address for the code or an empty string.
-	 * 
-	 */
+	 * * <p> Description: Get the email addressed associated with an invitation code.</p>
+	 * * @param code is the 6 character String invitation code
+	 * * @return the email address for the code or an empty string.
+	 * */
 	// For a given invitation code, return the associated email address of an empty string
 	public String getEmailAddressUsingCode (String code ) {
 	    String query = "SELECT emailAddress FROM InvitationCodes WHERE code = ?";
@@ -836,12 +779,9 @@ public class Database {
 	
 	/*******
 	 * <p> Method: void removeInvitationAfterUse(String code) </p>
-	 * 
-	 * <p> Description: Remove an invitation record once it is used.</p>
-	 * 
-	 * @param code is the 6 character String invitation code
-	 *  
-	 */
+	 * * <p> Description: Remove an invitation record once it is used.</p>
+	 * * @param code is the 6 character String invitation code
+	 * */
 	// Remove an invitation using an email address once the user account has been setup
 	public void removeInvitationAfterUse(String code) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE code = ?";
@@ -870,14 +810,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getFirstName(String username) </p>
-	 * 
-	 * <p> Description: Get the first name of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return the first name of a user given that user's username 
-	 *  
-	 */
+	 * * <p> Description: Get the first name of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return the first name of a user given that user's username 
+	 * */
 	// Get the First Name
 	public String getFirstName(String username) {
 		String query = "SELECT firstName FROM userDB WHERE userName = ?";
@@ -898,15 +834,11 @@ public class Database {
 
 	/*******
 	 * <p> Method: void updateFirstName(String username, String firstName) </p>
-	 * 
-	 * <p> Description: Update the first name of a user given that user's username and the new
+	 * * <p> Description: Update the first name of a user given that user's username and the new
 	 *		first name.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @param firstName is the new first name for the user
-	 *  
-	 */
+	 * * @param username is the username of the user
+	 * * @param firstName is the new first name for the user
+	 * */
 	// update the first name
 	public void updateFirstName(String username, String firstName) {
 	    String query = "UPDATE userDB SET firstName = ? WHERE username = ?";
@@ -923,14 +855,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getMiddleName(String username) </p>
-	 * 
-	 * <p> Description: Get the middle name of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return the middle name of a user given that user's username 
-	 *  
-	 */
+	 * * <p> Description: Get the middle name of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return the middle name of a user given that user's username 
+	 * */
 	// get the middle name
 	public String getMiddleName(String username) {
 		String query = "SELECT MiddleName FROM userDB WHERE userName = ?";
@@ -950,15 +878,11 @@ public class Database {
 	
 	/*******
 	 * <p> Method: void updateMiddleName(String username, String middleName) </p>
-	 * 
-	 * <p> Description: Update the middle name of a user given that user's username and the new
-	 * 		middle name.</p>
-	 * 
-	 * @param username is the username of the user
-	 *  
-	 * @param middleName is the new middle name for the user
-	 *  
-	 */
+	 * * <p> Description: Update the middle name of a user given that user's username and the new
+	 * middle name.</p>
+	 * * @param username is the username of the user
+	 * * @param middleName is the new middle name for the user
+	 * */
 	// update the middle name
 	public void updateMiddleName(String username, String middleName) {
 	    String query = "UPDATE userDB SET middleName = ? WHERE username = ?";
@@ -975,14 +899,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getLastName(String username) </p>
-	 * 
-	 * <p> Description: Get the last name of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return the last name of a user given that user's username 
-	 *  
-	 */
+	 * * <p> Description: Get the last name of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return the last name of a user given that user's username 
+	 * */
 	// get he last name
 	public String getLastName(String username) {
 		String query = "SELECT LastName FROM userDB WHERE userName = ?";
@@ -1002,15 +922,11 @@ public class Database {
 	
 	/*******
 	 * <p> Method: void updateLastName(String username, String lastName) </p>
-	 * 
-	 * <p> Description: Update the middle name of a user given that user's username and the new
-	 * 		middle name.</p>
-	 * 
-	 * @param username is the username of the user
-	 *  
-	 * @param lastName is the new last name for the user
-	 *  
-	 */
+	 * * <p> Description: Update the middle name of a user given that user's username and the new
+	 * middle name.</p>
+	 * * @param username is the username of the user
+	 * * @param lastName is the new last name for the user
+	 * */
 	// update the last name
 	public void updateLastName(String username, String lastName) {
 	    String query = "UPDATE userDB SET lastName = ? WHERE username = ?";
@@ -1027,14 +943,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getPreferredFirstName(String username) </p>
-	 * 
-	 * <p> Description: Get the preferred first name of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return the preferred first name of a user given that user's username 
-	 *  
-	 */
+	 * * <p> Description: Get the preferred first name of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return the preferred first name of a user given that user's username 
+	 * */
 	// get the preferred first name
 	public String getPreferredFirstName(String username) {
 		String query = "SELECT preferredFirstName FROM userDB WHERE userName = ?";
@@ -1055,15 +967,11 @@ public class Database {
 	
 	/*******
 	 * <p> Method: void updatePreferredFirstName(String username, String preferredFirstName) </p>
-	 * 
-	 * <p> Description: Update the preferred first name of a user given that user's username and
-	 * 		the new preferred first name.</p>
-	 * 
-	 * @param username is the username of the user
-	 *  
-	 * @param preferredFirstName is the new preferred first name for the user
-	 *  
-	 */
+	 * * <p> Description: Update the preferred first name of a user given that user's username and
+	 * the new preferred first name.</p>
+	 * * @param username is the username of the user
+	 * * @param preferredFirstName is the new preferred first name for the user
+	 * */
 	// update the preferred first name of the user
 	public void updatePreferredFirstName(String username, String preferredFirstName) {
 	    String query = "UPDATE userDB SET preferredFirstName = ? WHERE username = ?";
@@ -1080,14 +988,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getEmailAddress(String username) </p>
-	 * 
-	 * <p> Description: Get the email address of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return the email address of a user given that user's username 
-	 *  
-	 */
+	 * * <p> Description: Get the email address of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return the email address of a user given that user's username 
+	 * */
 	// get the email address
 	public String getEmailAddress(String username) {
 		String query = "SELECT emailAddress FROM userDB WHERE userName = ?";
@@ -1108,15 +1012,11 @@ public class Database {
 	
 	/*******
 	 * <p> Method: void updateEmailAddress(String username, String emailAddress) </p>
-	 * 
-	 * <p> Description: Update the email address name of a user given that user's username and
-	 * 		the new email address.</p>
-	 * 
-	 * @param username is the username of the user
-	 *  
-	 * @param emailAddress is the new preferred first name for the user
-	 *  
-	 */
+	 * * <p> Description: Update the email address name of a user given that user's username and
+	 * the new email address.</p>
+	 * * @param username is the username of the user
+	 * * @param emailAddress is the new preferred first name for the user
+	 * */
 	// update the email address
 	public void updateEmailAddress(String username, String emailAddress) {
 	    String query = "UPDATE userDB SET emailAddress = ? WHERE username = ?";
@@ -1133,14 +1033,10 @@ public class Database {
 	
 	/*******
 	 * <p> Method: boolean getUserAccountDetails(String username) </p>
-	 * 
-	 * <p> Description: Get all the attributes of a user given that user's username.</p>
-	 * 
-	 * @param username is the username of the user
-	 * 
-	 * @return true of the get is successful, else false
-	 *  
-	 */
+	 * * <p> Description: Get all the attributes of a user given that user's username.</p>
+	 * * @param username is the username of the user
+	 * * @return true of the get is successful, else false
+	 * */
 	// get the attributes for a specified user
 	public boolean getUserAccountDetails(String username) {
 		String query = "SELECT * FROM userDB WHERE username = ?";
@@ -1164,9 +1060,10 @@ public class Database {
 	    }
 	}
 	
-	/**
-	 * Resets a user's password.
-	 * @param username the username to update
+	/*******
+	 * <p> Method: resetUserPassword </p>
+	 * * <p> Description: Resets a user's password and sets the OTP flag to true.</p>
+	 * * @param username the username to update
 	 * @param tempPass the temporary password
 	 */
 	public void resetUserPassword(String username, String tempPass) {
@@ -1183,19 +1080,13 @@ public class Database {
 	
 	/*******
 	 * <p> Method: boolean updateUserRole(String username, String role, String value) </p>
-	 * 
-	 * <p> Description: Update a specified role for a specified user's and set and update all the
-	 * 		current user attributes.</p>
-	 * 
-	 * @param username is the username of the user
-	 *  
-	 * @param role is string that specifies the role to update
-	 * 
-	 * @param value is the string that specified TRUE or FALSE for the role
-	 * 
-	 * @return true if the update was successful, else false
-	 *  
-	 */
+	 * * <p> Description: Update a specified role for a specified user's and set and update all the
+	 * current user attributes.</p>
+	 * * @param username is the username of the user
+	 * * @param role is string that specifies the role to update
+	 * * @param value is the string that specified TRUE or FALSE for the role
+	 * * @return true if the update was successful, else false
+	 * */
 	// Update a users role
 	public boolean updateUserRole(String username, String role, String value) {
 		// SAFETY: if attempting to remove Admin role, check invariants first
@@ -1272,9 +1163,10 @@ public class Database {
 	    return false;
 	}
 	
-	/**
-	 * Deletes a user.
-	 * @param username the username to delete
+	/*******
+	 * <p> Method: deleteUser </p>
+	 * * <p> Description: Permanently removes a user record from the database, with safety checks to prevent self-deletion or leaving zero admins.</p>
+	 * * @param username the username to delete
 	 * @return true if the delete succeeds
 	 */
 	public boolean deleteUser(String username) {
@@ -1322,18 +1214,16 @@ public class Database {
 	// Attribute getters for the current user
 	/*******
 	 * <p> Method: String getCurrentUsername() </p>
-	 * 
-	 * <p> Description: Get the current user's username.</p>
-	 * 
-	 * @return the username value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's username.</p>
+	 * * @return the username value is returned
+	 * */
 	public String getCurrentUsername() { return currentUsername;};
 
 	
-	/**
-	 * Updates a user's password.
-	 * @param username the username to update
+	/*******
+	 * <p> Method: updatePassword </p>
+	 * * <p> Description: Updates a user's password string in the database.</p>
+	 * * @param username the username to update
 	 * @param newPassword the new password
 	 * @return true if the update succeeds
 	 */
@@ -1356,111 +1246,81 @@ public class Database {
 	
 	/*******
 	 * <p> Method: String getCurrentPassword() </p>
-	 * 
-	 * <p> Description: Get the current user's password.</p>
-	 * 
-	 * @return the password value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's password.</p>
+	 * * @return the password value is returned
+	 * */
 	public String getCurrentPassword() { return currentPassword;};
 
 	
 	/*******
 	 * <p> Method: String getCurrentFirstName() </p>
-	 * 
-	 * <p> Description: Get the current user's first name.</p>
-	 * 
-	 * @return the first name value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's first name.</p>
+	 * * @return the first name value is returned
+	 * */
 	public String getCurrentFirstName() { return currentFirstName;};
 
 	
 	/*******
 	 * <p> Method: String getCurrentMiddleName() </p>
-	 * 
-	 * <p> Description: Get the current user's middle name.</p>
-	 * 
-	 * @return the middle name value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's middle name.</p>
+	 * * @return the middle name value is returned
+	 * */
 	public String getCurrentMiddleName() { return currentMiddleName;};
 
 	
 	/*******
 	 * <p> Method: String getCurrentLastName() </p>
-	 * 
-	 * <p> Description: Get the current user's last name.</p>
-	 * 
-	 * @return the last name value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's last name.</p>
+	 * * @return the last name value is returned
+	 * */
 	public String getCurrentLastName() { return currentLastName;};
 
 	
 	/*******
 	 * <p> Method: String getCurrentPreferredFirstName( </p>
-	 * 
-	 * <p> Description: Get the current user's preferred first name.</p>
-	 * 
-	 * @return the preferred first name value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's preferred first name.</p>
+	 * * @return the preferred first name value is returned
+	 * */
 	public String getCurrentPreferredFirstName() { return currentPreferredFirstName;};
 
 	
 	/*******
 	 * <p> Method: String getCurrentEmailAddress() </p>
-	 * 
-	 * <p> Description: Get the current user's email address name.</p>
-	 * 
-	 * @return the email address value is returned
-	 *  
-	 */
+	 * * <p> Description: Get the current user's email address name.</p>
+	 * * @return the email address value is returned
+	 * */
 	public String getCurrentEmailAddress() { return currentEmailAddress;};
 
 	
 	/*******
 	 * <p> Method: boolean getCurrentAdminRole() </p>
-	 * 
-	 * <p> Description: Get the current user's Admin role attribute.</p>
-	 * 
-	 * @return true if this user plays an Admin role, else false
-	 *  
-	 */
+	 * * <p> Description: Get the current user's Admin role attribute.</p>
+	 * * @return true if this user plays an Admin role, else false
+	 * */
 	public boolean getCurrentAdminRole() { return currentAdminRole;};
 
 	
 	/*******
 	 * <p> Method: boolean getCurrentNewRole1() </p>
-	 * 
-	 * <p> Description: Get the current user's Student role attribute.</p>
-	 * 
-	 * @return true if this user plays a Student role, else false
-	 *  
-	 */
+	 * * <p> Description: Get the current user's Student role attribute.</p>
+	 * * @return true if this user plays a Student role, else false
+	 * */
 	public boolean getCurrentNewRole1() { return currentNewRole1;};
 
 	
 	/*******
 	 * <p> Method: boolean getCurrentNewRole2() </p>
-	 * 
-	 * <p> Description: Get the current user's Reviewer role attribute.</p>
-	 * 
-	 * @return true if this user plays a Reviewer role, else false
-	 *  
-	 */
+	 * * <p> Description: Get the current user's Reviewer role attribute.</p>
+	 * * @return true if this user plays a Reviewer role, else false
+	 * */
 	public boolean getCurrentNewRole2() { return currentNewRole2;};
 
 	
 	/*******
 	 * <p> Debugging method</p>
-	 * 
-	 * <p> Description: Debugging method that dumps the database of the console.</p>
-	 * 
-	 * @throws SQLException if there is an issues accessing the database.
-	 * 
-	 */
+	 * * <p> Description: Debugging method that dumps the database of the console.</p>
+	 * * @throws SQLException if there is an issues accessing the database.
+	 * */
 	// Dumps the database.
 	public void dump() throws SQLException {
 		String query = "SELECT * FROM userDB";
@@ -1478,8 +1338,9 @@ public class Database {
 	}
 	
 	/*******
-	 * Check if the user is currently flagged for a one-time password reset.
-	 * @param username the username to check
+	 * <p> Method: isPasswordTemporary </p>
+	 * * <p> Description: Check if the user is currently flagged for a one-time password reset.</p>
+	 * * @param username the username to check
 	 * @return true if the password is temporary
 	 */
 	public boolean isPasswordTemporary(String username) {
@@ -1497,8 +1358,9 @@ public class Database {
 	}
 
 	/*******
-	 * Clears the OTP flag. Call this in your Update Controller after the 
-     * user successfully saves their new password.
+	 * <p> Method: clearOTPFlag </p>
+	 * * <p> Description: Clears the OTP flag. Call this in your Update Controller after the 
+     * user successfully saves their new password.</p>
 	 * @param username the username to update
 	 */
 	public void clearOTPFlag(String username) {
@@ -1513,11 +1375,12 @@ public class Database {
 	
 	/*******
 	 * <p> Method: saveRequest </p>
-	 * <p> Description: Saves a new staff request to the database.</p>
-	 * @param title the request title
+	 * * <p> Description: Gabriel/Connor's Story: Saves a new staff request to the database.</p>
+	 * * @param title the request title
 	 * @param description the request description
 	 * @param author the staff member submitting the request
 	 * @throws SQLException when there is an issue executing the SQL command
+	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void saveRequest(String title, String description, String author) throws SQLException {
 	    String query = "INSERT INTO requestDB (title, description, author, status, timestamp) "
@@ -1533,8 +1396,8 @@ public class Database {
 
 	/*******
 	 * <p> Method: loadAllRequests </p>
-	 * <p> Description: Loads all staff requests from the database.</p>
-	 * @return a list of all requests as String arrays
+	 * * <p> Description: Loads all staff requests from the database for admin viewing.</p>
+	 * * @return a list of all requests as String arrays
 	 * @throws SQLException when there is an issue executing the SQL query
 	 */
 	public List<String[]> loadAllRequests() throws SQLException {
@@ -1559,10 +1422,11 @@ public class Database {
 
 	/*******
 	 * <p> Method: closeRequest </p>
-	 * <p> Description: Closes a request and saves the admin's resolution notes.</p>
-	 * @param id the request ID to close
+	 * * <p> Description: Closes a request and saves the admin's resolution notes.</p>
+	 * * @param id the request ID to close
 	 * @param resolutionNotes what the admin did to resolve it
 	 * @throws SQLException when there is an issue executing the SQL command
+	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void closeRequest(int id, String resolutionNotes) throws SQLException {
 	    String query = "UPDATE requestDB SET status = 'CLOSED', resolutionNotes = ? WHERE id = ?";
@@ -1575,11 +1439,12 @@ public class Database {
 
 	/*******
 	 * <p> Method: reopenRequest </p>
-	 * <p> Description: Reopens a closed request and links it to the original.</p>
-	 * @param originalId the ID of the original closed request
+	 * * <p> Description: Gabriel/Connor's Story: Reopens a closed request and links it to the original ID for historical tracking.</p>
+	 * * @param originalId the ID of the original closed request
 	 * @param description the new description explaining why it's being reopened
 	 * @param author the staff member reopening it
 	 * @throws SQLException when there is an issue executing the SQL command
+	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void reopenRequest(int originalId, String description, String author) throws SQLException {
 	    String query = "INSERT INTO requestDB (title, description, author, status, "
@@ -1597,10 +1462,8 @@ public class Database {
 
 	/*******
 	 * <p> Method: void closeConnection()</p>
-	 * 
-	 * <p> Description: Closes the database statement and connection.</p>
-	 * 
-	 */
+	 * * <p> Description: Closes the database statement and connection.</p>
+	 * */
 	// Closes the database statement and connection.
 	public void closeConnection() {
 		try{ 

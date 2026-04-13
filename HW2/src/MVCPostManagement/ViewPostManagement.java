@@ -79,7 +79,7 @@ public class ViewPostManagement {
 		theRootPane = new Pane();
 		theScene = new Scene(theRootPane, width, height);
 
-		// --- TOP GLOBAL AREA ---
+		// top global area
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 10);
 		
 		setupButtonUI(button_ToCreatePage, "Arial", 16, 200, Pos.CENTER, 20, 50);
@@ -90,7 +90,7 @@ public class ViewPostManagement {
 		setupButtonUI(button_Back, "Arial", 14, 150, Pos.CENTER, width - 170, 50);
 		button_Back.setOnAction((_) -> { ControllerPostManagement.performBack(); });
 
-		// --- LEFT SIDEBAR ---
+		// left sidebar
 		setupLabelUI(label_SidebarHeader, "Arial", 18, 250, Pos.BASELINE_LEFT, 20, 100);
 		
 		// Search bar for filtering posts
@@ -129,7 +129,7 @@ public class ViewPostManagement {
 		    }
 		});
 
-		// --- RIGHT SIDE (Reading Pane) ---
+		// right side (reading pane)
 		setupLabelUI(label_FullTitle, "Arial", 22, width - 350, Pos.BASELINE_LEFT, 320, 130);
 		setupLabelUI(label_FullAuthor, "Arial", 14, 400, Pos.BASELINE_LEFT, 320, 165);
 		setupLabelUI(label_FullTimestamp, "Arial", 12, 400, Pos.BASELINE_LEFT, 320, 185);
