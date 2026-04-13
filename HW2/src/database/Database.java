@@ -168,7 +168,6 @@ public class Database {
 	 * * @param name the name of the parameter
 	 * @param criteria the description of the criteria
 	 * @throws SQLException when there is an issue executing the SQL command
-	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void saveEvaluationParameter(String name, String criteria) throws SQLException {
 	    String query = "INSERT INTO reviewParameters (paramName, criteria) VALUES (?, ?)";
@@ -201,7 +200,6 @@ public class Database {
 	 * @param feedback the feedback text string
 	 * @param isAnonymous whether the feedback should be displayed anonymously
 	 * @throws SQLException when there is an issue executing the SQL command
-	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void updatePostFeedback(int postId, String feedback, boolean isAnonymous) throws SQLException {
 	    String query = "UPDATE postDB SET staffFeedback = ?, anonymousFeedback = ? WHERE id = ?";
@@ -321,7 +319,6 @@ public class Database {
      * * <p> Description: Deletes a post by its ID and also removes all replies associated with that post.</p>
      * * @param id the ID of the post to delete
      * @throws SQLException when there is an issue executing the SQL command
-     * @see DataBaseTests.StaffComprehensiveTest
      */
 	public void deletePost(int id) throws java.sql.SQLException {
 	    // 1. Delete the post
@@ -345,7 +342,6 @@ public class Database {
      * * @param id the post ID
      * @param newBody the new body text
      * @throws SQLException when there is an issue executing the SQL command
-     * @see DataBaseTests.StaffComprehensiveTest
      */
 	public void updatePost(int id, String newBody) throws java.sql.SQLException {
 	    String query = "UPDATE postDB SET body = ? WHERE id = ?";
@@ -1380,7 +1376,6 @@ public class Database {
 	 * @param description the request description
 	 * @param author the staff member submitting the request
 	 * @throws SQLException when there is an issue executing the SQL command
-	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void saveRequest(String title, String description, String author) throws SQLException {
 	    String query = "INSERT INTO requestDB (title, description, author, status, timestamp) "
@@ -1426,7 +1421,6 @@ public class Database {
 	 * * @param id the request ID to close
 	 * @param resolutionNotes what the admin did to resolve it
 	 * @throws SQLException when there is an issue executing the SQL command
-	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void closeRequest(int id, String resolutionNotes) throws SQLException {
 	    String query = "UPDATE requestDB SET status = 'CLOSED', resolutionNotes = ? WHERE id = ?";
@@ -1444,7 +1438,6 @@ public class Database {
 	 * @param description the new description explaining why it's being reopened
 	 * @param author the staff member reopening it
 	 * @throws SQLException when there is an issue executing the SQL command
-	 * @see DataBaseTests.StaffComprehensiveTest
 	 */
 	public void reopenRequest(int originalId, String description, String author) throws SQLException {
 	    String query = "INSERT INTO requestDB (title, description, author, status, "
