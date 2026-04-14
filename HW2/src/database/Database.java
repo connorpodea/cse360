@@ -39,7 +39,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase112342asdfasdfqwesd342hakjassfklsjd1234123aa4";  
+	static final String DB_URL = "jdbc:h2:~/FoundationDatabase112342asdfasdfqwesd342hakjassfklsj51234123aa44";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
