@@ -36,7 +36,10 @@ public class Post {
     /** Max allowed length for post bodies */
     public static final int MAX_BODY_LENGTH = 5000;
     
+    /** Private feedback provided by staff members */
     private String staffFeedback;
+
+    /** Flag indicating if the staff feedback should be shown anonymously */
     private boolean anonymousFeedback;
 
     /**
@@ -251,11 +254,11 @@ public class Post {
     /**
      * Constructor used when loading a post from the database.
      *
-     * @param id        post id
-     * @param title     post title
-     * @param body      post body
-     * @param author    post author
-     * @param category  post category
+     * @param id         post id
+     * @param title      post title
+     * @param body       post body
+     * @param author     post author
+     * @param category   post category
      * @param timestamp time the post was created
      */
     public Post(int id, String title, String body, String author, String category, LocalDateTime timestamp) {
@@ -268,11 +271,26 @@ public class Post {
         this.deleted = false;
     }
     
+    /**
+     * Emiliano's Story: Sets private staff feedback and anonymity preferences for a post.
+     * @param feedback the feedback text to be stored
+     * @param isAnonymous true if the feedback should be anonymous, false otherwise
+     * @see DataBaseTests.StaffComprehensiveTest
+     */
     public void setStaffFeedback(String feedback, boolean isAnonymous) {
         this.staffFeedback = feedback;
         this.anonymousFeedback = isAnonymous;
     }
 
+    /**
+     * Retrieves the private staff feedback associated with this post.
+     * @return the staff feedback string
+     */
     public String getStaffFeedback() { return staffFeedback; }
+
+    /**
+     * Checks if the associated staff feedback is anonymous.
+     * @return true if feedback is anonymous, false otherwise
+     */
     public boolean isAnonymousFeedback() { return anonymousFeedback; }
 }

@@ -26,10 +26,9 @@ public class StaffComprehensiveTest {
     }
 
     @Test
-    @DisplayName("Test Emiliano, Lans, Yuvi, and Gabriel/Connor Stories")
     void testStaffFunctionality() throws SQLException {
         
-        // --- 1. LANS: STAFF CRUD ---
+        // staff CRUD
         int postId = 777;
         Post p = new Post(postId, "Test", "Content", "StudentA", "Homework");
         db.savePost(p);
@@ -37,13 +36,13 @@ public class StaffComprehensiveTest {
         db.updatePost(postId, "Moderated by Staff");
         List<Post> posts = db.loadAllPosts();
         assertTrue(posts.stream().anyMatch(post -> post.getBody().equals("Moderated by Staff")), 
-            "Lans Story: Staff should be able to update any post.");
+            "Staff should be able to update any post.");
 
-        // --- 2. EMILIANO: WHISPER ---
+        // whisper
         // Verify the method exists and executes for the post
         db.updatePostFeedback(postId, "Private staff message", true);
         
-        // --- 3. GABRIEL & CONNOR: REQUESTS ---
+        // requests
         db.saveRequest("Account Fix", "Fix student profile", "StaffB");
         List<String[]> requests = db.loadAllRequests();
         int reqId = Integer.parseInt(requests.get(0)[0]);
@@ -55,9 +54,9 @@ public class StaffComprehensiveTest {
         // Index 0 is the newest (reopened) request
         assertEquals("REOPENED", updatedRequests.get(0)[4]);
         assertEquals(String.valueOf(reqId), updatedRequests.get(0)[6], 
-            "Gabriel/Connor Story: Reopened request must link to the original ID.");
+            "Reopened request must link to the original ID.");
 
-        // --- 4. YUVI: PARAMETERS ---
+        // parameters
         db.saveEvaluationParameter("Quality", "Must be high quality.");
         List<String[]> params = db.getEvaluationParameters();
         assertTrue(params.stream().anyMatch(param -> param[0].equals("Quality")),
