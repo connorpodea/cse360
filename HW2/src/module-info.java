@@ -1,5 +1,5 @@
 /** The FoundationsF26 module. */
-module FoundationsF26{
+module TP2{
 	requires javafx.controls;
 	requires java.sql;
     requires org.junit.jupiter.api;
