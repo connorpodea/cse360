@@ -6,7 +6,6 @@ module FoundationsF26{
     
 	
 	opens applicationMain to javafx.graphics, javafx.fxml;
-    opens StudentSummary to org.junit.platform.commons;  
 
 	
     opens testCases to org.junit.platform.commons;
