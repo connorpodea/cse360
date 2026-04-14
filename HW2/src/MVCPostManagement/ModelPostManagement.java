@@ -1,7 +1,12 @@
 package MVCPostManagement;
 
+import java.util.List;
+
+import MVCReplyManagement.ModelReplyManagement;
+import entityClasses.DiscussionAnalyzer;
 import entityClasses.Post;
 import entityClasses.PostStorage;
+import entityClasses.StudentParticipationSummary;
 
 /** Model for post management. */
 public class ModelPostManagement {
@@ -47,5 +52,30 @@ public class ModelPostManagement {
      */
     public static PostStorage getPostStorage() {
         return postStorage;
+    }
+
+    /**
+     * Returns the shared discussion analyzer used by staff-facing features.
+     * @return the discussion analyzer
+     */
+    public static DiscussionAnalyzer getDiscussionAnalyzer() {
+        return new DiscussionAnalyzer(postStorage, ModelReplyManagement.getReplyStorage());
+    }
+
+    /**
+     * Returns a participation summary for the specified user.
+     * @param user the user to summarize
+     * @return the participation summary
+     */
+    public static StudentParticipationSummary getStudentParticipationSummary(entityClasses.User user) {
+        return getDiscussionAnalyzer().summarizeStudent(user);
+    }
+
+    /**
+     * Returns unanswered question posts for grading review.
+     * @return the unanswered posts
+     */
+    public static List<Post> getUnansweredPosts() {
+        return getDiscussionAnalyzer().getUnansweredQuestionPosts();
     }
 }

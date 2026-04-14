@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
 
 /**
  * Analyzes discussion activity so the instructional team can verify that a student
@@ -61,6 +62,45 @@ public class DiscussionAnalyzer {
     }
 
     /**
+     * Counts how many valid replies this user made to posts owned by other students.
+     * Self-replies and replies to missing posts are ignored.
+     *
+     * @param user the replying user
+     * @return the number of valid replies to other students
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public int countRepliesToOtherStudents(User user) {
+        String userName = requireValidUser(user);
+        int count = 0;
+
+        for (Reply reply : replyStorage.getAllReplies()) {
+            if (!userName.equals(reply.getAuthor())) {
+                continue;
+            }
+
+            Post post = findPostForReply(reply);
+            if (post == null || userName.equals(post.getAuthor())) {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
+    /**
+     * Returns whether the user has made at least three valid replies to other students.
+     *
+     * @param user the replying user
+     * @return true when the three-reply requirement is met
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public boolean hasMetThreeReplyRequirement(User user) {
+        return countRepliesToOtherStudents(user) >= 3;
+    }
+
+    /**
      * Returns the posts this user has replied to, without duplicates.
      * Posts authored by the user are excluded.
      *
@@ -115,12 +155,8 @@ public class DiscussionAnalyzer {
                 continue;
             }
 
-            Post post;
-            try {
-                post = postStorage.getPostById(reply.getPostId());
-            } catch (IllegalArgumentException ex) {
-                // Ignore replies that point to missing posts so this method
-                // still produces useful results for the grader.
+            Post post = findPostForReply(reply);
+            if (post == null) {
                 continue;
             }
 
@@ -134,6 +170,96 @@ public class DiscussionAnalyzer {
         }
 
         return authors;
+    }
+
+    /**
+     * Returns all posts authored by the specified user.
+     *
+     * @param user the user to inspect
+     * @return the user's posts
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public List<Post> getPostsByUser(User user) {
+        String userName = requireValidUser(user);
+        List<Post> posts = new ArrayList<>();
+
+        for (Post post : postStorage.getAllPosts()) {
+            if (userName.equals(post.getAuthor())) {
+                posts.add(post);
+            }
+        }
+
+        return posts;
+    }
+
+    /**
+     * Returns all replies authored by the specified user.
+     *
+     * @param user the user to inspect
+     * @return the user's replies
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public List<Reply> getRepliesByUser(User user) {
+        String userName = requireValidUser(user);
+        List<Reply> replies = new ArrayList<>();
+
+        for (Reply reply : replyStorage.getAllReplies()) {
+            if (userName.equals(reply.getAuthor())) {
+                replies.add(reply);
+            }
+        }
+
+        return replies;
+    }
+
+    /**
+     * Counts how many posts were authored by the specified user.
+     *
+     * @param user the user to inspect
+     * @return the number of authored posts
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public int countPostsByUser(User user) {
+        return getPostsByUser(user).size();
+    }
+
+    /**
+     * Counts how many replies were authored by the specified user.
+     *
+     * @param user the user to inspect
+     * @return the number of authored replies
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public int countRepliesByUser(User user) {
+        return getRepliesByUser(user).size();
+    }
+
+    /**
+     * Builds a participation summary for the specified user.
+     *
+     * @param user the user to summarize
+     * @return a summary object for instructor/grader review
+     * @throws IllegalArgumentException if the user is invalid
+     */
+    public StudentParticipationSummary summarizeStudent(User user) {
+        String userName = requireValidUser(user);
+        return new StudentParticipationSummary(
+                userName,
+                countPostsByUser(user),
+                countRepliesByUser(user),
+                countRepliesToOtherStudents(user),
+                countUniqueStudentsRepliedTo(user),
+                hasMetThreeStudentRequirement(user));
+    }
+
+    /**
+     * Returns all unanswered question posts using the shared unanswered filter logic.
+     *
+     * @return the unanswered question posts
+     */
+    public List<Post> getUnansweredQuestionPosts() {
+        return Collections.unmodifiableList(
+                FilterUnanswered.identifyUnanswered(postStorage, replyStorage));
     }
 
     /**
@@ -151,5 +277,19 @@ public class DiscussionAnalyzer {
             throw new IllegalArgumentException("User name cannot be empty.");
         }
         return user.getUserName();
+    }
+
+    /**
+     * Finds the parent post for a reply.
+     *
+     * @param reply the reply to inspect
+     * @return the parent post, or null when the reply points to a missing post
+     */
+    private Post findPostForReply(Reply reply) {
+        try {
+            return postStorage.getPostById(reply.getPostId());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 }

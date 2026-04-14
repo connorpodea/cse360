@@ -3,11 +3,9 @@ package MVCPostManagement;
 import entityClasses.Post;
 import database.Database;
 import java.sql.SQLException;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 
 /*******
  * <p> Title: ControllerPostManagement Class </p>
@@ -252,54 +250,6 @@ public class ControllerPostManagement {
             showAlert("Error", "Could not parse Post ID.");
         }
     }
-	
-	/*****
-	 * <p> Method: performWhisperFeedback </p>
-	 * * <p> Description: Opens a custom dialog to allow staff to provide 
-	 * private feedback to a student. Feedback is saved as a Request 
-	 * entity for tracking. </p>
-	 */
-	protected static void performWhisperFeedback() {
-	    Post p = ModelPostManagement.getPostStorage()
-	            .getPostById(ViewPostManagement.currentPostId);
-	    
-	    if (p == null) return;
-
-	    // 1. Create a Dialog UI components
-	    javafx.scene.control.TextArea feedbackArea = new javafx.scene.control.TextArea();
-	    javafx.scene.control.CheckBox anonCheck = new javafx.scene.control.CheckBox("Hide my name (Anonymous)");
-	    VBox content = new VBox(10); 
-
-	    content.getChildren().addAll(
-	     new Label("Provide private feedback to " + p.getAuthor() + ":"),
-	     feedbackArea, 
-	    anonCheck
-	     );
-
-	    Alert dialog = new Alert(AlertType.CONFIRMATION);
-	    dialog.setTitle("Staff Whisper System");
-	    dialog.getDialogPane().setContent(content);
-
-	    dialog.showAndWait().ifPresent(response -> {
-	        if (response == ButtonType.OK && !feedbackArea.getText().trim().isEmpty()) {
-	            try {
-	                String staffName = anonCheck.isSelected() ? "Anonymous Staff" : ViewPostManagement.theUser.getUserName();
-	                String messageBody = "[PRIVATE FEEDBACK regarding post #" + p.getId() + "]: " + feedbackArea.getText();
-	                
-	                // Store "Whisper" in the Request table for student visibility
-	                database.saveRequest(
-	                    "Feedback: " + p.getTitle(), 
-	                    messageBody, 
-	                    staffName
-	                );
-	                
-	                showAlert("Sent", "Your feedback has been sent privately to " + p.getAuthor());
-	            } catch (Exception e) {
-	                showAlert("Error", "Failed to send whisper feedback.");
-	            }
-	        }
-	    });
-	}
 	
 	/*****
 	 * <p> Method: performWhisper </p>
