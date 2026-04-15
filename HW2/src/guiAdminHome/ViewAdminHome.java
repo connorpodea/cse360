@@ -119,6 +119,7 @@ public class ViewAdminHome {
 	protected static Button button_DeleteUser = new Button("Delete a User");
 	protected static Button button_ListUsers = new Button("List All Users");
 	protected static Button button_AddRemoveRoles = new Button("Add/Remove Roles");
+	protected static Button button_RequestBoard = new Button("Requests");
 	protected static Alert alertNotImplemented = new Alert(AlertType.INFORMATION);
 
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -342,6 +343,9 @@ public class ViewAdminHome {
     
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.setOnAction((_) -> {ControllerAdminHome.performQuit(); });
+		
+		setupButtonUI(button_RequestBoard, "Dialog", 14, 160, Pos.CENTER, 630, 350);
+		button_RequestBoard.setOnAction((_) -> {ControllerAdminHome.performRequestBoard(); });		
 
 		setupButtonUI(button_BackToRoleSelection, "Dialog", 16, 220, Pos.CENTER, 560, 540);
 		button_BackToRoleSelection.setOnAction((_) ->
@@ -363,7 +367,8 @@ public class ViewAdminHome {
 			    line_Separator4, 
 			    button_Logout,
 			    button_Quit,
-			    button_BackToRoleSelection
+			    button_BackToRoleSelection,
+			    button_RequestBoard
 			);
 		
 		// With theRootPane set up with the common widgets, it is up to displayAdminHome to show

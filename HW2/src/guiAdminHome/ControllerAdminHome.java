@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import guiTools.UserNameRecognizer;
 
 import entityClasses.User;
+import guiRole1.ViewRole1Home;
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -260,6 +261,11 @@ public class ControllerAdminHome {
 	 */
 	protected static void performLogout() {
 		guiUserLogin.ViewUserLogin.displayUserLogin(ViewAdminHome.theStage);
+	}
+	
+	protected static void performRequestBoard() {
+		MVCRequestManagement.ViewRequestManagement.displayRequestManagement(
+		        ViewAdminHome.theStage, ViewAdminHome.theUser);
 	}
 
 	/**********

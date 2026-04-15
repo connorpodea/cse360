@@ -1,8 +1,13 @@
 package MVCRequestManagement;
 
 import entityClasses.Request;
+import entityClasses.User;
+import guiAdminHome.ViewAdminHome;
+import guiRole1.ViewRole1Home;
+import guiRole2.ViewRole2Home;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 import javafx.scene.control.TextInputDialog;
 
 import java.sql.SQLException;
@@ -119,12 +124,13 @@ public class ControllerRequestManagement {
         }
 
         boolean isAdmin = ViewRequestManagement.theUser.getAdminRole();
+        boolean isStaff = ViewRequestManagement.theUser.getNewRole1();
         boolean isOpen = r.getStatus().equals("OPEN") || r.getStatus().equals("REOPENED");
         boolean isClosed = r.getStatus().equals("CLOSED");
 
         // Only admin can close, only staff can reopen
         ViewRequestManagement.button_Close.setVisible(isAdmin && isOpen);
-        ViewRequestManagement.button_Reopen.setVisible(!isAdmin && isClosed);
+        ViewRequestManagement.button_Reopen.setVisible(isStaff && isClosed);
     }
 
     /**
@@ -202,11 +208,25 @@ public class ControllerRequestManagement {
     /**
      * Navigates back to the staff home page.
      */
-    protected static void performBack() {
-        guiRole1.ViewRole1Home.displayRole1Home(
-            ViewRequestManagement.theStage,
-            ViewRequestManagement.theUser);
-    }
+	/**
+	 * Returns the user to the home page for the currently active role.
+	 * @param stage the active stage
+	 * @param user the current user
+	 */
+	public static void navigateToActiveHome(Stage stage, User user) {
+		switch (applicationMain.FoundationsMain.activeHomePage) {
+		case 1:
+			ViewAdminHome.displayAdminHome(stage, user);
+			break;
+		case 2:
+			ViewRole1Home.displayRole1Home(stage, user);
+			break;
+		case 3:
+		default:
+			ViewRole2Home.displayRole2Home(stage, user);
+			break;
+		}
+	}
 
     /**
      * Shows a simple popup alert.
