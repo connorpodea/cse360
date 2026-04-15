@@ -89,7 +89,7 @@ public class ViewRequestManagement {
         });
 
         setupButton(button_Back, "Arial", 14, 140, Pos.CENTER, width - 160, 50);
-        button_Back.setOnAction((_) -> { ControllerRequestManagement.performBack(); });
+        button_Back.setOnAction((_) -> { ControllerRequestManagement.navigateToActiveHome(theStage, theUser); });
 
         // --- LEFT SIDEBAR ---
         setupLabel(label_SidebarHeader, "Arial", 16, 260, Pos.BASELINE_LEFT, 20, 95);
