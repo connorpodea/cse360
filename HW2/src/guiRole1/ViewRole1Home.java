@@ -64,8 +64,9 @@ public class ViewRole1Home {
 	// logging out.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
-	protected static Button button_DiscuessionsBoard = new Button("Discussion");
-	protected static Button button_RequestBoard = new Button("Requests");
+	protected static Button button_DiscuessionsBoard = new Button("Discussion Board");
+	protected static Button button_RequestBoard = new Button("Staff Requests");
+	protected static Button button_BackToRoleSelection = new Button("Back to Role Selection");
 
 	// This is the end of the GUI objects for the page.
 	
@@ -127,6 +128,7 @@ public class ViewRole1Home {
 		applicationMain.FoundationsMain.activeHomePage = theRole;
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());
+		configureHomeLayout();
 				
 		// Set the title for the window, display the page, and wait for the Admin to do something
 		theStage.setTitle("CSE 360 Foundations: Staff Home Page");
@@ -162,7 +164,7 @@ public class ViewRole1Home {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
-		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
+		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 315, 45);
 		button_UpdateThisUser.setOnAction((_) -> {ControllerRole1Home.performUpdate(); });
 		
 		// GUI Area 2
@@ -171,25 +173,29 @@ public class ViewRole1Home {
 		
 		
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 135, 540);
         button_Logout.setOnAction((_) -> {ControllerRole1Home.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 415, 540);
         button_Quit.setOnAction((_) -> {ControllerRole1Home.performQuit(); });
         
         // allows the staff user to go to the discuessions post for students and delete or edit some posts if needed.
-        setupButtonUI(button_DiscuessionsBoard, "Dialog", 18, 250, Pos.CENTER, 200, 200);
+        setupButtonUI(button_DiscuessionsBoard, "Dialog", 18, 250, Pos.CENTER, 275, 200);
         button_DiscuessionsBoard.setOnAction((_) -> {ControllerRole1Home.performManagePosts(); });
         
-        setupButtonUI(button_RequestBoard, "Dialog", 18, 250, Pos.CENTER, 200, 100);
+        setupButtonUI(button_RequestBoard, "Dialog", 18, 250, Pos.CENTER, 275, 145);
         button_RequestBoard.setOnAction((_) -> {ControllerRole1Home.performRequestPosts(); });
+
+        setupButtonUI(button_BackToRoleSelection, "Dialog", 18, 250, Pos.CENTER, 275, 285);
+        button_BackToRoleSelection.setOnAction((_) -> {ControllerRole1Home.performBackToRoleSelection(); });
         
 		// This is the end of the GUI initialization code
 		
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_DiscuessionsBoard, button_RequestBoard);
+	        line_Separator4, button_Logout, button_Quit, button_DiscuessionsBoard, button_RequestBoard,
+	        button_BackToRoleSelection);
 }
 	
 	
@@ -238,5 +244,32 @@ public class ViewRole1Home {
 		b.setAlignment(p);
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
+	}
+
+	/**
+	 * Centers the home-page buttons and only shows role selection when needed.
+	 */
+	private static void configureHomeLayout() {
+		boolean showRoleSelection = theUser != null && theUser.getNumRoles() > 1;
+		button_BackToRoleSelection.setVisible(showRoleSelection);
+
+		centerButton(button_UpdateThisUser, 45);
+		centerButton(button_RequestBoard, 145);
+		centerButton(button_DiscuessionsBoard, 215);
+		if (showRoleSelection) {
+			centerButton(button_BackToRoleSelection, 285);
+		}
+		button_Logout.setLayoutX(135);
+		button_Quit.setLayoutX(415);
+	}
+
+	/**
+	 * Centers a button using its configured width.
+	 * @param b the button to position
+	 * @param y the vertical location
+	 */
+	private static void centerButton(Button b, double y) {
+		b.setLayoutX((width - b.getMinWidth()) / 2.0);
+		b.setLayoutY(y);
 	}
 }

@@ -89,7 +89,7 @@ public class ViewAdminHome {
 	// GUI Area 2: This area is used to provide status of the system.  This basic foundational code
 	// does not have much current status information to display.
 	protected static Label label_NumberOfInvitations = 
-			new Label("Number of Oustanding Invitations: x");
+			new Label("Number of Outstanding Invitations: x");
 	protected static Label label_NumberOfUsers = new Label("Number of Users: x");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -103,7 +103,7 @@ public class ViewAdminHome {
 	//protected static ComboBox<String> combobox_UserList = new ComboBox<>();
 	protected static TextField text_InvitationEmailAddress = new TextField();
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
-	protected static String [] roles = {"Admin", "Role1", "Role2"};
+	protected static String [] roles = {"Admin", "Staff", "Student"};
 	protected static Button button_SendInvitation = new Button("Send Invitation");
 	protected static Alert alertEmailError = new Alert(AlertType.INFORMATION);
 	protected static Alert alertEmailSent = new Alert(AlertType.INFORMATION);
@@ -130,6 +130,7 @@ public class ViewAdminHome {
 	// return is to a fixed page as opposed to the actual page that invoked the pages.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
+	protected static Button button_BackToRoleSelection = new Button("Back to Role Selection");
 
 	// This is the end of the GUI objects for the page.
 	
@@ -238,8 +239,8 @@ public class ViewAdminHome {
 	        User u = cell.getValue();
 	        List<String> parts = new ArrayList<>();
 	        if (u.getAdminRole()) parts.add("Admin");
-	        if (u.getNewRole1()) parts.add("Role1");
-	        if (u.getNewRole2()) parts.add("Role2");
+	        if (u.getNewRole1()) parts.add("Staff");
+	        if (u.getNewRole2()) parts.add("Student");
 	        return new SimpleStringProperty(String.join(", ", parts));
 	       
 	    });
@@ -341,6 +342,10 @@ public class ViewAdminHome {
     
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.setOnAction((_) -> {ControllerAdminHome.performQuit(); });
+
+		setupButtonUI(button_BackToRoleSelection, "Dialog", 16, 220, Pos.CENTER, 560, 540);
+		button_BackToRoleSelection.setOnAction((_) ->
+				{ControllerAdminHome.performBackToRoleSelection(); });
 		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
@@ -357,7 +362,8 @@ public class ViewAdminHome {
 			    button_AddRemoveRoles,
 			    line_Separator4, 
 			    button_Logout,
-			    button_Quit
+			    button_Quit,
+			    button_BackToRoleSelection
 			);
 		
 		// With theRootPane set up with the common widgets, it is up to displayAdminHome to show

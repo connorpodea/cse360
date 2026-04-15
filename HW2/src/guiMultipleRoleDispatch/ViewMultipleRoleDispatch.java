@@ -46,7 +46,7 @@ public class ViewMultipleRoleDispatch {
 
 	// GUI Area 1: It informs the user about the purpose of this page and whose account is being
 	// used. There is no button to allow this user to update the account settings.
-	private static Label label_PageTitle = new Label("Multiple Role Dispatch Page");
+	private static Label label_PageTitle = new Label("Role Selection");
 	private static Label label_UserDetails = new Label();
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -54,9 +54,9 @@ public class ViewMultipleRoleDispatch {
 
 	// GUI Area 2: This area consists of a label to ask the user what roles to place, a ComboBox 
 	// so the user can select the role, and a button to perform that role.
-	private static Label label_WhichRole = new Label("Which role do you wish to play:");
+	private static Label label_WhichRole = new Label("Choose which role to use:");
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
-	private static Button button_PerformRole = new Button("Perform Role");		
+	private static Button button_PerformRole = new Button("Continue");		
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -123,7 +123,7 @@ public class ViewMultipleRoleDispatch {
 		combobox_SelectRole.getSelectionModel().select(0);
 		
 		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("CSE 360 Foundation Code: Multiple Role Dispatch");	
+		theStage.setTitle("CSE 360 Foundations: Role Selection");	
 		theStage.setScene(theMultipleRoleDispatchScene);		// Set this page onto the stage
 		theStage.show();										// Display it to the user
 	}

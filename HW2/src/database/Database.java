@@ -132,6 +132,16 @@ public class Database {
                 + "author VARCHAR(255), "
                 + "timestamp VARCHAR(255))";
 		statement.execute(replyTable);
+
+		String whisperTable = "CREATE TABLE IF NOT EXISTS whisperDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "postId INT, "
+				+ "targetUser VARCHAR(255), "
+				+ "postTitle VARCHAR(255), "
+				+ "staffAuthor VARCHAR(255), "
+				+ "message CLOB, "
+				+ "timestamp VARCHAR(255))";
+		statement.execute(whisperTable);
 		
 		// create the request table
 		String request = "CREATE TABLE IF NOT EXISTS requestDB ("
@@ -211,6 +221,58 @@ public class Database {
 	    }
 	}
 
+	/**
+	 * Saves one whisper message for a student's post.
+	 * @param postId the related post id
+	 * @param targetUser the student receiving the whisper
+	 * @param postTitle the title of the related post
+	 * @param staffAuthor the staff user sending the whisper
+	 * @param message the whisper contents
+	 * @throws SQLException when there is an issue executing the SQL command
+	 */
+	public void saveWhisper(int postId, String targetUser, String postTitle,
+			String staffAuthor, String message) throws SQLException {
+		String query = "INSERT INTO whisperDB (postId, targetUser, postTitle, staffAuthor, message, timestamp) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, postId);
+			pstmt.setString(2, targetUser);
+			pstmt.setString(3, postTitle);
+			pstmt.setString(4, staffAuthor);
+			pstmt.setString(5, message);
+			pstmt.setString(6, LocalDateTime.now().toString());
+			pstmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Loads all whispers addressed to a student.
+	 * @param studentUserName the student username
+	 * @return the student's whispers
+	 * @throws SQLException when there is an issue executing the SQL query
+	 */
+	public List<entityClasses.WhisperMessage> loadWhispersForStudent(String studentUserName) throws SQLException {
+		List<entityClasses.WhisperMessage> whispers = new ArrayList<>();
+		String query = "SELECT * FROM whisperDB WHERE targetUser = ? ORDER BY timestamp DESC";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, studentUserName);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					whispers.add(new entityClasses.WhisperMessage(
+							rs.getInt("id"),
+							rs.getInt("postId"),
+							rs.getString("targetUser"),
+							rs.getString("postTitle"),
+							rs.getString("staffAuthor"),
+							rs.getString("message"),
+							LocalDateTime.parse(rs.getString("timestamp"))
+					));
+				}
+			}
+		}
+		return whispers;
+	}
+
 	
 	/**
 	 * <p> Method: savePost(Post p) </p>
@@ -266,6 +328,7 @@ public class Database {
 	                rs.getString("author"), rs.getString("category"),
 	                LocalDateTime.parse(rs.getString("timestamp"))
 	            );
+	        	post.setStaffFeedback(rs.getString("staffFeedback"), rs.getBoolean("anonymousFeedback"));
 	        	if (rs.getBoolean("deleted")) {
 	        		post.markDeleted();
 	        	}
@@ -307,7 +370,8 @@ public class Database {
 	                rs.getInt("id"), 
 	                rs.getInt("postId"), 
 	                rs.getString("body"),
-	                rs.getString("author")
+	                rs.getString("author"),
+	                LocalDateTime.parse(rs.getString("timestamp"))
 	            ));
 	        }
 	    }

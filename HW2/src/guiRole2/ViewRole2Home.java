@@ -55,6 +55,7 @@ public class ViewRole2Home {
 
 	// GUI Area 2: Post and Reply Management
 	protected static Button button_DiscussionBoard = new Button("Discussion Board");
+	protected static Button button_Inbox = new Button("Student Inbox");
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -64,6 +65,7 @@ public class ViewRole2Home {
 	// logging out.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
+	protected static Button button_BackToRoleSelection = new Button("Back to Role Selection");
 
 	// this is the end of the GUI objects for the page.
 	
@@ -123,6 +125,7 @@ public class ViewRole2Home {
 		applicationMain.FoundationsMain.activeHomePage = theRole;
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());// Set the username
+		configureHomeLayout();
 
 		// Set the title for the window, display the page, and wait for the Admin to do something
 		theStage.setTitle("CSE 360 Foundations: Student Home Page");
@@ -158,19 +161,23 @@ public class ViewRole2Home {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
-		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
+		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 315, 45);
 		button_UpdateThisUser.setOnAction((_) -> {ControllerRole2Home.performUpdate(); });
 		
 		// GUI Area 2
-		setupButtonUI(button_DiscussionBoard, "Dialog", 18, 200, Pos.CENTER, 20, 120);
+		setupButtonUI(button_DiscussionBoard, "Dialog", 18, 200, Pos.CENTER, 300, 150);
 		button_DiscussionBoard.setOnAction((_) -> { ControllerRole2Home.performManagePosts(); });
+		setupButtonUI(button_Inbox, "Dialog", 18, 200, Pos.CENTER, 300, 220);
+		button_Inbox.setOnAction((_) -> { ControllerRole2Home.performOpenInbox(); });
+		setupButtonUI(button_BackToRoleSelection, "Dialog", 18, 250, Pos.CENTER, 275, 220);
+		button_BackToRoleSelection.setOnAction((_) -> { ControllerRole2Home.performBackToRoleSelection(); });
 		
 		
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 135, 540);
         button_Logout.setOnAction((_) -> {ControllerRole2Home.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 415, 540);
         button_Quit.setOnAction((_) -> {ControllerRole2Home.performQuit(); });
 
 		// This is the end of the GUI initialization code
@@ -178,7 +185,8 @@ public class ViewRole2Home {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
     			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-    			button_DiscussionBoard, line_Separator4, button_Logout, button_Quit);
+    			button_DiscussionBoard, button_Inbox, button_BackToRoleSelection, line_Separator4,
+    			button_Logout, button_Quit);
 	}
 	
 	
@@ -227,5 +235,32 @@ public class ViewRole2Home {
 		b.setAlignment(p);
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
+	}
+
+	/**
+	 * Centers the home-page buttons and only shows role selection when needed.
+	 */
+	private static void configureHomeLayout() {
+		boolean showRoleSelection = theUser != null && theUser.getNumRoles() > 1;
+		button_BackToRoleSelection.setVisible(showRoleSelection);
+
+		centerButton(button_UpdateThisUser, 45);
+		centerButton(button_DiscussionBoard, 145);
+		centerButton(button_Inbox, 215);
+		if (showRoleSelection) {
+			centerButton(button_BackToRoleSelection, 285);
+		}
+		button_Logout.setLayoutX(135);
+		button_Quit.setLayoutX(415);
+	}
+
+	/**
+	 * Centers a button using its configured width.
+	 * @param b the button to position
+	 * @param y the vertical location
+	 */
+	private static void centerButton(Button b, double y) {
+		b.setLayoutX((width - b.getMinWidth()) / 2.0);
+		b.setLayoutY(y);
 	}
 }

@@ -17,10 +17,10 @@ public class ViewReplyManagement {
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	// GUI Widgets for reply input
-	protected static Label label_PageTitle = new Label("Add a Reply");
+	protected static Label label_PageTitle = new Label("Reply to Post");
 	protected static TextArea text_Body = new TextArea();
 	protected static Button button_Submit = new Button("Submit Reply");
-	protected static Button button_Back = new Button("Back");
+	protected static Button button_Back = new Button("Back to Discussion Board");
 
 	protected static Stage theStage;
 	protected static User theUser;
@@ -41,7 +41,7 @@ public class ViewReplyManagement {
 		currentPostId = postId;
 		if (theView == null) theView = new ViewReplyManagement();
 		
-		theStage.setTitle("Reply Management");
+		theStage.setTitle("Reply to Post");
 		theStage.setScene(theScene);
 		theStage.show();
 	}

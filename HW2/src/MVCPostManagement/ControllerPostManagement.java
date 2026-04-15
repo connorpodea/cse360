@@ -1,11 +1,19 @@
 package MVCPostManagement;
 
 import entityClasses.Post;
+import entityClasses.PostStorage;
+import entityClasses.ReplyStorage;
+import entityClasses.StudentParticipationSummary;
+import entityClasses.User;
 import database.Database;
+import guiAdminHome.ViewAdminHome;
+import guiRole1.ViewRole1Home;
+import guiRole2.ViewRole2Home;
 import java.sql.SQLException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 
 /*******
  * <p> Title: ControllerPostManagement Class </p>
@@ -83,8 +91,7 @@ public class ControllerPostManagement {
 	 * Delete, and Whisper buttons based on user roles and post status. </p>
 	 */
 	protected static void displaySelectedPost() {
-		boolean isStaffOrAdmin = ViewPostManagement.theUser.getAdminRole() || 
-                ViewPostManagement.theUser.getNewRole1(); // staff role
+		boolean isStaffView = ViewPostManagement.isStaffDiscussionView();
 		
 		// Get post by ID instead of relying on strings
 	    entityClasses.Post p = ModelPostManagement.getPostStorage()
@@ -95,6 +102,7 @@ public class ControllerPostManagement {
 	        ViewPostManagement.label_FullAuthor.setText("Author: " + p.getAuthor());
 	        ViewPostManagement.label_FullTimestamp.setText("Posted: " + p.getFormattedTimestamp());
 	        ViewPostManagement.area_FullBody.setText(p.isDeleted() ? DELETED_POST_MESSAGE : p.getBody());
+	        updateParticipationSummary(p);
 
 	        // Update reply count so user can see activity
 	        int count = MVCReplyManagement.ModelReplyManagement.getReplyStorage()
@@ -109,7 +117,7 @@ public class ControllerPostManagement {
 	        ViewPostManagement.button_Delete.setVisible(canModify && !p.isDeleted());
 	        
 	        if (ViewPostManagement.button_Whisper != null) {
-	            ViewPostManagement.button_Whisper.setVisible(isStaffOrAdmin);
+	            ViewPostManagement.button_Whisper.setVisible(isStaffView);
 	        }
 	    }
 	}
@@ -209,9 +217,7 @@ public class ControllerPostManagement {
      * * <p> Description: Returns the user to the Role 2 (Student) home screen. </p>
      */
 	protected static void performBack() {
-		guiRole2.ViewRole2Home.displayRole2Home(
-		        ViewPostManagement.theStage, 
-		        ViewPostManagement.theUser);
+		navigateToActiveHome(ViewPostManagement.theStage, ViewPostManagement.theUser);
 	}
 
 	/*****
@@ -262,11 +268,9 @@ public class ControllerPostManagement {
 
 	    // 1. Setup UI
 	    javafx.scene.control.TextArea feedbackArea = new javafx.scene.control.TextArea();
-	    javafx.scene.control.CheckBox anonCheck = new javafx.scene.control.CheckBox("Hide my name (Anonymous)");
 	    javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10, 
 	        new javafx.scene.control.Label("Provide private feedback to " + p.getAuthor() + ":"),
-	        feedbackArea, 
-	        anonCheck
+	        feedbackArea
 	    );
 
 	    Alert dialog = new Alert(AlertType.CONFIRMATION);
@@ -278,16 +282,21 @@ public class ControllerPostManagement {
 	        if (response == ButtonType.OK && !feedbackArea.getText().trim().isEmpty()) {
 	            try {
 	                String feedback = feedbackArea.getText().trim();
-	                boolean isAnon = anonCheck.isSelected();
 	                
-	                // Save specifically to postDB columns
-	                database.updatePostFeedback(p.getId(), feedback, isAnon);
+	                // Keep the latest feedback on the post while also storing a full whisper history.
+	                database.updatePostFeedback(p.getId(), feedback, false);
+	                database.saveWhisper(
+	                		p.getId(),
+	                		p.getAuthor(),
+	                		p.getTitle(),
+	                		ViewPostManagement.theUser.getUserName(),
+	                		feedback);
 	                
 	                // Record action in Request table for Admin visibility (Transparency)
 	                database.saveRequest(
 	                    "Feedback Sent to " + p.getAuthor(),
 	                    "Staff provided feedback on post #" + p.getId() + ": " + feedback,
-	                    isAnon ? "Anonymous Staff" : ViewPostManagement.theUser.getUserName()
+	                    ViewPostManagement.theUser.getUserName()
 	                );
 
 	                showAlert("Sent", "Feedback saved successfully.");
@@ -296,5 +305,77 @@ public class ControllerPostManagement {
 	            }
 	        }
 	    });
+	}
+
+	/**
+	 * Returns the user to the home page for the currently active role.
+	 * @param stage the active stage
+	 * @param user the current user
+	 */
+	public static void navigateToActiveHome(Stage stage, User user) {
+		switch (applicationMain.FoundationsMain.activeHomePage) {
+		case 1:
+			ViewAdminHome.displayAdminHome(stage, user);
+			break;
+		case 2:
+			ViewRole1Home.displayRole1Home(stage, user);
+			break;
+		case 3:
+		default:
+			ViewRole2Home.displayRole2Home(stage, user);
+			break;
+		}
+	}
+
+	/**
+	 * Refreshes the staff participation summary for the selected post author.
+	 * @param post the selected post
+	 */
+	private static void updateParticipationSummary(Post post) {
+		if (!ViewPostManagement.isStaffDiscussionView() || post == null) {
+			ViewPostManagement.clearParticipationSummary();
+			return;
+		}
+
+		StudentParticipationSummary summary = getFreshStudentParticipationSummary(post.getAuthor());
+		if (summary == null) {
+			ViewPostManagement.clearParticipationSummary();
+			return;
+		}
+
+		ViewPostManagement.label_SummaryStudent.setText("Student: " + summary.getUserName());
+		ViewPostManagement.label_SummaryMet.setText(
+				"Requirement: " + (summary.hasMetThreeStudentRequirement() ? "Met" : "Not Met"));
+		ViewPostManagement.label_SummaryReplyCount.setText(
+				"Replies to Others: " + summary.getRepliesToOtherStudentsCount());
+		ViewPostManagement.label_SummaryDistinct.setText(
+				"Distinct Students Answered: " + summary.getDistinctStudentsAnsweredCount());
+		ViewPostManagement.label_SummaryPosts.setText("Posts: " + summary.getPostCount());
+		ViewPostManagement.label_SummaryReplies.setText("Replies: " + summary.getReplyCount());
+	}
+
+	/**
+	 * Builds the latest participation summary directly from persisted data.
+	 * @param authorUserName the student being summarized
+	 * @return the latest participation summary
+	 */
+	private static StudentParticipationSummary getFreshStudentParticipationSummary(String authorUserName) {
+		try {
+			PostStorage postStorage = new PostStorage();
+			ReplyStorage replyStorage = new ReplyStorage();
+			for (Post loadedPost : database.loadAllPosts()) {
+				postStorage.addPost(loadedPost);
+			}
+			for (entityClasses.Reply loadedReply : database.loadAllReplies()) {
+				replyStorage.addReply(loadedReply);
+			}
+
+			User summaryUser = new User();
+			summaryUser.setUserName(authorUserName);
+			return new entityClasses.DiscussionAnalyzer(postStorage, replyStorage)
+					.summarizeStudent(summaryUser);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

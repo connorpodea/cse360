@@ -8,6 +8,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import entityClasses.User;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * View class for managing and viewing discussion posts.
@@ -37,6 +39,13 @@ public class ViewPostManagement {
 	protected static Label label_FullAuthor = new Label();
 	protected static Label label_FullTimestamp = new Label();
 	protected static TextArea area_FullBody = new TextArea();
+	protected static Label label_ParticipationHeader = new Label("Participation Summary");
+	protected static Label label_SummaryStudent = new Label("Select a post to review...");
+	protected static Label label_SummaryMet = new Label("Requirement: ");
+	protected static Label label_SummaryReplyCount = new Label("Replies to Others: ");
+	protected static Label label_SummaryDistinct = new Label("Distinct Students Answered: ");
+	protected static Label label_SummaryPosts = new Label("Posts: ");
+	protected static Label label_SummaryReplies = new Label("Replies: ");
 	protected static Button button_ReplyToThis = new Button("Reply to this Post");
 	protected static Button button_Edit = new Button("Edit Post");
     protected static Button button_Delete = new Button("Delete Post");
@@ -44,6 +53,7 @@ public class ViewPostManagement {
 	
 	// Keeps track of which post is currently selected
 	protected static int currentPostId = -1;
+	private static List<Integer> visiblePostIds = new ArrayList<>();
 
 	/** The stage for this page. */
 	public static Stage theStage;
@@ -63,9 +73,15 @@ public class ViewPostManagement {
 		theStage = ps;
 		theUser = user;
 		if (theView == null) theView = new ViewPostManagement();
+		configureRoleSpecificLayout();
 		
 		// Update the sidebar so it stays in sync with storage
 		refreshPostList(); 
+		if (currentPostId != -1) {
+			ControllerPostManagement.displaySelectedPost();
+		} else {
+			clearParticipationSummary();
+		}
 		
 		theStage.setTitle("CSE 360 Discussion Board");
 		theStage.setScene(theScene);
@@ -113,19 +129,14 @@ public class ViewPostManagement {
 		// When a post is selected, update the main reading area
 		list_Posts.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, selected) -> {
 		    if (selected != null) {
-		        for (entityClasses.Post p : ModelPostManagement.getPostStorage().getAllPosts()) {
-		        	String titleText = p.isDeleted() ? "[Deleted] " + p.getTitle() : p.getTitle();
-		            String matchString = String.format("[%s] %s", p.getCategory(), titleText);
-		            
-		            if (selected.startsWith(matchString)) {
-		                // Save the ID so other buttons know what post is active
-		                currentPostId = p.getId(); 
-		                
-		                // Ask the controller to fill the right side details
-		                ControllerPostManagement.displaySelectedPost(); 
-		                break;
-		            }
+		    	int selectedIndex = list_Posts.getSelectionModel().getSelectedIndex();
+		        if (selectedIndex >= 0 && selectedIndex < visiblePostIds.size()) {
+		        	currentPostId = visiblePostIds.get(selectedIndex);
+		        	ControllerPostManagement.displaySelectedPost();
 		        }
+		    } else {
+		    	currentPostId = -1;
+		    	clearParticipationSummary();
 		    }
 		});
 
@@ -133,6 +144,13 @@ public class ViewPostManagement {
 		setupLabelUI(label_FullTitle, "Arial", 22, width - 350, Pos.BASELINE_LEFT, 320, 130);
 		setupLabelUI(label_FullAuthor, "Arial", 14, 400, Pos.BASELINE_LEFT, 320, 165);
 		setupLabelUI(label_FullTimestamp, "Arial", 12, 400, Pos.BASELINE_LEFT, 320, 185);
+		setupLabelUI(label_ParticipationHeader, "Arial", 18, 180, Pos.BASELINE_LEFT, 590, 130);
+		setupLabelUI(label_SummaryStudent, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 165);
+		setupLabelUI(label_SummaryMet, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 190);
+		setupLabelUI(label_SummaryReplyCount, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 215);
+		setupLabelUI(label_SummaryDistinct, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 240);
+		setupLabelUI(label_SummaryPosts, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 265);
+		setupLabelUI(label_SummaryReplies, "Arial", 13, 180, Pos.BASELINE_LEFT, 590, 290);
 		
 		area_FullBody.setLayoutX(320); 
 		area_FullBody.setLayoutY(210);
@@ -161,11 +179,14 @@ public class ViewPostManagement {
 	    
 	    button_Whisper.setVisible(false); // Hidden by default, Controller will show it to Staff
 	    button_Whisper.setOnAction((_) -> { ControllerPostManagement.performWhisper(); });
+	    clearParticipationSummary();
 	    
 	    theRootPane.getChildren().addAll(
 	    	    label_PageTitle, button_ToCreatePage, button_Back, 
 	    	    label_SidebarHeader, text_SearchPosts, combo_FilterCategory, list_Posts, 
-	    	    label_FullTitle, label_FullAuthor, label_FullTimestamp, area_FullBody, 
+	    	    label_FullTitle, label_FullAuthor, label_FullTimestamp, label_ParticipationHeader,
+	    	    label_SummaryStudent, label_SummaryMet, label_SummaryReplyCount, label_SummaryDistinct,
+	    	    label_SummaryPosts, label_SummaryReplies, area_FullBody, 
 	    	    button_ReplyToThis, button_ViewReplies, button_Edit, button_Delete, 
 	    	    button_Whisper
 	    	);
@@ -176,6 +197,7 @@ public class ViewPostManagement {
 	 */
 	public static void refreshPostList() {
 	    list_Posts.getItems().clear();
+	    visiblePostIds.clear();
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a");
 	    
 	    String searchKey = text_SearchPosts.getText().toLowerCase(); 
@@ -194,6 +216,7 @@ public class ViewPostManagement {
 		                               p.getAuthor(), 
 		                               p.getTimestamp().format(formatter)); 
 		        list_Posts.getItems().add(displayString);
+		        visiblePostIds.add(p.getId());
 	    	}
 	    }
 	}
@@ -206,5 +229,48 @@ public class ViewPostManagement {
 	// Small helper to avoid repeating button setup code everywhere
 	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
 		b.setFont(Font.font(ff, f)); b.setMinWidth(w); b.setAlignment(p); b.setLayoutX(x); b.setLayoutY(y);		
+	}
+
+	/**
+	 * Returns true when the shared discussion board is being used by staff or admin.
+	 * @return true if staff-only review widgets should be shown
+	 */
+	protected static boolean isStaffDiscussionView() {
+		return theUser != null && theUser.getNewRole1()
+				&& applicationMain.FoundationsMain.activeHomePage == 2;
+	}
+
+	/**
+	 * Clears the participation summary until a post is selected.
+	 */
+	protected static void clearParticipationSummary() {
+		label_SummaryStudent.setText("Select a post to review...");
+		label_SummaryMet.setText("Requirement: ");
+		label_SummaryReplyCount.setText("Replies to Others: ");
+		label_SummaryDistinct.setText("Distinct Students Answered: ");
+		label_SummaryPosts.setText("Posts: ");
+		label_SummaryReplies.setText("Replies: ");
+	}
+
+	/**
+	 * Shows staff-only widgets without changing the student discussion layout.
+	 */
+	private static void configureRoleSpecificLayout() {
+		boolean showStaffSummary = isStaffDiscussionView();
+
+		label_ParticipationHeader.setVisible(showStaffSummary);
+		label_SummaryStudent.setVisible(showStaffSummary);
+		label_SummaryMet.setVisible(showStaffSummary);
+		label_SummaryReplyCount.setVisible(showStaffSummary);
+		label_SummaryDistinct.setVisible(showStaffSummary);
+		label_SummaryPosts.setVisible(showStaffSummary);
+		label_SummaryReplies.setVisible(showStaffSummary);
+		button_Whisper.setVisible(false);
+
+		label_FullTitle.setMinWidth(showStaffSummary ? 250 : width - 350);
+		area_FullBody.setPrefWidth(showStaffSummary ? 250 : width - 350);
+		if (!showStaffSummary) {
+			clearParticipationSummary();
+		}
 	}
 }
