@@ -261,6 +261,19 @@ public class ControllerAdminHome {
 	protected static void performLogout() {
 		guiUserLogin.ViewUserLogin.displayUserLogin(ViewAdminHome.theStage);
 	}
+
+	/**********
+	 * <p>
+	 *
+	 * Title: performBackToRoleSelection () Method. </p>
+	 *
+	 * <p> Description: Protected method that returns the current user to the role selection
+	 * page. </p>
+	 */
+	protected static void performBackToRoleSelection() {
+		guiMultipleRoleDispatch.ViewMultipleRoleDispatch.displayMultipleRoleDispatch(
+				ViewAdminHome.theStage, ViewAdminHome.theUser);
+	}
 	
 	/**********
 	 * <p> 
@@ -305,4 +318,3 @@ public class ControllerAdminHome {
 		return true;
 	}
 }
-

@@ -64,9 +64,9 @@ public class ControllerOneTimePassword {
 		if (!theDatabase.getCurrentAdminRole())
 			ViewOneTimePassword.addList.add("Admin");
 		if (!theDatabase.getCurrentNewRole1())
-			ViewOneTimePassword.addList.add("Role1");
+			ViewOneTimePassword.addList.add("Staff");
 		if (!theDatabase.getCurrentNewRole2())
-			ViewOneTimePassword.addList.add("Role2");
+			ViewOneTimePassword.addList.add("Student");
 
 		// Create the list of roles that could be removed for the currently selected user (e.g., Do
 		// not show a role to remove that the user does not have!)
@@ -75,9 +75,9 @@ public class ControllerOneTimePassword {
 		if (theDatabase.getCurrentAdminRole())
 			ViewOneTimePassword.removeList.add("Admin");
 		if (theDatabase.getCurrentNewRole1())
-			ViewOneTimePassword.removeList.add("Role1");
+			ViewOneTimePassword.removeList.add("Staff");
 		if (theDatabase.getCurrentNewRole2())
-			ViewOneTimePassword.removeList.add("Role2");
+			ViewOneTimePassword.removeList.add("Student");
 		
 		// Create the list or roles that the user currently has with proper use of a comma between
 		// items
@@ -93,9 +93,9 @@ public class ControllerOneTimePassword {
 		// Roles 1 - It could be at the head of the list or later in the list
 		if (theDatabase.getCurrentNewRole1()) {
 			if (notTheFirst)
-				theCurrentRoles += ", Role1"; 
+				theCurrentRoles += ", Staff"; 
 			else {
-				theCurrentRoles += "Role1";
+				theCurrentRoles += "Staff";
 				notTheFirst = true;
 			}
 		}
@@ -103,9 +103,9 @@ public class ControllerOneTimePassword {
 		// Roles 2 - It could be at the head of the list or later in the list
 		if (theDatabase.getCurrentNewRole2()) {
 			if (notTheFirst)
-				theCurrentRoles += ", Role2"; 
+				theCurrentRoles += ", Student"; 
 			else {
-				theCurrentRoles += "Role2";
+				theCurrentRoles += "Student";
 				notTheFirst = true;
 			}
 		}

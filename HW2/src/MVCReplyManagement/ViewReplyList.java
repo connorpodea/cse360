@@ -19,7 +19,7 @@ public class ViewReplyList {
     // Left side list of replies
     protected static ListView<Reply> list_Replies = new ListView<>();
     protected static TextArea area_ReplyBody = new TextArea();
-    protected static Button button_Back = new Button("Back to Post");
+    protected static Button button_Back = new Button("Back to Discussion Board");
     
     // Search box for filtering replies
     protected static TextField text_SearchReplies = new TextField();
@@ -45,7 +45,7 @@ public class ViewReplyList {
         
         refreshReplyList();
         ps.setScene(theScene);
-        ps.setTitle("Viewing Replies");
+        ps.setTitle("Replies");
         ps.show();
     }
 
@@ -56,7 +56,7 @@ public class ViewReplyList {
         theRootPane = new Pane();
         theScene = new Scene(theRootPane, width, height);
 
-        Label label_Title = new Label("Post Replies");
+        Label label_Title = new Label("Replies");
         label_Title.setFont(Font.font("Arial", 24));
         label_Title.setLayoutX(20); label_Title.setLayoutY(20);
 

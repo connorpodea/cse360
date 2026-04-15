@@ -32,6 +32,23 @@ public class Reply {
     }
 
     /**
+     * Creates a reply using an existing timestamp from storage.
+     * @param id the reply id
+     * @param postId the post id
+     * @param body the reply body
+     * @param author the reply author
+     * @param timestamp when the reply was created
+     */
+    public Reply(int id, int postId, String body, String author, LocalDateTime timestamp) {
+        validateCreate(body, author);
+        this.id = id;
+        this.postId = postId;
+        this.body = body;
+        this.author = author;
+        this.timestamp = timestamp;
+    }
+
+    /**
      * Checks values when creating a reply.
      */
     private void validateCreate(String body, String author) {

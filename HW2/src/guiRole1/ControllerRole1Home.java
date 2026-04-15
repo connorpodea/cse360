@@ -88,4 +88,12 @@ public class ControllerRole1Home {
 	    MVCRequestManagement.ViewRequestManagement.displayRequestManagement(
 	        ViewRole1Home.theStage, ViewRole1Home.theUser);
 	}
+
+	/**
+	 * Returns a multi-role user to the role selection screen.
+	 */
+	protected static void performBackToRoleSelection() {
+		guiMultipleRoleDispatch.ViewMultipleRoleDispatch.displayMultipleRoleDispatch(
+				ViewRole1Home.theStage, ViewRole1Home.theUser);
+	}
 }

@@ -20,7 +20,7 @@ public class ViewRequestManagement {
 
     // --- Top area ---
     protected static Label label_PageTitle = new Label("Staff Requests");
-    protected static Button button_CreateRequest = new Button("New Request");
+    protected static Button button_CreateRequest = new Button("Create Request");
     protected static Button button_Back = new Button("Back to Home");
 
     // --- Left sidebar ---

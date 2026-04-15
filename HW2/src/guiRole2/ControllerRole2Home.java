@@ -81,4 +81,19 @@ public class ControllerRole2Home {
 	protected static void performManagePosts() {
 		MVCPostManagement.ViewPostManagement.displayPostManagement(ViewRole2Home.theStage, ViewRole2Home.theUser);
 	}
+
+	/**
+	 * Opens the student inbox page.
+	 */
+	protected static void performOpenInbox() {
+		ViewStudentInbox.displayStudentInbox(ViewRole2Home.theStage, ViewRole2Home.theUser);
+	}
+
+	/**
+	 * Returns a multi-role user to the role selection screen.
+	 */
+	protected static void performBackToRoleSelection() {
+		guiMultipleRoleDispatch.ViewMultipleRoleDispatch.displayMultipleRoleDispatch(
+				ViewRole2Home.theStage, ViewRole2Home.theUser);
+	}
 }

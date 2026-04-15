@@ -113,11 +113,12 @@ public class ControllerReplyManagement {
         });
     }
 
-    /**
-     * Goes back to the role 2 home screen.
-     */
+	/**
+	 * Goes back to the role 2 home screen.
+	 */
 	protected static void performBack() {
-		guiRole2.ViewRole2Home.displayRole2Home(ViewReplyManagement.theStage, ViewReplyManagement.theUser);
+		MVCPostManagement.ControllerPostManagement.navigateToActiveHome(
+				ViewReplyManagement.theStage, ViewReplyManagement.theUser);
 	}
 
 	// Simple helper for pop-up messages

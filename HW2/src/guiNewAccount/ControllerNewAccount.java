@@ -144,10 +144,10 @@ public class ControllerNewAccount {
 	        if (ViewNewAccount.theRole.equals("Admin")) {
 	            roleCode = 1;
 	            user = new User(username, password1, email, firstName, middleName, lastName, "", true, false, false);
-	        } else if (ViewNewAccount.theRole.equals("Role1")) {
+	        } else if (ViewNewAccount.theRole.equals("Staff") || ViewNewAccount.theRole.equals("Role1")) {
 	            roleCode = 2;
 	            user = new User(username, password1, email, firstName, middleName, lastName, "", false, true, false);
-	        } else if (ViewNewAccount.theRole.equals("Role2")) {
+	        } else if (ViewNewAccount.theRole.equals("Student") || ViewNewAccount.theRole.equals("Role2")) {
 	            roleCode = 3;
 	            user = new User(username, password1, email, firstName, middleName, lastName, "", false, false, true);
 	        }
