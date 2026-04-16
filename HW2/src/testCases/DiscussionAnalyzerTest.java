@@ -10,8 +10,6 @@ import entityClasses.ReplyStorage;
 import entityClasses.User;
 
 /**
- * Console-based tests for {@link DiscussionAnalyzer}.
- *
  * These tests verify that the analyzer counts distinct discussion partners
  * correctly, ignores duplicate replies to the same student, ignores self-replies,
  * and returns unique answered posts in a stable order.

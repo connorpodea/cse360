@@ -1,6 +1,5 @@
 package DataBaseTests;
 
-// Correct imports for JUnit Jupiter (JUnit 5)
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
