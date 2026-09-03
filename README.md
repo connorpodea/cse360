@@ -103,7 +103,7 @@ The H2 database file is created automatically under your home directory on first
 - **Forced password reset** — temporary passwords issued via the One-Time Password flow must be changed by the user before continuing
 - **Input validation** — dedicated FSM recognizers reject malformed usernames, passwords, and emails before they reach the database
 
-## Author
+## Authors
 
 Connor Podea, Lansana Conte, Gabe Abarca, Yuvraj Karnani, Emiliano Vasquez — CSE 360 team project, built to learn Java desktop application design (MVC, JavaFX), embedded relational databases, and role-based access control.
 
