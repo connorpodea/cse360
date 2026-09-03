@@ -1,4 +1,4 @@
-# FoundationsF26
+# EdThread
 
 A role-based course discussion board with staff moderation and grading support, built as a JavaFX desktop application in Java.
 
