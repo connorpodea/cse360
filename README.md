@@ -105,4 +105,6 @@ The H2 database file is created automatically under your home directory on first
 
 ## Author
 
-Connor Podea — CS student project, built to learn Java desktop application design (MVC, JavaFX), embedded relational databases, and role-based access control.
+Connor Podea, Lansana Conte, Gabe Abarca, Yuvraj Karnani, Emiliano Vasquez — CSE 360 team project, built to learn Java desktop application design (MVC, JavaFX), embedded relational databases, and role-based access control.
+
+Built on a course-provided starter codebase (Copyright © Lynn Robert Carter). Several core classes (`Database.java`, `FoundationsMain.java`, the GUI scaffolding, and the FSM-based input recognizers) originate from or extend that starter code.
